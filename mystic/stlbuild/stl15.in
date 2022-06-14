@@ -1,0 +1,4 @@
+box 5 10 15
+translate 0 0 -10
+box 10 10 10
+stop

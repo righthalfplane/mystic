@@ -1,0 +1,66 @@
+{
+
+        print ("Testing Bit Hacking Operations.\n",0);
+
+        i = 0;
+        j = -1;
+        if (~i != j) {
+            print("error %g\n",10);
+            print("j %g\n",j);
+            print("~i  %g\n",~i);
+        }
+        if (~~i != i){
+            print("error %g\n",20);
+            print("i %g\n",i);
+            print("~~i  %g\n",~~i);
+        }
+        if (~j != i){
+            print("error %g\n",30);
+            print("i %g\n",i);
+            print("~j %g\n",~j);
+         }
+        if (i & j) {
+            print("error %g\n",40);
+            print("i %g\n",i);
+            print("j %g\n",j);
+        }
+        if (i | i) {
+            print("error %g\n",50);
+            print("i %g\n",i);
+        }
+
+        if (j ^ j) {
+            print("error %g\n",60);
+            print("j %g\n",j);
+        }
+        i = 1;
+        if ((i << 1) != 2){
+            print("error %g\n",70);
+            print("i %g\n",i);
+            print("i<<1 %g\n",i<<1);
+        }
+        if ((i <<= 1) != 2 || i != 2) print("error %g\n",71);
+        i = 1;
+        if ((i << 8) != 0400) print("error %g\n",80);
+        if ((i <<= 8) != 0400 || i != 0400) print("error %g\n",81);
+        i = 0404;
+        if ((i >> 1) != 0202) print("error %g\n",90);
+        if ((i >>= 1) != 0202 || i != 0202) print("error %g\n",91);
+        i = 0404;
+        if ((i >> 2) != 0101) print("error %g\n",100);
+        if ((i >> 6) != 04) print("error %g\n",110);
+        i = 0404;
+        if ((i ^ 0703) != 0307) print("error %g\n",120);
+        if ((i ^= 0703) != 0307 || i != 0307) print("error %g\n",121);
+        i = 0404;
+        if ((i ^ 0707) != 0303) print("error %g\n",130);
+        if ((i ^= 0707) != 0303 || i != 0303) print("error %g\n",131);
+        i = 0404;
+        if ((i | 030) != 0434) print("error %g\n",140);
+        if ((i |= 030) != 0434 || i != 0434) print("error %g\n",141);
+        i = 0625;
+        if ((i & 0451) != 0401) print("error %g\n",150);
+        if ((i &= 0451) != 0401 || i != 0401) print("error %g\n",151);
+        print ("Done Testing Bit Hacking Operations.\n",0);
+
+}

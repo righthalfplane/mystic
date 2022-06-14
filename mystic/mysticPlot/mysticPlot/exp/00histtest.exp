@@ -1,0 +1,25 @@
+{
+    window("out",sizeof(r1));
+    out=r2-r1;
+    /* writesds(out); */
+    print("frame %g\n",frame);
+
+    maxd=max(out);
+    print("maxd %g\n",maxd);
+    mind=min(out);
+    print("mind %g\n",mind);
+    steps=256;
+    dv=(maxd-mind)/steps;
+    window("hist",size(steps,steps));
+    print("dv %g\n",dv);
+    window("low",size(steps,steps));
+    window("high",size(steps,steps));
+    low=xfill(hist,mind,dv);
+    high=xfill(hist,mind+dv,dv);
+ 
+   hist=0;
+
+   if((out > low) && (out < high)){
+       hist = 1;
+   }
+}

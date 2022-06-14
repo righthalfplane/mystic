@@ -1,0 +1,37 @@
+beam compression  (dmter2)
+setup,1,11,11
+1,1, 11,11, 1,1,1,1,
+0,20, 20,0
+0.,0.,  20.,20.
+end,grid
+w
+pon plot 
+poff node dof elem equl
+pon comp
+exit
+nodes
+1,  1,1,  1,11
+3,  1,6,  1,6
+end
+mat,1
+2 2 1 1 1 1. 8.00e10 .2 0. 2.0
+end
+elements
+quad,1,  1,1
+5,10
+quad,1,  6,1
+5,10
+end
+press,1,1
+500,  11,1,  11,10
+end
+w
+form
+exit
+load
+end
+w
+solv,stre
+stop
+exit
+stop

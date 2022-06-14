@@ -1,0 +1,12 @@
+{
+   /*  areaplotset(s,0,0,0, 0.95,0.95,0,200,200,1); */
+    areaplotset(s,0,3.27,0, 0.95,3.27,0.95,200,1,200);
+    areaplotset(d,0,0,0, 0.95,0.95,0,200,200,1);
+    window("outs",size(200,200));
+    window("outd",size(200,200));
+    window("diff",size(200,200));
+    outs=s:density;
+    outd=d;
+    diff=fabs(outs-outd)/fabs(max(outd));
+
+}

@@ -1,0 +1,14 @@
+{
+                 a=2;
+                            b=4;
+          print("a %f ",a);
+          print("b %f \n",b);
+          print("a+b %f\n",a+b);
+          print("a-b %f\n",a-b);
+          print("a*b %f\n",a*b);
+          print("a/b %f\n",a/b);
+          print("a & b %f\n",a & b);
+          print("a | b %f\n",a | b);
+          print("a && b %f\n",a && b);
+          print("a || b %f\n",a || b);
+}

@@ -1,0 +1,53 @@
+
+{
+
+	print("Testing Integer Arithmetic.\n",0);
+
+	x0=0;x1=1;x2=2;x3=3;x4=4;
+	if (x0 != 0) print("error %g\n",10);
+	if (x1 > 1) print("error %g\n",20);
+	if (x2 < 2) print("error %g\n",30);
+	if (x3 <= 3) ; else print("error %g\n",31);
+	if (x4 >= 4) ; else print("error %g\n",32);
+	if (x1 + x2 != x3) print("error %g\n",40);
+	if (x1 * x3 != x3) print("error %g\n",50);
+	if (x4 / x2 != x2) print("error %g\n",60);
+	if (x4 % x3 != x1) print("error %g\n",70);
+	i = 56;
+	j = -102;
+	k = 7;
+	if (i*j + i*k != i*(j+k)) print("error %g\n",80);
+	if (i*(k+3) + j*(k+3) != (i+j)*(k+3)) print("error %g\n",90);
+	j += i;
+	if (j != -46){
+	    print("error %g\n",100);
+	    print("j %g\n",j);
+	    print("i %g\n",i);
+	
+	}
+	if ((j += i) != 10 || j != 10){
+            print("error %g\n",110);
+	    print("j %g\n",j);
+	    print("i %g\n",i);
+	}
+/*
+	if (++j != 11 || j != 11) print("error %g\n",120);
+	if (j++ != 11 || j != 12) print("error %g\n",130);
+	if (--j != 11 || j != 11) print("error %g\n",140);
+	if (j-- != 11 || j != 10) print("error %g\n",150);
+*/
+	j=10;
+	if (-j != k-17) print("error %g\n",160);
+	if ((j *= 2) != 20 || j != 20) print("error %g\n",170);
+	if ((j -= 13) != k || j != k) print("error %g\n",180);
+	if ((j %= 4) != 3 || j != 3) print("error %g\n",190);
+	if ((i /= 14) != x4 || i != x4) print("error %g\n",200);
+	if (3 + 5 - 12 * 40 != -472) print("error %g\n",210);
+	if (-5 * 10 != -448/56 + 68%9 - 47) print("error %g\n",220);
+	if (k*1 != 0+k) print("error %g\n",230);
+	if (k/1 != k || k != k-0) print("error %g\n",240);
+	if (i*0) print("error %g\n",250);
+	print("Testing Integer Arithmetic. Done\n",0);
+}
+
+

@@ -1,0 +1,53 @@
+clear
+filelist open s "/Users/dir/Desktop/show_verify/3D-06"
+tlbvv306-dmp000000
+end
+
+expression
+{
+
+    
+    bhangmeterset(s, 0,0,0 ,2000,1000,1000, -1.0,0.,0.);
+    bhm=s;
+    print("Bhangmeter %g\n",max(bhm));
+   
+    bhangmeterset(s, 0,0,0 ,11000,1000,1000, -1.0,0.,0.);
+    bhm=s;
+    print("Bhangmeter %g\n",max(bhm));
+     
+    bhangmeterset(s, 0,0,0 ,71710.7,71710.7,1000, -1.0,-1.0,0.0);
+    bhm=s;
+    print("Bhangmeter %g\n",max(bhm));
+    
+    bhangmeterset(s, 0,0,0 ,58735,58735,58735,  -1.0,-1.0,-1.0);
+    bhm=s;
+    print("Bhangmeter %g\n",max(bhm));
+    
+    
+/*    
+    xd=getoption(bhm,"xdata");
+    
+    framecount=getoption(bhm,"xsize");
+         
+
+     print("framecount %.0f ",framecount);
+     print("min %g ",min(bhm));
+     print("max %g\n",max(bhm));
+
+        
+     
+     for(n=0;n<framecount;++n){
+        print("%14.6e ",pick(xd,n));
+        print("%14.6e\n",pick(bhm,n));
+     }
+     
+ */        
+         
+}
+step 0 0
+end
+
+filelist close s
+
+exit
+

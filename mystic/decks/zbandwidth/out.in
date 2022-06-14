@@ -1,0 +1,5 @@
+code : 32 data : 0 Reference : 1 LargestStructure 0
+0          imax =    15 jmax =    15 kmax =    85
+     number of nodes written =  19125 auto b.c. =        0
+0         number of materials =      1
+     mystic elements written = 16464

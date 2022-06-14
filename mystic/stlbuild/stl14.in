@@ -1,0 +1,18 @@
+scale 1 2 1
+torus 40 20 100. 20.
+translate 0 0 -200
+scale 2 2 1
+cone 40 20 100. 20. 200.
+translate 0 0 200
+scale 1 1 2
+sphere 40 20 100.
+rotate 90 0 0
+translate 0 0 400
+scale 1 2 2
+torus 40 20 100. 20.
+translate 0 0 -200
+rotate 0 0 0
+scale 2 2 2
+disk 20 30 20. 100.
+stop
+

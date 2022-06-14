@@ -1,0 +1,15 @@
+{
+    a=scale(s,401,401);
+    b=scale(a,201,201);
+    c=scale(b,401,401);
+    window("out",sizeof(a));
+    out=a-c;
+
+    sumd=0;
+    if(out == 0){
+      sumd =  1;
+    }
+
+    print("sumd = %g\n",sumd);
+
+}

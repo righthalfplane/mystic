@@ -1,0 +1,28 @@
+{
+    a=scale(s,400,400);
+    window("out",sizeof(s));
+    print("max %g\n",max(s));
+    print("min %g\n",min(s));
+    print("count(s,49) %g\n",count(s,49));
+    print("count(s,152) %g\n",count(s,152));
+    print("count(s,172) %g\n",count(s,172));
+
+    xx = -1;
+    yy = -1;
+
+    x=xfill(s,0,1);
+    y=yfill(s,0,1);
+    if(s == 172){
+      xx=x;
+      yy=y;
+    }
+
+    print("xx %g ",xx);
+    print("yy %g\n ",yy);
+
+     if(s >= 153){
+        out=255;
+    }else{
+        out=0;
+    }
+}

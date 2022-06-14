@@ -1,0 +1,6 @@
+{
+     window("out",sizeof(s));
+
+     out=s:cell_energy/s:mass;
+
+}

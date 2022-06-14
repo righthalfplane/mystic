@@ -1,0 +1,58 @@
+clear
+filelist open s "/Users/dir/Desktop/2dts6u-dmps-for-Dale/0520h"
+tow115_20h-dmp000000 tow115_20h-dmp000032 tow115_20h-dmp000033 tow115_20h-dmp000034 tow115_20h-dmp000035
+tow115_20h-dmp000036 tow115_20h-dmp000037 tow115_20h-dmp000039 tow115_20h-dmp000041 tow115_20h-dmp000046
+tow115_20h-dmp000055 tow115_20h-dmp000059 tow115_20h-dmp000066 tow115_20h-dmp000075 tow115_20h-dmp000083
+tow115_20h-dmp000094 tow115_20h-dmp000104 tow115_20h-dmp000118 tow115_20h-dmp000129 tow115_20h-dmp000147
+tow115_20h-dmp000169 tow115_20h-dmp000193 tow115_20h-dmp000221 tow115_20h-dmp000251 tow115_20h-dmp000293
+tow115_20h-dmp000338 tow115_20h-dmp000394 tow115_20h-dmp000456 tow115_20h-dmp000533 tow115_20h-dmp000617
+tow115_20h-dmp000717 tow115_20h-dmp000840 tow115_20h-dmp000981 tow115_20h-dmp001153 tow115_20h-dmp001350
+tow115_20h-dmp001569 tow115_20h-dmp001812 tow115_20h-dmp001848 tow115_20h-dmp001964 tow115_20h-dmp002109
+tow115_20h-dmp002259 tow115_20h-dmp002402 tow115_20h-dmp002550 tow115_20h-dmp002704 tow115_20h-dmp002811
+tow115_20h-dmp002917 tow115_20h-dmp003030 tow115_20h-dmp003148 tow115_20h-dmp003269 tow115_20h-dmp003396
+tow115_20h-dmp003528 tow115_20h-dmp003670 tow115_20h-dmp003885 tow115_20h-dmp004040 tow115_20h-dmp004204 
+tow115_20h-dmp004366 tow115_20h-dmp004374 tow115_20h-dmp004467 tow115_20h-dmp004565 tow115_20h-dmp004669
+tow115_20h-dmp004781 tow115_20h-dmp004901 tow115_20h-dmp005031 tow115_20h-dmp005176 tow115_20h-dmp005337
+tow115_20h-dmp005511 tow115_20h-dmp005695 tow115_20h-dmp005891 tow115_20h-dmp006095 tow115_20h-dmp006099
+tow115_20h-dmp006322 tow115_20h-dmp006564 tow115_20h-dmp006830 tow115_20h-dmp007121 tow115_20h-dmp007433
+tow115_20h-dmp007767 tow115_20h-dmp008127 tow115_20h-dmp008517 tow115_20h-dmp008934 tow115_20h-dmp009339
+tow115_20h-dmp009363 tow115_20h-dmp009605 tow115_20h-dmp009867 tow115_20h-dmp010150 tow115_20h-dmp010453
+tow115_20h-dmp010778 tow115_20h-dmp011124 tow115_20h-dmp011495 tow115_20h-dmp011891 tow115_20h-dmp012312
+tow115_20h-dmp012758 tow115_20h-dmp013242 tow115_20h-dmp013720 tow115_20h-dmp013744 tow115_20h-dmp014285
+tow115_20h-dmp015006 tow115_20h-dmp016034 tow115_20h-dmp017177 tow115_20h-dmp018541 tow115_20h-dmp020171
+tow115_20h-dmp021971 tow115_20h-dmp024084 tow115_20h-dmp026545 tow115_20h-dmp029480 tow115_20h-dmp033043
+tow115_20h-dmp037520
+end
+
+expression
+{
+
+    bhangmeterset(s, 0,0,0 ,1e5,0,0);
+    
+    bhm=s;
+    
+    xd=getoption(bhm,"xdata");
+    
+    framecount=getoption(bhm,"xsize");
+         
+     print("framecount %.0f ",framecount);
+     print("min %g ",min(bhm));
+     print("max %g\n",max(bhm));
+          
+        
+     
+     for(n=0;n<framecount;++n){
+        print("%14.6e ",pick(xd,n));
+        print("%14.6e\n",pick(bhm,n));
+     }
+     
+         
+         
+}
+step 0 0
+end
+
+filelist close s
+
+exit
+

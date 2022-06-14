@@ -1,0 +1,14 @@
+{
+
+    xc=500;
+    yc=500;
+    zc=500;
+    window("a",size3(100,100,100));
+    x=xfill(a,0,10);
+    y=yfill(a,0,10);
+    z=zfill(a,0,10);
+    a=sqrt((x-xc)*(x-xc)+(y-yc)*(y-yc)+(z-zc)*(z-zc));
+    print("max %g ",max(a));
+    print("min %g\n",min(a));
+   /*  writesds(a); */
+}

@@ -1,0 +1,23 @@
+# Makefile for taurusx
+
+CC	= gcc
+FC	= gfortran
+CFLAGS	=   -O3
+FFLAGS	=  -O3 -fno-automatic -fsecond-underscore  -fno-range-check
+                  
+                          
+COBJS	= esplot.o plottar.o showlib.o
+
+FOBJS	=   taurusx.o
+
+OBJS	= ${COBJS} ${FOBJS}
+
+
+taurusx : ${OBJS}
+	  ${FC} ${FFLAGS} -o taurusxG ${OBJS} -lm -L../dignew \
+	-ldignewGF -L/usr/X11R6/lib -lX11
+
+taurusx.o	: taurusx.f
+esplot.o	: esplot.c 
+plottar.o	: plottar.c 
+showlib.o	: showlib.c showlib.h

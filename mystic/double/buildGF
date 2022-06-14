@@ -1,0 +1,12 @@
+rm *.o dstatgsG mysticdGD
+gfortran -std=legacy -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -g  -c  mysticd.f
+gfortran -std=legacy -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -g  -c  mystice1.f
+gfortran -std=legacy -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -g  -c  mystice2.f
+gcc -c ciolib.c
+gcc -c showlib.c
+gfortran -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -g -o mysticdGD mysticd.o mystice1.o mystice2.o ciolib.o showlib.o
+mv mysticdGD ~/utlib/
+gfortran  -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8 -o dstatgsGD dstatgs.f
+mv dstatgsGD ~/utlib/
+rm *.o
+

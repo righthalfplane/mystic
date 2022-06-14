@@ -1,0 +1,5 @@
+{
+
+    window("out",sizeof(s));
+    out=s:density;
+}

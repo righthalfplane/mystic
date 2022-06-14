@@ -1,0 +1,44 @@
+pressure element and solid element test (dmd7)
+setup,1,22,11 
+1,1, 11,11, 1,1,1,1,polar
+10,20, 20,10
+0.,0.,  90.,90.
+12,1, 22,11, 1,1,1,1,polar
+10,20, 20,10
+0.,0.,  90.,90.
+end,grid
+w
+poff node dof elem equl load
+pon comp
+exit
+nodes
+3,  1,1,  1,11
+2,  2,1,  11,11
+2,  12,1,  22,1
+1,  12,11,  22,11 
+end
+mat,2
+2 1 0  2.64  0. 2.5e11
+0 2 1 1 1 1. 2.56e11 .42 0. 2.64
+end
+elements
+pqdm,1,  1,1
+10,10
+quad,2,  12,1
+10,10
+end
+press
+3141.5926,  11,1,  11,10
+-628.31852,  12,1,  12,10 
+3141.5926,  22,1,  22,10
+end
+w
+form
+exit
+load
+end
+w
+solv,stre,0,end
+stop
+exit
+stop

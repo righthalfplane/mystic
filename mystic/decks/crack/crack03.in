@@ -1,0 +1,35 @@
+$ Crack example Copper
+setup,1,101,101
+1,1, 101,101, 1,1,1,1
+0,10, 10,0
+0.,0.,  10.,10.
+end,grid
+scale
+w
+poff node dof elem equl load
+pon node dof elem equl load
+exit
+nodes
+2,  41,1, 101,1
+1,  1,1,  1,101
+end
+mat,1
+0 2 1 1 1 1. 18e6 0.35 0. 2.64
+end
+elements
+quad,1,  1,1
+100,100
+end
+press
+1000,  1,1,  41,1
+end
+w
+form
+exit
+load
+end
+w
+solv,stre,0,end
+stop
+exit
+stop

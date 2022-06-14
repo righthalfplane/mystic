@@ -1,0 +1,15 @@
+{
+    window("out",size(400,400));
+
+    window("out2",size(1600,1600));
+    x=xfill(out,0,1.0);
+    y=yfill(out,0,1.0);
+
+    out=x+400*y;
+    plotsetrange(out,"step",out,0,0,0,400,400,0);
+   
+    areaplotset(s,.125,.125,0,400.125,400.125,0,1600,1600,1);
+
+    out2=s;
+
+}

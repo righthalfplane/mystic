@@ -1,0 +1,35 @@
+pressure element test
+setup,1,15,11
+1,1, 15,11, 1,1,1,1,
+0,15, 15,0
+0.,0.,  10.,10.
+end,grid
+w
+poff stre 
+pon plot 
+exit
+scale
+nodes
+1,  1,1, 1,11
+2,  1,6, 1,6
+end
+mat,1
+0 2 1 1 1 1. 30e6 0.3 0. 2.64
+end
+elements
+quad,1,  1,1
+14,10
+end
+w
+form
+exit
+load
+-2. 0. 15,2,  15,10
+-1. 0. 15,1,  15,1
+-1. 0. 15,11,  15,11
+end
+w
+solv,stre,1,end
+stop
+exit
+stop

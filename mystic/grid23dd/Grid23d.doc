@@ -1,0 +1,83 @@
+
+		Grid23d Commands
+
+
+stop
+
+    Leave the program
+
+
+setup,iprint,imax,jmax,kmax
+
+    setup starts the node point generator
+
+    iprint is the print level flag. 1 minimal 4 normal > 4 debug
+    imax maximun i in grid
+    jmax maximun j in grid
+    jmax maximun j in grid
+
+copy,1,  imin,jmin,kmin,  imax,jmax,kmax,  icount,jcount,kcount
+
+kill,isys, imin,jmin,kmin,  imax,jmax,kmax
+
+arc,isys, i1,j1,k1,  i2,j2,k2, g,  x1,y1,z1,  x2,y2,z2
+
+face,isys,  imin,jmin,kmin,  imax,jmax,kmax, g1,g2,g3,g4
+x1,y2,z1,  x2,y2,z2,  x3,y3,z3,  x4,y4,z4
+
+block,isys,  imin,jmin,kmin,  imax,jmax,kmax, n1,g1, n2,g2,...
+x1,y2,z1,  x2,y2,z2,  x3,y3,z3,  x4,y4,z4/
+x5,y5,z5,  x6,y6,z6,  x7,y7,z7,  x8,y8,z8
+
+csystm,isys,itype,  x0,y0,z0,  xx,xy,xz, zx,zy,zz  
+
+connect,isys, i1,j1,k1,  i2,j2,k2, g, icount,jcount,kcount
+
+end
+
+   end is used to stop many commands.
+
+w
+    w copies every thing to tape33 until the next end card.
+
+end
+
+w elements
+brick,imat,  i1,j1,k1,  [i2,j2,k2,  i3,j3,k3, i4,j4,k4, ... i8,j8,k8]
+1,1,1, icount,jcount,kcount
+end
+
+shell,imat
+i1,j1,k1,  i2,j2,k2,  i3,j3,k3, i4,j4,k4, icount,jcount,kcount
+end
+
+slide
+i1,j1,k1,  i2,j2,k2,  i3,j3,k3, i4,j4,k4, icount,jcount,kcount
+end
+
+equal
+i1,j1,k1,  i2,j2,k2, icount,jcount,kcount
+end
+
+equal2
+i1,j1,k1,  i2,j2,k2, icount,jcount,kcount
+end
+
+w nodes
+bc, imin,jmin,kmin, imax,jmax,kmax
+
+     w nodes starts the reading of the boundary condition data
+     when the end car is read, the nodes are output to tape33.
+
+end
+
+family nfam
+
+    family set the family number to nfam. This is for
+    ploting purposes only.
+
+
+press,p,icurve,inc
+i1,j1,k1,  i2,j2,k2,  i3,j3,k3, i4,j4,k4, icount,jcount,kcount
+end
+

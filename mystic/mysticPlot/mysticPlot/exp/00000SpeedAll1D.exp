@@ -1,0 +1,6 @@
+{
+    lineplotset(p1, 0,0,0 ,5,0,0, 0);
+     out=p1:speed;
+    lineplotout(out,p1);
+
+}

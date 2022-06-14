@@ -1,0 +1,1114 @@
+**********************************************************************
+**********************************************************************
+**********************************************************************
+      subroutine bmshell(ns,mat,num,xd,yd,zd)
+      dimension num(4),xd(*),yd(*),zd(*)
+      common/tapes/ntape5,ntape6,ntape1,ntape2,ntape3,ntape4,ntape52
+      common/matcom/area(50),volume(50),weight(50),density(50),
+     .              thickness(50),blength(50)
+      dimension h(4),hr(4),hs(4)
+      dimension xg(4,4),wgt(4,4)
+c
+      data xg/   0.d0,   0.d0,   0.d0,   0.d0,   -.5773502691896d0,
+     1 .5773502691896d0,   0.d0,   0.d0,   -.7745966692415d0,   0.d0,
+     2 .7745966692415d0,   0.d0,   -.8611363115941d0,
+     3 -.3399810435849d0,   .3399810435849d0,   .8611363115941d0 /
+c
+c      matrix wgt stores gauss - legendre weighting factors
+c
+      data wgt /  2.d0,   0.d0,   0.d0,   0.d0,   1.d0,   1.d0,
+     1 0.d0,   0.d0,   .5555555555556d0,   .8888888888889d0,
+     2 .5555555555556d0,   0.d0,   .3478548451375d0,
+     3 .6521451548625d0,   .6521451548625d0,   .3478548451375d0 /
+ 
+      if(mat.le.0.or.mat.gt.50)return
+      a=0.0
+      nint=2
+      do 40 ir=1,nint
+      r=xg(ir,nint)
+      do 30 is=1,nint
+      s=xg(is,nint)
+      call gethrs(h,hr,hs,r,s)
+      xr=0
+      xs=0
+      yr=0
+      ys=0
+      zr=0
+      zs=0
+      do 10 i=1,4
+      xr=xr+hr(i)*xd(num(i))
+      yr=yr+hr(i)*yd(num(i))
+      zr=zr+hr(i)*zd(num(i))
+      xs=xs+hs(i)*xd(num(i))
+      ys=ys+hs(i)*yd(num(i))
+      zs=zs+hs(i)*zd(num(i))
+   10 continue
+      det=(xr**2+yr**2+zr**2)*(xs**2+ys**2+zs**2)-(xr*xs+yr*ys+zr*zs)**2
+      if(det.le.0.0)then
+          write(ntape6,1000)nel
+          return
+      endif
+      wt=wgt(ir,nint)*wgt(is,nint)*sqrt(det)
+      a = a + wt
+   30 continue
+   40 continue
+      area(mat) = area(mat)+a
+      volume(mat) = volume(mat)+a*thickness(mat)
+      weight(mat) = weight(mat)+a*thickness(mat)*density(mat)
+      return
+ 1000 format(' shell = ',i5,' area = ',1pe12.4,' mat = ',i5,' n = ',4i8)
+      end
+      subroutine gethrs(h,hr,hs,r,s)
+      dimension h(4),hr(4),hs(4)
+      rr=(1.-r)
+      rb=(1.+r)
+      ss=(1.-s)
+      sb=(1.+s)
+      h(1)=.5*rr*ss
+      h(2)=.5*rb*ss
+      h(3)=.5*rb*sb
+      h(4)=.5*rr*sb
+      hr(1) = -.5*ss
+      hs(1) = -.5*rr
+      hr(2) =  .5*ss
+      hs(2) = -.5*rb
+      hr(3) =  .5*sb
+      hs(3) =  .5*rb
+      hr(4) = -.5*sb
+      hs(4) =  .5*rr
+      return
+      end
+**********************************************************************
+      subroutine recs(ntape,a,nwords,npos)
+      dimension a(1)
+c     call rdisk(ntape,a,nwords,npos)
+c     if(udisk(ntape))10,900,900
+10    continue
+      return
+900   continue
+      write(6,1000)ntape,nwords,npos
+      return
+1000  format(5x,'error-ntape,nwords,npos',5i6)
+      end
+*deck wfile
+      subroutine wecs(ntape,a,nwords,npos)
+      dimension a(1)
+c     call wdisk(ntape,a,nwords,npos)
+c     if(udisk(ntape))10,900,900
+10    continue
+      return
+900   continue
+      write(6,1000)ntape,nwords,npos
+      return
+1000  format(5x,'error-ntape,nwords,npos',5i6)
+      end
+**********************************************************************
+      if(word.eq.'head')go to 50
+   50 continue
+      call ghead
+      go to 10
+*deck ghead
+      subroutine ghead
+      common/tapes/ntape5,ntape6,ntape1,ntape2,ntape3,ntape4,ntape52
+      common/comh/head(10),nh
+      dimension temp(80)
+      read(ntape5,100)temp
+      encode(80,100,head)temp
+      nh=80
+      do 10 i=1,80
+      if(temp(nh).ne.1h )return
+      nh=nh-1
+   10 continue
+      return
+  100 format(80a1)
+      end
+**********************************************************************
+      subroutine getval(val,nval,im,jm,ic)
+      dimension val(im,jm,1),nval(im,jm,1)
+      dimension stress(12),ixc(9)
+      common/dcom1/numel,imax,jmax,kmax,nmax,ntwo,nfam
+      common/pcom/iprint,itype
+      common/size/nsize,n0,n4,n5
+      common ia(1)
+      do 30 k=1,kmax
+      do 20 j=1,jmax
+      do 10 i=1,imax
+      val(i,j,k)=0.
+      nval(i,j,k)=0
+   10 continue
+   20 continue
+   30 continue
+      ij=imax*jmax
+      do 50 ne=1,numel
+      call gstress(ne,stress)
+      iadd=n5+3*(ne-1)
+      call unpack2(ixc,ia(iadd))
+      do 40 ii=2,9
+      n=ixc(ii)
+      k=n/ij
+      j=(n-k*ij)/imax
+      i=n-k*ij-j*imax
+      k=k+1
+      j=j+1
+      val(i,j,k)=val(i,j,k)+stress(ic)
+      nval(i,j,k)=nval(i,j,k)+1
+   40 continue
+   50 continue
+      do 80 k=1,kmax
+      do 70 j=1,jmax
+      do 60 i=1,imax
+      if(nval(i,j,k).eq.0)go to 60
+      val(i,j,k)=val(i,j,k)/float(nval(i,j,k))
+      if(iprint.eq.1)write(6,1000)i,j,k,nval(i,j,k),val(i,j,k)
+   60 continue
+   70 continue
+   80 continue
+      return
+ 1000 format(4i6,1pe12.4)
+      end
+**********************************************************************
+      if(word.eq.'lines')go to 310
+  310 continue
+      call geth
+      m2=n4
+      m3=n5+npack
+      call lines(a(n1),a(m2),a(m3),imax,jmax)
+      go to 10
+      subroutine lines(xyz,val,nval,im,jm)
+      dimension xyz(1),val(im,jm,1),nval(im,jm,1)
+      dimension com(12),lcom(1)
+      common/info/ifoe(64),neq,npack,nstress
+      common/uset/nl(5),l(8,5)
+      common/size/nsize,n0,n4,n5
+      common/timcom/time(7)
+      common/flist/fdata(256),nflag(256),nword
+      common/clist/cdata(256)
+      character*8 cdata,word,com
+      common/pplt/r(1024),v(1024)
+      common a(1)
+      equivalence (com(1),lcom(1))
+      data com/'sigx','sigy','sigz',4*'_','p','sigj','sig1','sig2',
+     .         'sig3'/
+      nstep=fdata(2)
+      xo=fdata(3)
+      yo=fdata(4)
+      zo=fdata(5)
+      last=nstep
+      n6=n5+npack
+      n7=n6+ifoe(17)
+      if(n7.le.nsize)go to 20
+      nreq=n7-nsize
+      nsize=nsize+nreq
+      call memadj(nsize,ierror)
+      if(ierror.eq.0)go to 20
+      write(59,2020)ierror
+      return
+   20 continue
+      nl(1)=38
+      nl(3)=36
+      encode(36,1090,l(1,3))(ifoe(i),i=1,6)
+      call recs(12,a(n5),npack,64+neq)
+      call pos(xyz,nstep)
+   40 continue
+      call ffin
+      word=cdata(1)
+      if(word.eq.'end')return
+      do 50 i=1,12
+      ic=i
+      if(word.eq.com(i))go to 60
+   50 continue
+      write(59,2030)word
+      return
+   60 continue
+      i1=fdata(2)
+      j1=fdata(3)
+      k1=fdata(4)
+      i2=fdata(5)
+      j2=fdata(6)
+      k2=fdata(7)
+      nl(2)=8
+      l(1,2)=lcom(ic)
+      encode(38,2110,l(1,1))i1,i2,j1,j2,k1,k2,time(1)
+      call getval(val,nval,im,jm,ic)
+      n=0
+      do 90 k=k1,k2
+      do 80 j=j1,j2
+      do 70 i=i1,i2
+      n=n+1
+      nn=1+3*(nijk(i,j,k)-1)
+      r(n)=sqrt((xyz(nn)-xo)**2+(xyz(nn+1)-yo)**2+(xyz(nn+2)-zo)**2)
+      v(n)=val(i,j,k)
+   70 continue
+   80 continue
+   90 continue
+      call line2d(r,v,n,n,1,1)
+      call endplt()
+      go to 40
+ 1090 format(6a6)
+ 2020 format(1x,'memory error =',i5)
+ 2030 format(1x,'bad line type =',a8)
+ 2110 format(6i4,2x,1pe12.4)
+      end
+**********************************************************************
+      if(word.eq.'ntime')go to 260
+      if(word.eq.'etime')go to 270
+  260 continue
+      call plotns(1)
+      go to 10
+  270 continue
+      call plotns(2)
+      go to 10
+      subroutine plotns(iflag)
+c     common/flist/fdata(256),nflag(256),nword
+c     common/clist/cdata(256)
+c     character*8 cdata
+c     common/uset/nl(5),l(8,5)
+c     common/size/nsize,n0,n4,n5
+c     common/info/ifoe(64)
+c     common/pplt/t(1024),dt(1024)
+c     dimension ia(2),ndout(2,1),nsout(2,1)
+c     dimension lab(9,2),stress(9)
+c     common a(10)
+c     equivalence (ia(1),a(1))
+c     equivalence (numnp,ifoe(17)),(numel,ifoe(24))
+c     equivalence (numds,ifoe(26)),(numst,ifoe(27))
+c     equivalence (ndout(1,1),ifoe(30)),(nsout(1,1),ifoe(46))
+c     data lab/1hx,1hy,1hz,5hx-vel,5hy-vel,5hz-vel,1h , 1h ,1h ,
+c    .  4hsigx,4hsigy,4hsigz,5hsigxy,5hsigyz,5hsigzx,4hvmin,1hp,4hsigj/
+c     data out/700043400216001070004b/
+c     data maxsiz/1000000b/
+c     nod=fdata(2)
+c     ndof=fdata(3)
+c     call recs(19,ifoe,64,0)
+c     write(59,1000)(ifoe(i),i=1,10)
+c     write(59,1010)numnp,numel
+c     neq=3*numnp
+c     npack=3*numel
+c     ns=64+neq+npack
+c     if(numds.gt.0)
+c    . write(59,1020)numds,((ndout(i,j),i=1,2),j=1,numds)
+c     if(numst.gt.0)
+c    . write(59,1030)numst,((nsout(i,j),i=1,2),j=1,numst)
+c     nl(1)=4
+c     l(1,1)=4htime
+c     nl(2)=8
+c     l(1,2)=lab(ndof,iflag)
+c     nl(3)=36
+c     encode(36,1090,l(1,3))(ifoe(i),i=1,6)
+c     nl(5)=16
+c     if(iflag.eq.1)encode(13,1070,l(1,5))nod
+c     if(iflag.eq.2)encode(16,1080,l(1,5))nod
+c     nn=0
+c     knod=0
+c     if(numds.eq.0)go to 30
+c     do 20 i=1,numds
+c     is=ndout(1,i)
+c     ie=ndout(2,i)
+c     do 10 j=is,ie
+c     nn=nn+1
+c     if(j.eq.nod)knod=nn
+c  10 continue
+c  20 continue
+c  30 continue
+c     write(59,1040)nn
+c     ne=0
+c     kelem=0
+c     if(numst.eq.0)go to 60
+c     do 50 i=1,numst
+c     is=nsout(1,i)
+c     ie=nsout(2,i)
+c     do 40 j=is,ie
+c     ne=ne+1
+c     if(j.eq.nod)kelem=ne
+c  40 continue
+c  50 continue
+c  60 continue
+c     write(59,1050)ne
+c     kp=0
+c     ib=0
+c     kfile=0
+c     nnw=7*nn
+c     new=(56+7)*ne
+c     kstep=2+nnw+new
+c     if(iflag.ne.2)go to 70
+c     kloc=2+nnw+56*ne+7*(kelem-1)
+c     if(kelem.ne.0)go to 80
+c     write(59,1200)
+c     return
+c  70 if(knod.eq.0)return
+c     kloc=7*(knod-1)+ndof
+c     nloc=63+3*(nod-1)+ndof
+c     call recs(19,base,1,nloc)
+c     if(ndof.le.3)ib=1
+c  80 continue
+c     call recs(19,word,1,ns)
+c     if(word.eq.out)go to 100
+c     kp=kp+1
+c     if(kp.gt.1023)go to 110
+c     t(kp)=word
+c     if(iflag.eq.2)go to 85
+c     call recs(19,word,1,ns+kloc)
+c     if(ib.eq.1)word=word-base
+c     dt(kp)=word
+c     go to 90
+c  85 continue
+c     call recs(19,stress,7,ns+kloc)
+c     stress(8)=-(stress(1)+stress(2)+stress(3))/3.
+c     cs1=stress(1)+stress(8)
+c     cs2=stress(2)+stress(8)
+c     cs3=stress(3)+stress(8)
+c     stress(9)=stress(4)**2+stress(5)**2+stress(6)**2
+c    . -cs1*cs2-cs2*cs3-cs1*cs3
+c     stress(9)=sqrt(3.0*abs(stress(9)))
+c     dt(kp)=stress(ndof)
+c  90 continue
+c     ifactor=ns/maxsiz
+c     ns=ns+kstep
+c     if(ns.le.(ifactor+1)*maxsiz)go to 80
+c 100 continue
+c     ns=(ifactor+1)*maxsiz
+c     kfile=kfile+1
+c     if(kfile.le.9)encode(8,1100,ifile)kfile
+c     if(kfile.gt.9)encode(8,1110,ifile)kfile
+c     call filsiz(ifile,isize)
+c     if(isize.eq.-1)go to 110
+c     go to 80
+c 110 continue
+c     write(59,1060)kp
+c     call plot(t,dt,t,dt,kp,kp,1,1,.true.)
+      return
+1000  format(5x,'heading found is ... ',/,12a6)
+1010  format(5x,'number of node =',i8,
+     . 1x,'number of elements = ',i8)
+1020  format(5x,'number of node time history =',i5,/,(2i8))
+1030  format(5x,'number of element time history =',i5,/,(2i8))
+1040  format(5x,'number of nodes =',i5)
+1050  format(5x,'number of elements =',i8)
+1060  format(5x,'number of time steps=',i8)
+1070  format('node = ',i6)
+1080  format('element = ',i6)
+1090  format(6a6)
+1100  format('d3thdt0',i1)
+1110  format('d3thdt',i2)
+ 1200 format(' ------ error element not found -------')
+       end
+**********************************************************************
+      if(word.eq.'iplane')go to 210
+      if(word.eq.'jplane')go to 220
+      if(word.eq.'kplane')go to 230
+  210 continue
+      ityc=1
+      mcmax=jmax
+      ncmax=kmax
+      go to 240
+  220 continue
+      ityc=2
+      mcmax=imax
+      ncmax=kmax
+      go to 240
+  230 continue
+      ityc=3
+      mcmax=imax
+      ncmax=jmax
+  240 continue
+      length=mcmax*ncmax
+      i=n2
+      j=n3
+      m2=n4
+      m3=m2+length
+      m4=m3+length
+      n5=m4+length
+      call con(a(n1),a(i),a(j),a(m2),a(m3),a(m4),ityc,imax,jmax,mcmax,
+     .  ncmax)
+      go to 10
+      subroutine con(neijk,val,nval,x,y,z,itype,imax,jmax,mcmax,ncmax)
+      dimension neijk(imax,jmax,1),x(mcmax,1),y(mcmax,1),z(mcmax,1)
+      dimension  zc(100),xh(3),yh(3),zh(3),com(12),glab(5)
+      dimension kfi(3,3),kfj(3,3),kfk(3,3),ilab(3)
+      dimension nval(imax,jmax,1),val(imax,jmax,1)
+      common/info/ifoe(64),neq,npack,nstress
+      common/size/nsize,n0,n4,n5
+      common/timcom/time(7)
+      common/flist/fdata(256),nflag(256),nword
+      common/clist/cdata(256)
+      character*8 cdata,word,com
+      common a(10)
+      dimension ia(2)
+      equivalence (a(1),ia(1))
+      data com/'sigx','sigy','sigz',4*'_','p','sigj','sig1','sig2',
+     .       'sig3'/
+      data kfi/0,0,1,  1,0,0,  1,0,0/
+      data kfj/1,0,0,  0,0,1,  0,1,0/
+      data kfk/0,1,0,  0,1,0,  0,0,1/
+      data ilab/1hi,1hj,1hk/
+      mplane=fdata(2)
+      nstep=fdata(3)
+      call geth
+      call add(fdata(7),fdata(4),xh,-1.)
+      call add(fdata(10),fdata(4),yh,-1.)
+      call cross(xh,yh,zh,d,n)
+      call cross(zh,xh,yh,d,n)
+      call cross(yh,zh,xh,d,n)
+      write(59,2000)xh
+      write(59,2000)yh
+      write(59,2000)zh
+      write(6,2000)xh
+      write(6,2000)yh
+      write(6,2000)zh
+      last=nstep
+      n6=n5+npack
+      n7=n6+neq
+      write(59,2010)n7
+      if(n7.le.nsize)go to 20
+      nreq=n7-nsize
+      nsize=nsize+nreq
+      call memadj(nsize,ierror)
+      if(ierror.eq.0)go to 20
+      write(59,2020)ierror
+      return
+   20 continue
+      call recs(12,a(n5),npack,64+neq)
+      call pos(a(n6),nstep)
+   30 continue
+   40 continue
+      call ffin
+      word=cdata(1)
+      if(word.eq.'end')return
+      do 50 i=1,12
+      ic=i
+      if(word.eq.com(i))go to 60
+   50 continue
+      write(59,2030)word
+      return
+   60 continue
+      nc=fdata(2)
+      if(nc.gt.0)go to 80
+      n=iabs(nc)
+      do 70 i=1,n
+      zc(i)=fdata(i+2)
+   70 continue
+   80 continue
+      call getval(val,nval,imax,jmax,ic)
+      do 110 n=1,ncmax
+      do 100 m=1,mcmax
+      i=kfi(1,itype)*m+kfi(2,itype)*n+kfi(3,itype)*mplane
+      j=kfj(1,itype)*m+kfj(2,itype)*n+kfj(3,itype)*mplane
+      k=kfk(1,itype)*m+kfk(2,itype)*n+kfk(3,itype)*mplane
+      z(m,n)=0
+c     if(nval(i,j,k).ne.0)z(m,n)=val(i,j,k).or.1
+      nn=n6+3*(nijk(i,j,k)-1)
+      x(m,n)=a(nn)*xh(1)+a(nn+1)*xh(2)+a(nn+2)*xh(3)
+      y(m,n)=a(nn)*yh(1)+a(nn+1)*yh(2)+a(nn+2)*yh(3)
+  100 continue
+  110 continue
+      encode(36,2050,glab)com(ic),ilab(itype),mplane,time(1)
+c     call conn(1,mcmax,1,ncmax,mcmax,x,y,z,zc,nc,glab,ylag,1)
+      n=iabs(nc)
+      write(6,2040)(zc(i),i=1,n)
+      go to 40
+ 2000 format(1p3e12.4)
+ 2010 format(1x,'number of words required for contours =',i8)
+ 2020 format(1x,'memory error =',i5)
+ 2030 format(1x,'bad contour type =',a8)
+ 2040 format(1p10e12.4)
+ 2050 format(a8,1x,a1,3h = ,i3,4x,4ht = ,1pe12.4)
+      end
+      subroutine gstress(ne,stress)
+      complex p,q,r
+      dimension stress(12),rr(3)
+      common/info/ifoe(64),neq,npack,nstress
+      common/pos2/npos
+      nad=npos+7+2*neq+7*(ne-1)
+      call recs(12,stress,7,nad)
+      stress(8)=-(stress(1)+stress(2)+stress(3))/3.
+      cs1=stress(1)+stress(8)
+      cs2=stress(2)+stress(8)
+      cs3=stress(3)+stress(8)
+      stress(9)=stress(4)**2+stress(5)**2+stress(6)**2
+     . -cs1*cs2-cs2*cs3-cs1*cs3
+      stress(9)=sqrt(3.0*abs(stress(9)))
+      c=-(stress(1)+stress(2)+stress(3))
+      p=cmplx(c,0.)
+      c=-(-stress(1)*stress(2)-stress(1)*stress(3)-stress(2)*stress(3)
+     .    +stress(4)*stress(4)+stress(5)*stress(5)+stress(6)*stress(6))
+      q=cmplx(c,0.)
+      c=-(2*stress(4)*stress(5)*stress(6)+stress(1)*stress(2)*stress(3)
+     .    -stress(4)**2*stress(3)-stress(6)**2*stress(2)
+     .    -stress(5)**2*stress(1))
+      r=cmplx(c,0.)
+      call cubics(p,q,r,rr)
+      s1=rr(1)
+      s2=rr(2)
+      s3=rr(3)
+      if(s1.gt.s2)go to 10
+      t=s1
+      s1=s2
+      s2=t
+   10 if(s1.gt.s3)go to 20
+      t=s1
+      s1=s3
+      s3=t
+   20 if(s2.gt.s3)go to 30
+      t=s2
+      s2=s3
+      s3=t
+   30 continue
+      stress(10)=s1
+      stress(11)=s2
+      stress(12)=s3
+      return
+      end
+      subroutine cubics(p,q,r,rr)
+c
+c        cubic solves the cubic equation x**3+p*x**2+q*x+r=0
+c
+      complex as,bs,det,a,b,p3,t,u,v
+      complex p,q,r
+      complex x
+      dimension x(3)
+      dimension rr(3)
+      data nerror/0/
+      p3=p/3.
+      as=(3.0*q-p**2)/3.0
+      bs=(2.0*p**3-9.0*p*q+27.0*r)/27.0
+      det=bs*bs/4.0+as*as*as/27.
+      t=csqrt(det)
+      u=-bs/2.+t
+c
+c        the complex cube root of u is evaluated
+c
+      r1=real(u)
+      r2=aimag(u)
+      a1=0.
+      a2=0.
+      s=sqrt(r1**2+r2**2)
+      if(s.le.0.) go to 10
+      s=exp(alog(s)/3.)
+      o=atan2(r2,r1)
+      o=o/3.0
+      a1=s*sin(o)
+      a2=s*cos(o)
+   10 continue
+      a=cmplx(a2,a1)
+      b=0.
+      if(cabs(a).gt.0.)b=-as/(3.*a)
+      u=-(a+b)/2.-p3
+      v=csqrt(cmplx(-3.,0.))*(a-b)/2.
+      x(1)=a+b-p3
+      x(2)=u+v
+      x(3)=u-v
+      do 20 i=1,3
+      x1=real(x(i))
+      x2=aimag(x(i))
+      rr(i)=x1
+      if(abs(x2).lt.1.e-5*abs(x1))go to 20
+      nerror=nerror+1
+      if(nerror.gt.20)go to 20
+      write(59,1000)
+   20 continue
+      return
+c     f(1)=x(1)**3+p*x(1)**2+q*x(1)+r
+c     f(2)=x(2)**3+p*x(2)**2+q*x(2)+r
+c     f(3)=x(3)**3+p*x(3)**2+q*x(3)+r
+c     write(6,200)x
+c     write(6,200)f
+c     return
+  200 format(10x,1p8e14.6)
+ 1000 format(' error complex stresses')
+      end
+**********************************************************************
+      if(word.eq.'pxyz')go to 170
+      if(word.eq.'pijk')go to 180
+  170 continue
+      call pxyz(a(n1),a(n2),a(n3),a(n4),imax,jmax,1)
+      go to 10
+  180 continue
+      call pxyz(a(n1),a(n2),a(n3),a(n4),imax,jmax,0)
+      go to 10
+      subroutine pxyz(xn,yn,zn,dis,ni,nj,iflag)
+c     dimension xn(ni,nj,1),yn(ni,nj,1),zn(ni,nj,1)
+c     dimension xh(3),yh(3),zh(3)
+c     dimension dis(1)
+c     common/dcom1/numel,imax,jmax,kmax,nmax,ntwo,nfam
+c     common/size/nsize,n0,n4,n5
+c     common/info/ifoe(64),neq,npack,nstress
+c     common/flist/fdata(256),nflag(256),nword
+c     common/clist/cdata(256)
+c     character*8 cdata,word,com
+c     common/pplt/x(512),y(512),xd(512),yd(512)
+c     common/pcom/iprint,itype
+c     common/uset/nl(5),l(8,5)
+c     common/timcom/time(7)
+c     data nlast/-1/
+c     data maxsiz/1600000b/
+c     call geth
+c     nstep=fdata(2)
+c     n3=3
+c     if(itype.eq.1)n3=2
+c     nl(1)=38
+c     nl(3)=36
+c     encode(36,2100,l(1,3))(ifoe(i),i=1,6)
+c     if(iflag.ne.0)go to 10
+c     i=fdata(3)
+c     j=fdata(4)
+c     k=fdata(5)
+c     fdata(3)=xn(i,j,k)
+c     fdata(4)=yn(i,j,k)
+c     fdata(5)=zn(i,j,k)
+c     i=fdata(6)
+c     j=fdata(7)
+c     k=fdata(8)
+c     fdata(6)=xn(i,j,k)
+c     fdata(7)=yn(i,j,k)
+c     fdata(8)=zn(i,j,k)
+c     i=fdata(9)
+c     j=fdata(10)
+c     k=fdata(11)
+c     fdata(9)=xn(i,j,k)
+c     fdata(10)=yn(i,j,k)
+c     fdata(11)=zn(i,j,k)
+c  10 continue
+c     call add(fdata(6),fdata(3),xh,-1.)
+c     call add(fdata(9),fdata(3),yh,-1.)
+c     call cross(xh,yh,zh,d,n)
+c     call cross(zh,xh,yh,d,n)
+c     call cross(yh,zh,xh,d,n)
+c     write(59,2000)xh
+c     write(59,2000)yh
+c     write(59,2000)zh
+c     write(6,2000)xh
+c     write(6,2000)yh
+c     write(6,2000)zh
+c     if(nlast.eq.nstep)go to 40
+c     nlast=nstep
+c     n5=n4+neq
+c     write(59,1020)n4
+c     if(n5.le.nsize)go to 20
+c     nreq=n5-nsize
+c     nsize=nsize+nreq
+c     call memadj(nreq,ierror)
+c     if(ierror.eq.0)go to 20
+c     write(59,1030)ierror
+c     return
+c  20 continue
+c     call disdy(xn,yn,zn,dis,ni,nj)
+c     call pos(dis,nstep)
+c     if(itype.eq.1)go to 40
+c     do 35 k=1,kmax
+c     do 30 j=1,jmax
+c     do 25 i=1,imax
+c     nn=3*(nijk(i,j,k)-1)+1
+c     dis(nn)=dis(nn)-xn(i,j,k)
+c     dis(nn+1)=dis(nn+1)-yn(i,j,k)
+c     dis(nn+2)=dis(nn+2)-zn(i,j,k)
+c  25 continue
+c  30 continue
+c  35 continue
+c  40 continue
+c     call ffin
+c     if(cdata(1).eq.'end')go to 900
+c     i1=fdata(1)
+c     j1=fdata(2)
+c     k1=fdata(3)
+c     i2=fdata(4)
+c     j2=fdata(5)
+c     k2=fdata(6)
+c     write(59,2010)i1,i2,j1,j2,k1,k2
+c     write(6,2010)i1,i2,j1,j2,k1,k2
+c     encode(38,2110,l(1,1))i1,i2,j1,j2,k1,k2,time(1)
+c     if(i1.ne.i2)go to 90
+c     i=i1
+c     do 60 k=k1,k2
+c     n=0
+c     do 50 j=j1,j2
+c     n=n+1
+c     x(n)=xn(i,j,k)*xh(1)+yn(i,j,k)*xh(2)+zn(i,j,k)*xh(3)
+c     y(n)=xn(i,j,k)*yh(1)+yn(i,j,k)*yh(2)+zn(i,j,k)*yh(3)
+c     nn=3*(nijk(i,j,k)-1)+1
+c     xd(n)=dis(nn)*xh(1)+dis(nn+1)*xh(2)+dis(nn+2)*xh(3)
+c     yd(n)=dis(nn)*yh(1)+dis(nn+1)*yh(2)+dis(nn+2)*yh(3)
+c     if(iprint.gt.0)write(6,2020)i,j,k,x(n),y(n),xd(n),yd(n)
+c  50 continue
+c     call plot(x,y,xd,yd,n,n,1,n3,.false.)
+c  60 continue
+c     do 80 j=j1,j2
+c     n=0
+c     do 70 k=k1,k2
+c     n=n+1
+c     x(n)=xn(i,j,k)*xh(1)+yn(i,j,k)*xh(2)+zn(i,j,k)*xh(3)
+c     y(n)=xn(i,j,k)*yh(1)+yn(i,j,k)*yh(2)+zn(i,j,k)*yh(3)
+c     nn=3*(nijk(i,j,k)-1)+1
+c     xd(n)=dis(nn)*xh(1)+dis(nn+1)*xh(2)+dis(nn+2)*xh(3)
+c     yd(n)=dis(nn)*yh(1)+dis(nn+1)*yh(2)+dis(nn+2)*yh(3)
+c     if(iprint.gt.0)write(6,2020)i,j,k,x(n),y(n),xd(n),yd(n)
+c  70 continue
+c     call plot(x,y,xd,yd,n,n,1,n3,.false.)
+c  80 continue
+c     go to 40
+c  90 if(j1.ne.j2)go to 140
+c     j=j1
+c     do 110 k=k1,k2
+c     n=0
+c     do 100 i=i1,i2
+c     n=n+1
+c     x(n)=xn(i,j,k)*xh(1)+yn(i,j,k)*xh(2)+zn(i,j,k)*xh(3)
+c     y(n)=xn(i,j,k)*yh(1)+yn(i,j,k)*yh(2)+zn(i,j,k)*yh(3)
+c     nn=3*(nijk(i,j,k)-1)+1
+c     xd(n)=dis(nn)*xh(1)+dis(nn+1)*xh(2)+dis(nn+2)*xh(3)
+c     yd(n)=dis(nn)*yh(1)+dis(nn+1)*yh(2)+dis(nn+2)*yh(3)
+c     if(iprint.gt.0)write(6,2020)i,j,k,x(n),y(n),xd(n),yd(n)
+c 100 continue
+c     call plot(x,y,xd,yd,n,n,1,n3,.false.)
+c 110 continue
+c     do 130 i=i1,i2
+c     n=0
+c     do 120 k=k1,k2
+c     n=n+1
+c     x(n)=xn(i,j,k)*xh(1)+yn(i,j,k)*xh(2)+zn(i,j,k)*xh(3)
+c     y(n)=xn(i,j,k)*yh(1)+yn(i,j,k)*yh(2)+zn(i,j,k)*yh(3)
+c     nn=3*(nijk(i,j,k)-1)+1
+c     xd(n)=dis(nn)*xh(1)+dis(nn+1)*xh(2)+dis(nn+2)*xh(3)
+c     yd(n)=dis(nn)*yh(1)+dis(nn+1)*yh(2)+dis(nn+2)*yh(3)
+c     if(iprint.gt.0)write(6,2020)i,j,k,x(n),y(n),xd(n),yd(n)
+c 120 continue
+c     call plot(x,y,xd,yd,n,n,1,n3,.false.)
+c 130 continue
+c     go to 40
+c 140 if(k1.ne.k2)go to 890
+c     k=k1
+c     do 160 j=j1,j2
+c     n=0
+c     do 150 i=i1,i2
+c     n=n+1
+c     x(n)=xn(i,j,k)*xh(1)+yn(i,j,k)*xh(2)+zn(i,j,k)*xh(3)
+c     y(n)=xn(i,j,k)*yh(1)+yn(i,j,k)*yh(2)+zn(i,j,k)*yh(3)
+c     nn=3*(nijk(i,j,k)-1)+1
+c     xd(n)=dis(nn)*xh(1)+dis(nn+1)*xh(2)+dis(nn+2)*xh(3)
+c     yd(n)=dis(nn)*yh(1)+dis(nn+1)*yh(2)+dis(nn+2)*yh(3)
+c     if(iprint.gt.0)write(6,2020)i,j,k,x(n),y(n),xd(n),yd(n)
+c 150 continue
+c     call plot(x,y,xd,yd,n,n,1,n3,.false.)
+c 160 continue
+c     do 180 i=i1,i2
+c     n=0
+c     do 170 j=j1,j2
+c     n=n+1
+c     x(n)=xn(i,j,k)*xh(1)+yn(i,j,k)*xh(2)+zn(i,j,k)*xh(3)
+c     y(n)=xn(i,j,k)*yh(1)+yn(i,j,k)*yh(2)+zn(i,j,k)*yh(3)
+c     nn=3*(nijk(i,j,k)-1)+1
+c     xd(n)=dis(nn)*xh(1)+dis(nn+1)*xh(2)+dis(nn+2)*xh(3)
+c     yd(n)=dis(nn)*yh(1)+dis(nn+1)*yh(2)+dis(nn+2)*yh(3)
+c     if(iprint.gt.0)write(6,2020)i,j,k,x(n),y(n),xd(n),yd(n)
+c 170 continue
+c     call plot(x,y,xd,yd,n,n,1,n3,.false.)
+c 180 continue
+c     go to 40
+c 890 continue
+c     write(59,1050)
+c 900 continue
+c     nl(1)=0
+c     nl(3)=0
+c     call done
+      return
+1020  format(5x,'memory required = ',i8)
+1030  format(5x,'error in memory adjust error = ',i8)
+1040  format(5x,'step = ',i8,1x,'time = ',1pe12.4)
+ 1050 format(5x,'error bad ijk limits')
+ 2000 format(1p3e12.4)
+ 2010 format(6i5)
+ 2020 format(3i5,1p4e12.4)
+ 2100 format(6a6)
+ 2110 format(6i4,2x,1pe12.4)
+      end
+      subroutine disdy(xn,yn,zn,dis,ni,nj)
+      dimension xn(ni,nj,1),yn(ni,nj,1),zn(ni,nj,1)
+      dimension dis(1)
+      common/dcom1/numel,imax,jmax,kmax,nmax,ntwo,nfam
+      common/info/ifoe(64),neq,npack,nstress
+      call recs(12,dis,neq,64)
+      do 35 k=1,kmax
+      do 30 j=1,jmax
+      do 25 i=1,imax
+      nn=3*(nijk(i,j,k)-1)+1
+      xn(i,j,k)=dis(nn)
+      yn(i,j,k)=dis(nn+1)
+      zn(i,j,k)=dis(nn+2)
+   25 continue
+   30 continue
+   35 continue
+      return
+      end
+      subroutine pos(dis,nstep)
+c     common/info/ifoe(64),neq,npack,nstress
+c     common/pcom/iprint,itype
+c     common/timcom/time(7)
+c     common/pos2/npos
+c     dimension dis(1)
+c     data maxsiz/1600000b/
+c     icount=7+2*neq+nstress
+c     npos=64+neq+npack+(nstep-1)*icount
+c     if(npos+icount.le.maxsiz)go to 30
+c     nf=(maxsiz-64-neq-npack)/icount
+c     nb=maxsiz/icount
+c     nl=nstep-nf
+c     nc=(nl-1)/nb
+c     npos=maxsiz+nc*maxsiz+(nl-1-nc*nb)*icount
+c  30 continue
+c     call recs(12,time,7,npos)
+c     write(59,1040)nstep,time(1),itype
+c     write(6,1040)nstep,time(1),itype
+c     nad=npos+7
+c     if(itype.eq.1)nad=nad+neq
+c     call recs(12,dis,neq,nad)
+      return
+1040  format(5x,'step = ',i8,1x,'time = ',1pe12.4,
+     .  ' itype = ',i5)
+      end
+      subroutine geth
+      common/info/ifoe(64),neq,npack,nstress
+      common/comh/head(10),nh
+      dimension temp(60)
+      equivalence (numnp,ifoe(17)),(numel,ifoe(24))
+      call recs(12,ifoe,64,0)
+      write(59,1000)(ifoe(i),i=1,10)
+      write(59,1010)numnp,numel
+      write(6,1000)(ifoe(i),i=1,10)
+      write(6,1010)numnp,numel
+      neq=3*numnp
+      npack=3*numel
+      nstress=7*numel
+      encode(60,1030,head)(ifoe(i),i=1,10)
+      decode(60,1040,head)temp
+      nh=60
+      do 10 i=1,60
+      if(temp(nh).ne.1h )return
+      nh=nh-1
+   10 continue
+      return
+1000  format(5x,'heading found is ...',/,3x,12a6)
+1010  format(5x,'number of nodes =',i8,
+     . 1x,'number of elements = ',i8)
+ 1030 format(10a6)
+ 1040 format(60a1)
+      end
+**********************************************************************
+      if(word.eq.'state')go to 160
+  160 continue
+      call ploter
+      go to 10
+      subroutine ploter
+      common/flist/fdata(256),nflag(256),nword
+      common/clist/cdata(256)
+      character*8 cdata
+      common/size/nsize,n0,n4,n5
+      common/info/ifoe(64),neq,npack,nstress
+      common/pplt/xyz(1024),xyzd(1024)
+      dimension ixc(9)
+      dimension xy(24),xyd(24),ip(16)
+      common a(10)
+      dimension ia(2)
+      equivalence (ia(1),a(1))
+      equivalence (numnp,ifoe(17)),(numel,ifoe(24))
+      data ip/1,2,3,4,1,5,6,7,8,5,6,2,3,7,8,4/
+      nstep=fdata(2)
+      call geth
+      n1=1
+      n2=n1+neq
+      n3=n2+npack
+      n4=n3+neq
+      write(59,1020)n4
+      if(n4.le.nsize)go to 20
+      nreq=n4-nsize
+      nsize=nsize+nreq
+      call memadj(nsize,ierror)
+      if(ierror.eq.0)go to 20
+      write(59,1030)ierror
+      return
+20    continue
+      call recs(12,a(n1),neq,64)
+      call recs(12,a(n2),npack,64+neq)
+30    continue
+      call pos(a(n3),nstep)
+      ns=n2
+      ne=0
+      ng=(numel-1)/20+1
+      do 70 k2=1,ng
+      np=0
+      do 50 k1=1,20
+      ne=ne+1
+      if(ne.gt.numel)go to 60
+      call unpack2(ixc,ia(ns))
+      ns=ns+3
+      nc=0
+      do 40 i=2,9
+      xy(nc+1)=a(n1+3*(ixc(i)-1))
+      xy(nc+2)=a(n1+3*(ixc(i)-1)+1)
+      xy(nc+3)=a(n1+3*(ixc(i)-1)+2)
+      xyd(nc+1)=a(n3+3*(ixc(i)-1))-a(n1+3*(ixc(i)-1))
+      xyd(nc+2)=a(n3+3*(ixc(i)-1)+1)-a(n1+3*(ixc(i)-1)+1)
+      xyd(nc+3)=a(n3+3*(ixc(i)-1)+2)-a(n1+3*(ixc(i)-1)+2)
+      nc=nc+3
+40    continue
+      do 45 i=1,16
+      xyz(np+1)=xy(3*(ip(i)-1)+1)
+      xyz(np+2)=xy(3*(ip(i)-1)+2)
+      xyz(np+3)=xy(3*(ip(i)-1)+3)
+      xyzd(np+1)=xyd(3*(ip(i)-1)+1)
+      xyzd(np+2)=xyd(3*(ip(i)-1)+2)
+      xyzd(np+3)=xyd(3*(ip(i)-1)+3)
+      np=np+3
+   45 continue
+50    continue
+60    continue
+c      call plot(xyz,xyzd,xyz,xyzd,np/3,16,1,5,.false.)
+70    continue
+c      call done
+      return
+1020  format(5x,'memory required = ',i8)
+1030  format(5x,'error in memory adjust error = ',i8)
+1040  format(5x,'step = ',i8,1x,'time = ',1pe12.4)
+      end
+      subroutine unpack2(ixc,ixp)
+      dimension ixc(1),ixp(1)
+c
+c     kka=ixp(1)
+c     ixc(1)=and(kka,177777b)
+c     kka=shiftr(kka,16)
+c     ixc(2)=and(kka,177777b)
+c     kka=shiftr(kka,16)
+c     ixc(3)=and(kka,177777b)
+c     kka=ixp(2)
+c     ixc(4)=and(kka,177777b)
+c     kka=shiftr(kka,16)
+c     ixc(5)=and(kka,177777b)
+c     kka=shiftr(kka,16)
+c     ixc(6)=and(kka,177777b)
+c     kka=ixp(3)
+c     ixc(7)=and(kka,177777b)
+c     kka=shiftr(kka,16)
+c     ixc(8)=and(kka,177777b)
+c     kka=shiftr(kka,16)
+c     ixc(9)=and(kka,177777b)
+      return
+c
+      end
+
+**********************************************************************
+      if(word.eq.'nodes')go to 60
+      if(word.eq.'grid')go to 65
+   60 continue
+      iflag=2
+      call wdata(a(n1),a(n2),a(n3),a(n4),imax,jmax,iflag)
+      go to 10
+   65 continue
+      iflag=1
+      call wdata(a(n1),a(n2),a(n3),a(n4),imax,jmax,iflag)
+      go to 10
+*deck wdata
+      subroutine wdata(ux,uy,uz,dis,in,jn,iflag)
+      dimension ux(in,jn,1),uy(in,jn,1),uz(in,jn,1),dis(1)
+      dimension ii(3),jj(3),kk(3),u(9)
+      common/dcom1/numel,imax,jmax,kmax,nmax,ntwo,nfam
+      common/pcom/iprint,itype
+      common/dumcom/dumval
+      common/flist/fdata(256),nflag(256),nword
+      common/clist/cdata(256)
+      character*8 cdata
+      common/comh/head(10),nh
+      if(cdata(3).eq.'all')go to 5
+      im=fdata(3)
+      jm=fdata(4)
+      kn=fdata(5)
+      ix=fdata(6)
+      jx=fdata(7)
+      kx=fdata(8)
+      go to 10
+    5 continue
+      im=1
+      jm=1
+      kn=1
+      ix=imax
+      jx=jmax
+      kx=kmax
+   10 if(iflag.eq.2)go to 20
+      if(itype.eq.1)iflag=3
+      call geth
+      nstep=fdata(2)
+      call wshift(ux,uy,uz,dis,in,jn,nstep,iflag)
+   20 continue
+      nl=60
+      np=0
+      do 60 i=im,ix
+      do 50 j=jm,jx
+      do 40 k=kn,kx
+      if(ux(i,j,k).eq.dumval)go to 40
+      u(3*np+1)=ux(i,j,k)
+      u(3*np+2)=uy(i,j,k)
+      u(3*np+3)=uz(i,j,k)
+      if(iflag.eq.2)go to 25
+      nn=3*(nijk(i,j,k)-1)+1
+      u(3*np+1)=dis(nn)
+      u(3*np+2)=dis(nn+1)
+      u(3*np+3)=dis(nn+2)
+   25 continue
+      np=np+1
+      ii(np)=i
+      jj(np)=j
+      kk(np)=k
+      if(np.lt.3)go to 40
+      np=0
+      nl=nl+1
+      if(nl.le.58)go to 30
+      if(iflag.eq.1)write(6,1000)head
+      if(iflag.eq.2)write(6,1020)head
+      if(iflag.eq.3)write(6,1030)head
+      nl=1
+   30 continue
+      write(6,1010)(ii(n),jj(n),kk(n),u(3*n-2),u(3*n-1),u(3*n),n=1,3)
+   40 continue
+   50 continue
+   60 continue
+      if(np.eq.0)return
+      write(6,1010)(ii(n),jj(n),kk(n),u(3*n-2),u(3*n-1),u(3*n),n=1,np)
+      return
+ 1000 format('1nodal point displacements',5x,10a8,/,3('  i  j  k',4x,
+     .       'u',10x,'v',10x,'w',6x)/)
+ 1010 format(3(3i3,1p3e11.3))
+ 1020 format('1nodal point coordinates',5x,10a8,/,
+     .       3('  i  j  k',4x,'x',10x,'y',10x,'z',6x)/)
+ 1030 format('1nodal point velocities',5x,10a8,/,3('  i  j  k',4x,
+     .       'u',10x,'v',10x,'w',6x)/)
+      end
+      subroutine wshift(xn,yn,zn,dis,ni,nj,nstep,iflag)
+      common/dcom1/numel,imax,jmax,kmax,nmax,ntwo,nfam
+      common/info/ifoe(64),neq,npack,nstress
+      common/size/nsize,n0,n4,n5
+      dimension xn(ni,nj,1),yn(ni,nj,1),zn(ni,nj,1),dis(1)
+      n5=n4+neq
+      write(59,1020)n4
+      if(n5.le.nsize)go to 20
+      nreq=n5-nsize
+      nsize=nsize+nreq
+      call memadj(nreq,ierror)
+      if(ierror.eq.0)go to 20
+      write(59,1030)ierror
+      return
+   20 continue
+      call disdy(xn,yn,zn,dis,ni,nj)
+      call pos(dis,nstep)
+      if(iflag.eq.3)return
+      do 35 k=1,kmax
+      do 30 j=1,jmax
+      do 25 i=1,imax
+      nn=3*(nijk(i,j,k)-1)+1
+      dis(nn)=dis(nn)-xn(i,j,k)
+      dis(nn+1)=dis(nn+1)-yn(i,j,k)
+      dis(nn+2)=dis(nn+2)-zn(i,j,k)
+   25 continue
+   30 continue
+   35 continue
+      return
+1020  format(5x,'memory required = ',i8)
+1030  format(5x,'error in memory adjust error = ',i8)
+      end
+**********************************************************************

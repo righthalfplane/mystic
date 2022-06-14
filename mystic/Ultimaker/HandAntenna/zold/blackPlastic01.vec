@@ -1,0 +1,11 @@
+r=7.5
+rm=r/1000
+pi=4.0*atan(1.0)
+u=4e-7*pi
+a=pi*rm*rm
+l=49
+n=23
+LL=u*n^2*a/l
+LL
+end
+

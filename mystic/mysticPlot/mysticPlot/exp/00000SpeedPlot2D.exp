@@ -1,0 +1,7 @@
+{
+    lineplotset(s, 0.15,3.2,0.0 ,0.15,0.0,0.0, 0);
+    dx=s:cell_velocity(0);
+    dy=s:cell_velocity(1);
+    out=sqrt(dx*dx+dy*dy);
+    lineplotout(out,s);
+}

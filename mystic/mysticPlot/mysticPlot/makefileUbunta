@@ -1,0 +1,67 @@
+#CC = gcc
+
+CC = cc
+
+SHELL = /bin/sh
+
+#CFLAGS = -O3 -DPC -DMAC_RESOURCES -I/usr/X11R6/include  -Wall 
+CFLAGS = -O2 -DPC -DSUN -I/opt/X11/include  -Wall 
+
+CFILES= Xappl1.c Xappl2.c Control.c  xUtility.c uDraw.c uDrawObjects.c uDrawcPopUp.c\
+	ScrollList.c fileDialog.c Scanfile.c xText.c xStrings.c uFilesBatch3d.c uGridPlot.c \
+	xMenu.c GWorldX.c LoadJPG.c uFilesBatch2d.c TextFileConvert.c doGetPalette.c uTrue.c\
+	Warning.c Sagevol.c Sagetrace.c uFilesBatchSds3d.c doGetPalette.c SetPalMenu.c\
+	StatusWindow.c doSaveImages.c FileManager.c Raster2D.c Universal.c doDataDump.c\
+	Ploti.c BatchExpression.c uMABX.c doListen.c CommonUtlib.c Spread.c Object3d2.c\
+	RenderScene.c renderUtilities.c uFilesBatchSds2d.c macUtilities.c Table.c Streamline.c\
+	Do24to8.c System.c openTek.c doSetImageInfo.c File8.c SaveAllImages.c uFilesBatch24.c\
+	Object3d.c Keyframes.c Vrml.c  cMalloc.c BatchFile.c Tools.c BatchDraw.c Volumetric.c \
+	EditList.c Find.c Change.c NewEdit.c CExpress.c initPIO.c SagePIO2D.c SagePIO3D.c\
+	uLibX.c uDialogX.c uFiles.c uFilesBatch1d.c doSavePlots.c Render.c Teos2sds.c Image.c\
+	uNetWork.c NetX.c fileSend.c SendFileList.c Net2X.c Raster2D2.c uFilesUtilities.c\
+	uGroup.c uAlpha.c uEditText.c uDrawlPopUp.c uDrawsPopUp.c uDrawswPopUp.c uLine.c\
+	uDrawspPopUp.c uBox.c uOval.c uRoundRect.c uTek.c RenderTrace.c Bound.c Intersect.c\
+	Poly.c Pqueue.c Shade.c Sphere.c TriNC.c TriNCV.c TriN.c RenderFlightAnimation.c \
+	triangle.c savescreen.c imagestuff.c DoTracingExport.c Streamlines3d.c \
+	Vrml1.c Vrml2.c DoubleRecurse.c KdTree.c KdTreeTrace.c TriC1N1.c TriN2.c FFT.c \
+	uFilesBatch2d01.c Blocks.c uFilesBatch3d01.c doSage3DGet.c getPalette.c\
+	Blks.c initPIOBlocked.c uFilesBatch3dBlk.c uFilesBatch3dBlk01.c SageTraceBangMeter.c
+
+
+COBJS=  Xappl1.o Xappl2.o Control.o  xUtility.o uDraw.o uDrawObjects.o uDrawcPopUp.o\
+	ScrollList.o fileDialog.o Scanfile.o xText.o xStrings.o uFilesBatch3d.o uGridPlot.o \
+	xMenu.o GWorldX.o LoadJPG.o uFilesBatch2d.o TextFileConvert.o doGetPalette.o\
+	Warning.o Sagevol.o Sagetrace.o uFilesBatchSds3d.o uFilesBatch24.o SetPalMenu.o\
+	StatusWindow.o doSaveImages.o FileManager.o Raster2D.o Universal.o doDataDump.o\
+	Ploti.o BatchExpression.o uMABX.o doListen.o CommonUtlib.o Spread.o Object3d2.o\
+	RenderScene.o renderUtilities.o uFilesBatchSds2d.o macUtilities.o Table.o Streamline.o\
+	Do24to8.o System.o openTek.o doSetImageInfo.o File8.o SaveAllImages.o Volumetric.o \
+	Object3d.o Keyframes.o Vrml.o  cMalloc.o BatchFile.o  Tools.o BatchDraw.o Teos2sds.o \
+	EditList.o Find.o Change.o NewEdit.o CExpress.o initPIO.o SagePIO2D.o SagePIO3D.o\
+	uLibX.o uDialogX.o uFiles.o uFilesBatch1d.o doSavePlots.o Render.o Image.o uTrue.o\
+	uNetWork.o NetX.o fileSend.o SendFileList.o Net2X.o Raster2D2.o uFilesUtilities.o\
+	uGroup.o uAlpha.o uEditText.o uDrawlPopUp.o uDrawsPopUp.o uDrawswPopUp.o uLine.o\
+	uDrawspPopUp.o uBox.o uOval.o uRoundRect.o uTek.o RenderTrace.o Bound.o Intersect.o\
+	Poly.o Pqueue.o Shade.o Sphere.o TriNC.o TriNCV.o TriN.o RenderFlightAnimation.o \
+	triangle.o savescreen.o imagestuff.o DoTracingExport.o Streamlines3d.o \
+	Vrml1.o Vrml2.o DoubleRecurse.o KdTree.o KdTreeTrace.o TriC1N1.o TriN2.o FFT.o \
+	uFilesBatch2d01.o Blocks.o uFilesBatch3d01.o doSage3DGet.o \
+	Blks.o initPIOBlocked.o uFilesBatch3dBlk.o uFilesBatch3dBlk01.o getPalette.o\
+	uFilesBatch2dBlk.o uFilesBatch2dBlk01.o SageTraceBangMeter.o
+	
+
+
+CFILES2= hdfsend.c
+
+COBJS2=hdfsend.o LoadJPG.o cMalloc.o
+
+COBJS3=hdfget.c getPalette.o uFilesUtilities.c cMalloc.o LoadJPG.o
+
+
+xappl:  ${COBJS}
+	${CC} ${CFLAGS} -o mysticPlot.x ${COBJS} -lm  -L/opt/X11/lib -lX11 -lpthread -ldf -ljpeg -lz
+
+hdfsend:  ${COBJS2} ${COBJS3}
+	${CC} ${CFLAGS} -o hdfsend ${COBJS2}  -ljpeg -ldf -lz -lpthread
+	${CC} ${CFLAGS} -o hdfget ${COBJS3}   -ljpeg -ldf -lz  -lpthread
+

@@ -1,0 +1,10 @@
+{
+	x=xfill(w,0,10);
+        y=yfill(w,0,10);
+        z=zfill(w,0,10);
+
+	print("max-x %g\n",max(x));
+	print("max-y %g\n",max(y));
+	print("max-z %g\n",max(z));
+
+}

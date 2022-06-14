@@ -1,0 +1,39 @@
+clear
+filelist open s "/Users/dir/Desktop/2dPbP1-dmps-for-Dale"
+sm2dPbP1-dmp000000
+end
+
+expression
+{
+
+    /* bhangmeterset(s, 0,0,0 ,1e5,1e4,0); */
+    
+    bhangmeterset(s, 0,0,0 ,0,11.0e4,0);
+    
+    bhm=s;
+    
+    xd=getoption(bhm,"xdata");
+    
+    framecount=getoption(bhm,"xsize");
+         
+     print("framecount %.0f ",framecount);
+     print("min %g ",min(bhm));
+     print("max %g\n",max(bhm));
+          
+        
+     
+     for(n=0;n<framecount;++n){
+        print("%14.6e ",pick(xd,n));
+        print("%14.6e\n",pick(bhm,n));
+     }
+     
+         
+         
+}
+step 0 0
+end
+
+filelist close s
+
+exit
+

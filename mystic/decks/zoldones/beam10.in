@@ -1,0 +1,29 @@
+beam compression
+setup,1,85,11
+1,1, 85,11, 1,1,1,1,
+0,85, 85,0
+0.,0.,  10.,10.
+end,grid
+w
+poff stre 
+pon plot dof node equl
+poff elem  comp
+exit
+nodes
+3,  1,1, 1,11
+end
+mat,1
+0 2 1 1 1 1. 8.00e10 .2 0. 2.0
+end
+elements
+quad,1,  1,1
+84,10
+end
+w
+mode 6 0 0 6
+end
+end
+end
+stop
+exit
+stop

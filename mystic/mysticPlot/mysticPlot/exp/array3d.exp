@@ -1,0 +1,39 @@
+{
+    pi=4.0*atan(1.0);
+    frequency = 28e6;
+    w=2*pi*frequency;
+    speed     = 3e8;
+    wavelength = speed/frequency;
+
+    fac = 2;
+    wscale=2*pi/wavelength;
+    d= wavelength/fac;
+
+    d=0.05*wavelength+frame*0.05*wavelength
+
+    print("wavelength %g",wavelength);
+    print(" d %g ",d);
+    print(" fac %g\n",d/wavelength);
+
+    n=100;
+    out=size3(n+1,n+1,n+1);
+
+    x=xfill(out,-5*wavelength,5*wavelength/(.5*n));
+    y=yfill(out,-5*wavelength,5*wavelength/(.5*n));
+    z=zfill(out,-5*wavelength,5*wavelength/(.5*n));
+    r1 =  sqrt((x-.5*d)*(x-.5*d)+((y-.5*d)*(y-.5*d))+z*z);
+    r2 =  sqrt((x+.5*d)*(x+.5*d)+((y-.5*d)*(y-.5*d))+z*z);
+    r3 =  sqrt((x+.5*d)*(x+.5*d)+((y+.5*d)*(y+.5*d))+z*z);
+    r4 =  sqrt((x-.5*d)*(x-.5*d)+((y+.5*d)*(y+.5*d))+z*z);
+
+    if(r1 > 1 && r2 > 1 && r3 > 1 && r4 > 1){
+        a =   cos(wscale*r1)/r1+cos(wscale*r2+pi/2)/r2+
+              cos(wscale*r3+pi)/r3+cos(wscale*r4+pi/2)/r4;
+        b = -(sin(wscale*r1+pi/2)/r1+sin(wscale*r2+pi/2)/r2+
+              sin(wscale*r3+pi)/r3+sin(wscale*r4+pi/2)/r4);
+        out = sqrt(a*a+b*b);
+    }else{
+       out=0;
+    }
+    writesds(out);
+}

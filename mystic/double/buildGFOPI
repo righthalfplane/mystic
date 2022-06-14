@@ -1,0 +1,13 @@
+rm *.o dstatgsG mysticdGD
+gfortran -D_FILE_OFFSET_BITS=64 -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -O1 -std=legacy -Wno-argument-mismatch -c  mysticd.f
+gfortran -D_FILE_OFFSET_BITS=64 -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -O1 -std=legacy -Wno-argument-mismatch -c  mystice1.f
+gfortran -D_FILE_OFFSET_BITS=64 -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -O1 -std=legacy -Wno-argument-mismatch -c  mystice2.f
+cc -D_FILE_OFFSET_BITS=64 -O1 -c ciolib.c
+cc -D_FILE_OFFSET_BITS=64 -O1 -c showlib.c
+cc -D_FILE_OFFSET_BITS=64 -O1 -c esplot.c
+gfortran -D_FILE_OFFSET_BITS=64 -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -o mysticdGD mysticd.o mystice1.o mystice2.o ciolib.o showlib.o esplot.o
+mv mysticdGD ~/utlib/
+gfortran  -D_FILE_OFFSET_BITS=64 -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8 -O1 -std=legacy -Wno-argument-mismatch -o dstatgsGD dstatgs.f
+mv dstatgsGD ~/utlib/
+rm *.o
+

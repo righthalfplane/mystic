@@ -1,0 +1,7 @@
+{
+    ff= frame-10;
+    print("ff %g ",ff);
+    print("fmod(ff,10) %g ",fmod(ff,10));
+    print("pow(ff,2) %g ",pow(ff,2));
+    print("atan2(ff,2) %g \n",atan2(ff,2));
+}

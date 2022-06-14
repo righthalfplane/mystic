@@ -1,0 +1,24 @@
+#!/bin/tcsh
+sudo apt-get install gfortran
+sudo apt-get install bison
+sudo apt-get install flex
+sudo apt-get install libhdf4-dev
+tar -zxvf zlib-1.2.1.tar.gz
+cd zlib-1.2.1
+configure --prefix=/usr/local
+make -j 8
+sudo make install
+cd ..
+tar -zxvf jpegsrc.v6b.tar.gz
+cd jpeg-6b
+configure --prefix=/usr/local
+make -j 8
+sudo make install-lib
+cd ..
+tar -zxvf mysticPlot.tar.gz
+cd mysticPlot
+make -f makefileUbunta -j 8
+make -f makefileUbunta hdfsend
+cd ..
+
+

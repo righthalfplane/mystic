@@ -1,0 +1,6 @@
+{
+
+    window("out",sizeof(xvel));
+    out=sqrt(xvel*xvel+yvel*yvel);
+
+}

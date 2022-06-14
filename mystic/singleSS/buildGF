@@ -1,0 +1,9 @@
+rm *.o mysticG
+gfortran -std=legacy -fno-automatic -g -c  mystic.f
+gfortran -std=legacy -fno-automatic -g -c  mystice1.f
+gfortran -std=legacy -fno-automatic -g -c  mystice2.f
+gcc -g -c ciolib.c
+gfortran  -o mysticG mystic.o mystice1.o mystice2.o ciolib.o
+mv mysticG ~/utlib/
+rm *.o
+

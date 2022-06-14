@@ -1,0 +1,146 @@
+clear
+
+filelist open s "/Volumes/Western/Sage-Tests/ibar/ibar"
+
+ibar1-dmp000000 ibar1-dmp000009 ibar1-dmp000012 ibar1-dmp000014 ibar1-dmp000016 ibar1-dmp000018 ibar1-dmp000020 
+
+ibar1-dmp000022 ibar1-dmp000024 ibar1-dmp000026 ibar1-dmp000028 ibar1-dmp000030 ibar1-dmp000031 ibar1-dmp000033 
+
+ibar1-dmp000035 ibar1-dmp000037 ibar1-dmp000039 ibar1-dmp000041 ibar1-dmp000043 ibar1-dmp000045 ibar1-dmp000047 
+
+ibar1-dmp000048 ibar1-dmp000050 ibar1-dmp000052 ibar1-dmp000054 ibar1-dmp000056 ibar1-dmp000058 ibar1-dmp000060 
+
+ibar1-dmp000062 ibar1-dmp000064 ibar1-dmp000066 ibar1-dmp000068 ibar1-dmp000069 ibar1-dmp000071 ibar1-dmp000073 
+
+ibar1-dmp000075 ibar1-dmp000077 ibar1-dmp000079 ibar1-dmp000081 ibar1-dmp000083 ibar1-dmp000085 ibar1-dmp000086 
+
+ibar1-dmp000088 ibar1-dmp000090 ibar1-dmp000092 ibar1-dmp000094 ibar1-dmp000096 ibar1-dmp000098 ibar1-dmp000100 
+
+ibar1-dmp000102 ibar1-dmp000104 
+
+end
+
+
+
+filelist set s
+
+outputDirectory "/Users/dir/sage-tests/create02"
+
+outputName "create02density.s2d"
+
+outputType sds2d
+
+end
+
+
+
+sage2d s
+
+drawzones 0
+
+datatype density 0
+
+auto
+
+end
+
+
+
+filelist open d "/Users/dir/sage-tests/create02"
+
+create02density.s2d
+
+end
+
+
+
+filelist create both "/Users/dir/sage-tests/create02"
+
+
+
+filelist set both
+
+outputSize 200 340
+
+outputName "density002.s2d"
+
+outputType sds2d
+
+end
+
+
+
+filelist create diff "/Users/dir/sage-tests/create02"
+
+
+
+filelist set diff
+
+outputSize 100 340
+
+outputName "diff002.s2d"
+
+outputType sds2d
+
+end
+
+
+
+expression
+
+{
+
+    areaplotset(s,0,0,0, 1.0,3.4,0,100,340,1);
+
+    areaplotset(d,0,0,0, 1.0,3.4,0,100,340,1);
+
+    
+
+    if(s:density > 1.0){
+
+       /* sj2= sqrt(3.0*(s:sxx*s:sxx+s:syy*s:syy+s:sxx*s:syy+s:sxy*s:sxy)); */
+
+        outs=s:density;
+
+        outd=d:density;
+
+    }else{
+
+        outs= 0;
+
+        outd= 0;
+
+    }
+
+   maxf=max(fabs(outd));
+
+   diff=100*fabs(outs-outd)/maxf;
+
+   print("maximum percentage difference %g\n",max(diff));
+
+   both=insert(both,xflip(outd),0,0);
+
+   both=insert(both,outs,100,0);
+
+   plotsetrange(both,"density",s,-1,0,0,1,3.4,0);
+
+   plotsetlimits(diff,"diff",s);
+
+
+
+}
+
+step s
+
+end
+
+filelist close both save
+
+filelist close diff save
+
+filelist close s
+
+filelist close d
+
+exit
+

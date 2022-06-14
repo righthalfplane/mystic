@@ -1,0 +1,7 @@
+{
+
+    window("out",sizeof(xvel));
+    window("diff",sizeof(xvel));
+    out=sqrt(xvel*xvel+yvel*yvel);
+    diff=out-speed;
+}

@@ -1,0 +1,38 @@
+pressure element test (dmd6)
+setup,1,11,11
+1,1, 11,11, 1,1,1,1,
+0,20, 20,0
+0.,0.,  20.,20.
+end,grid
+w
+poff node dof elem equl 
+pon comp plot
+exit
+nodes
+2,  1,1, 11,1
+2,  1,11, 11,11
+2,  1,1,  11,11
+3,  1,1,  1,11
+end
+mat,1
+2 1 0  2.64  0. 2.5e11
+end
+elements
+pqdm,1,  1,1
+5,10
+pqdm,1,  6,1
+5,10
+end
+press,1,1
+3141.5926,  11,1,  11,10
+end
+w
+form
+exit
+load
+end
+w
+solv,stre,1,end 
+stop
+exit
+stop

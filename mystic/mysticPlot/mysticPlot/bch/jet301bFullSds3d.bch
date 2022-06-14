@@ -1,0 +1,50 @@
+clear
+
+filelist open fsds3d "/Users/dir/Graphics-Programs/vol/sagevol"
+jet301bdensity.sds3d
+end
+
+filelist set fsds3d
+outputDirectory "/Users/dir/sage-tests"
+outputName "JetImages1b"
+end
+
+sagevol fsds3d
+debug 1
+threads 0
+dmin 0.01
+dmax 1.5
+BackGround 1 1 1
+xResolution 1000
+yResolution 1000
+use sds3d
+! angle view
+Eye 56.1 65.2 55.0
+Lamp 56.1 155 55
+Up 0.0 1.0 0.0
+Target 0.0 0.0 0.0
+Degrees 1.5
+limits 0 1.0 0.01 0.7 0 1.1
+opacity
+.01 0.1 
+.8 .1 
+.81 0.003 
+.98 0.003 
+.99 0.0
+1.01 0.0
+1.02 0.003 
+1.5 0.003
+end
+reflect 1 0 1
+sagetrace all
+stop
+
+filelist close fsds3d
+exit
+
+reflect 1 0 1
+sagerotate 9 18
+
+sagetrace
+sagesweep 50
+opacity 6 .01 0.1 .98 0.1 .99 0.0 1.01 0.0 1.02 0.1 1.5 0.1

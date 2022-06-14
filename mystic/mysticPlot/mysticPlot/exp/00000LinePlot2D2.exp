@@ -1,0 +1,11 @@
+{
+    lineplotset(s, 0.15,3.2,0.0 ,0.15,0.0,0.0, 0);
+    window("out",sizeof(s));
+
+/*
+    dx=s:cell_velocity(0);
+    out=sqrt(dx*dx);
+*/
+    out=s:density;
+    lineplotout(out,s);
+}

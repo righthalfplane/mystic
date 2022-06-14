@@ -1,0 +1,9 @@
+rm *.o dstatgsG mysticdGD
+gfortran -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -O1 -std=legacy -c  mystic.f
+gfortran -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -O1 -std=legacy -c  mystice1.f
+gfortran -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -O1 -std=legacy -c  mystice2.f
+gcc -O1 -c ciolib.c
+gfortran -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -o mysticSS mystic.o mystice1.o mystice2.o ciolib.o
+mv mysticSS ~/utlib/
+rm *.o
+

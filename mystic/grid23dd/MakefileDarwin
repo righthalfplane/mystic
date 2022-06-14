@@ -1,0 +1,27 @@
+# Makefile for Grid23d
+CC	= cc
+FC	= gfortran
+CFLAGS	=   -O2
+FFLAGS  = -g -std=legacy  -fno-automatic -fdefault-real-8 -fdefault-integer-8  -fdefault-double-8
+                          
+COBJS	= main.o Eval.o Simple2.o ftoap.o print1.o Backgound.o\
+	  Simple1.o ExCalls.o Simple.tab.o Run.o
+FOBJS	=   grid23dd.o
+
+OBJS	= ${COBJS} ${FOBJS}
+
+
+grid23d : ${OBJS}
+	  ${FC} ${FFLAGS} -o grid23G ${OBJS} -lm
+
+main.o       : main.c
+Simple.tab.o : Simple.tab.c Simple.tab.h Simple.h tree.h
+Run.o	     : Run.c Simple.h Simpleop.h
+Eval.o       : Eval.c Simple.h Simple.tab.h Simpleop.h
+Simple1.o    : Simple1.c Simple.h Simple.tab.h Simpleop.h
+Simple2.o    : Simple2.c Simple.h Simple.tab.h
+ftoap.o	     : ftoap.c NewNames.h
+print1.o     : print1.c NewNames.h
+ExCalls.o    : ExCalls.c Simple.h
+Backgound.o  : Backgound.c
+grid23dd.o    : grid23dd.f

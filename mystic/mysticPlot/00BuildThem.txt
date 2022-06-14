@@ -1,0 +1,50 @@
+Dec 4, 2019
+********************************
+zlib-1.2.1.tar.gz
+
+tar -zxvf zlib-1.2.1.tar.gz
+cd zlib-1.2.1
+configure --prefix=/usr/local
+make -j 8
+
+
+Makefile make changes -
+prefix =/usr/local
+exec_prefix =${prefix}
+libdir =/usr/local/lib
+includedir =/usr/local/include
+
+
+
+sudo make install
+
+
+
+********************************
+jpegsrc.v6b.tar.gz
+
+tar -zxvf jpegsrc.v6b.tar.gz
+cd jpeg-6b
+configure --prefix=/usr/local
+make -j 8
+sudo make install-lib
+********************************
+
+
+setenv CFLAGS -Wno-implicit-function-declaration
+tar -zxvf hdf-4.2.15.tar.gz
+cd hdf-4.2.15
+configure --prefix=/usr/local --disable-fortran --with-jpeg=/usr/local --with-zlib=/usr/local
+make -j 8
+sudo make install
+*********************************
+
+
+
+xShow17.0e5MPI.tgz
+
+tar -zxvf xShow17.0e5MPI.tgz
+cd xShow17.0e5MPI
+make -j 8
+make hdfsend
+./xShow.x

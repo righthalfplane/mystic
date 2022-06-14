@@ -1,0 +1,108 @@
+clear
+
+filelist inputType stl
+
+filelist open ss "/Users/dir/Archive/mystic-152/Alphabet/"
+Dale01.stl
+end
+
+expression
+{
+
+
+	stlreset(0);
+	
+	stltransform(7,4,11, 0,0,0, 0.15,0.4,0.15);
+	stlmerge(ss,0,1,0.0,1);
+
+
+	stlsave("/Users/dir/Archive/mystic-152/Alphabet/Dale.stl","text");
+		
+}
+step 0 0
+end
+
+exit
+
+
+filelist open s "/Users/dir/Desktop/MPI/CanScan/output/"
+KenVillePlusOne01-0.stl
+end
+
+
+filelist set s
+outputDirectory "/Users/dir/Desktop/MPI/FireBall/output"
+outputType jpg
+outputSequenceName kenvillePlusOne02
+outputSequenceNumber 0
+end
+
+stl s
+PrintLevel 0
+ThreadCount 16
+backdropPlane z 0
+
+
+load 0
+up 0 0 1
+
+fireballRadius 5180
+fireballPower 11.3e12
+fireballCalculatePower no
+fireballLocation 0 0 0
+fireballCalculateType SphereViewFactor
+fireballThetaDivisions 40
+fireballPhiDivisions 20
+
+axisShow yes
+axisFollowTarget no
+axisLocation 0 -31080 1e-5
+
+sceneReset
+
+fireballThetaDivisions 200
+fireballPhiDivisions 100
+
+end saveScene scene
+
+expression
+{
+	xc=0;
+	yc=0;
+	zc=1e-5;
+		
+	  r=6*5180;
+	          
+	  pi=4*atan(1.0);
+	  
+	  theta1=270;
+	  theta2=281;
+	  
+	  dtorad=pi/180;
+	  
+      ns=101;
+      
+      dt=(theta2-theta1)/(ns-1);
+      
+     
+      for(n=0;n<ns;++n){
+        theta=theta1+n*dt;
+      	x=xc+r*cos(theta*dtorad);
+      	y=yc+r*sin(theta*dtorad);
+       	z=zc;
+		nx= -x/r;
+		ny= -y/r;
+		nz= -z/r;
+		print("a  %g ",0.5*11.3e12/(4*pi*r*r));
+		print(" %g ",0.25*11.3e12/(4*pi*r*r));
+     	pointflux(scene, x,y,z,nx,ny,nz);
+       	command="axisLocation "+ sprint(" %g ",x) +sprint(" %g ",y) +sprint(" %g ",z)+ "    ";
+        sceneCommand(scene,s,command);
+      }
+      
+}
+step 0 0
+end
+
+exit
+

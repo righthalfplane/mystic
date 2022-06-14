@@ -1,0 +1,22 @@
+{
+
+    wavelength = 10;
+    d=2.5;
+    n=400;
+    window("out",size(n+1,n+1));
+    two=sizeof(out);
+    out=2.0;
+
+
+    x=xfill(out,-5*wavelength,5*wavelength/(.5*n));
+    y=yfill(out,-5*wavelength,5*wavelength/(.5*n));
+    r1 =  sqrt((x-.5*d)*(x-.5*d)+(y*y));
+    r2 =  sqrt((x+.5*d)*(x+.5*d)+(y*y));
+    if((r1 > .5) && (r2 > .5)){
+	two=sqrt(2.0)*sqrt(out);
+    }
+
+    m=max(two);
+    print(" two %g\n",m);
+
+}

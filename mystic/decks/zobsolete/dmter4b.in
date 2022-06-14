@@ -1,0 +1,31 @@
+beam compression (dmter4) 
+setup,1,41,41
+1,1, 41,41, 1,1,1,1,
+0,20, 20,0
+0.,0.,  20.,20.
+end,grid
+w
+poff node dof elem equl
+pon comp
+pnt,5,1,1
+11,121,11
+end
+exit
+nodes
+1,  1,1,  1,41
+3,  1,21,  1,21
+end
+mat,1
+2 2 1 1 1 1. 8.00e10 .2 0. 2.0
+end
+elements
+quad,1,  1,1
+20,40
+quad,1,  21,1
+20,40
+end
+w
+mode 5 0 0 5
+stop
+exit
+stop

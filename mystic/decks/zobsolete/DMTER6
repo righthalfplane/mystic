@@ -1,0 +1,68 @@
+# startrun
+cat <<EOF >&! input
+BEAM COMPRESSION (DMTER6) 
+SETUP,1,11,11
+1,1, 11,11, 1,1,1,1,
+0,20, 20,0
+0.,0.,  20.,20.
+END,GRID
+W
+POFF NODE DOF ELEM EQUL
+PON COMP
+PNT,5,1,1
+11,121,11
+END
+EXIT
+NODES
+1,  1,1,  1,11
+3,  1,6,  1,6
+END
+MAT,1
+2 2 1 1 1 1. 8.00E10 .2 0. 2.0
+END
+ELEMENTS
+QUAD,1,  1,1
+5,10
+QUAD,1,  6,1
+5,10
+END
+W
+TLOA 2 2 1
+NFUN 1 2
+0. 1E3
+-500. -500.
+NFUN 2 2
+0. 1E3
+-1000. -1000.
+EXIT
+W
+FORM,3,0,2,2
+EXIT
+LOAD
+2. 0. 11,2,  11,10
+1. 0. 11,1,  11,1
+1. 0. 11,11,  11,11
+END
+W
+MAR 50 8E-6
+END
+END
+END
+STOP
+EXIT
+STOP
+EOF
+cat <<EOF >&! INPUT
+DMTER6
+TAP
+EOF
+dstatgs
+mysticd
+cat output >&! DMTER6.out
+cat <<EOF  >>&! DMTER6.out
+
+
+
+EOF
+cat OUTPUT >>&! DMTER6.out
+rm I* i* O* o* T* fort.*

@@ -1,0 +1,11 @@
+{
+    lineplotset(p, 0.15,3.2,0.0 ,0.15,0.0,0.0, 0);
+     out=p:speed;
+    lineplotout(out,p);
+
+
+    lineplotset(ip, 0.15,3.2,0.0 ,0.15,0.0,0.0, 0);
+     out2=ip;
+    lineplotout(out2,ip);
+
+}

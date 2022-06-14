@@ -1,0 +1,9 @@
+{
+
+    window("out",sizeof(x));
+    out=fabs(x-y);
+    print("sum = %g\n",sum(out));
+    print("sumx = %g\n",sum(x));
+    print("sumy = %g\n",sum(y));
+
+}

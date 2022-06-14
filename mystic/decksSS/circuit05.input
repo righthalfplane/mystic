@@ -1,0 +1,20 @@
+$ large dof test
+poff elem node dof
+pon elem node dof
+node 3 1
+ 1 0. 0.
+50 10. 10. 10.
+end
+reac 4
+m 1 2 50 1 1
+m 2 2 50 1 1
+m 3 3 50 1 1
+m 3 3 50 1 1
+form
+load
+1 10. 1 0
+3 10. 1 0
+end
+solv 1 end
+stop
+

@@ -1,0 +1,937 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		46683E5E13E1EF84007EACBA /* libdf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46683E5D13E1EF84007EACBA /* libdf.a */; };
+		46683E6013E1EF90007EACBA /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46683E5F13E1EF90007EACBA /* libjpeg.a */; };
+		46683E6213E1EF99007EACBA /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46683E6113E1EF99007EACBA /* libz.a */; };
+		46683E6A13E1EFFC007EACBA /* libX11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 46683E6913E1EFFC007EACBA /* libX11.dylib */; };
+		467BA572270F381A00932983 /* xStrings.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA56E270F381900932983 /* xStrings.c */; };
+		467BA573270F381A00932983 /* xText.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA570270F381A00932983 /* xText.c */; };
+		467BA574270F381A00932983 /* xUtility.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA571270F381A00932983 /* xUtility.c */; };
+		467BA59B270F385D00932983 /* uFilesBatch3d01.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA575270F385900932983 /* uFilesBatch3d01.c */; };
+		467BA59C270F385D00932983 /* uTrue.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA576270F385900932983 /* uTrue.c */; };
+		467BA59D270F385D00932983 /* uRoundRect.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA579270F385A00932983 /* uRoundRect.c */; };
+		467BA59E270F385D00932983 /* Xappl1.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA57A270F385A00932983 /* Xappl1.c */; };
+		467BA59F270F385D00932983 /* xMenu.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA57B270F385A00932983 /* xMenu.c */; };
+		467BA5A0270F385D00932983 /* uOval.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA57C270F385A00932983 /* uOval.c */; };
+		467BA5A1270F385D00932983 /* uFilesBatch24.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA57D270F385A00932983 /* uFilesBatch24.c */; };
+		467BA5A2270F385D00932983 /* uGridPlot.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA580270F385A00932983 /* uGridPlot.c */; };
+		467BA5A3270F385D00932983 /* Universal.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA583270F385B00932983 /* Universal.c */; };
+		467BA5A4270F385D00932983 /* uTek.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA584270F385B00932983 /* uTek.c */; };
+		467BA5A6270F385D00932983 /* uFilesBatchSds3d.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA587270F385B00932983 /* uFilesBatchSds3d.c */; };
+		467BA5A7270F385D00932983 /* uMABX.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA588270F385B00932983 /* uMABX.c */; };
+		467BA5A8270F385D00932983 /* uLibX.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA589270F385B00932983 /* uLibX.c */; };
+		467BA5A9270F385D00932983 /* Vrml1.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA58A270F385B00932983 /* Vrml1.c */; };
+		467BA5AA270F385D00932983 /* uFilesUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA58B270F385C00932983 /* uFilesUtilities.c */; };
+		467BA5AB270F385D00932983 /* Vrml2.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA58E270F385C00932983 /* Vrml2.c */; };
+		467BA5AC270F385D00932983 /* uFilesBatch3dBlk01.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA58F270F385C00932983 /* uFilesBatch3dBlk01.c */; };
+		467BA5AD270F385D00932983 /* uGroup.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA591270F385C00932983 /* uGroup.c */; };
+		467BA5AE270F385D00932983 /* uLine.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA593270F385D00932983 /* uLine.c */; };
+		467BA5AF270F385D00932983 /* uNetWork.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA594270F385D00932983 /* uNetWork.c */; };
+		467BA5B0270F385D00932983 /* Volumetric.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA595270F385D00932983 /* Volumetric.c */; };
+		467BA5B1270F385D00932983 /* Vrml.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA596270F385D00932983 /* Vrml.c */; };
+		467BA5B2270F385D00932983 /* Xappl2.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA597270F385D00932983 /* Xappl2.c */; };
+		467BA5B3270F385D00932983 /* uFilesBatch3dBlk.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA598270F385D00932983 /* uFilesBatch3dBlk.c */; };
+		467BA5B4270F385D00932983 /* uFilesBatchSds2d.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA599270F385D00932983 /* uFilesBatchSds2d.c */; };
+		467BA5B5270F385D00932983 /* Warning.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA59A270F385D00932983 /* Warning.c */; };
+		467BA5DA270F388B00932983 /* uDrawcPopUp.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5B8270F388700932983 /* uDrawcPopUp.c */; };
+		467BA5DB270F388B00932983 /* uDrawObjects.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5B9270F388700932983 /* uDrawObjects.c */; };
+		467BA5DC270F388B00932983 /* TriNCV.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5BC270F388700932983 /* TriNCV.c */; };
+		467BA5DD270F388B00932983 /* uDrawsPopUp.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5BD270F388800932983 /* uDrawsPopUp.c */; };
+		467BA5DE270F388B00932983 /* Tools.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5BE270F388800932983 /* Tools.c */; };
+		467BA5DF270F388B00932983 /* uDrawspPopUp.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5BF270F388800932983 /* uDrawspPopUp.c */; };
+		467BA5E0270F388B00932983 /* TriC1N1.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C0270F388800932983 /* TriC1N1.c */; };
+		467BA5E1270F388B00932983 /* TextFileConvert.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C1270F388800932983 /* TextFileConvert.c */; };
+		467BA5E2270F388B00932983 /* uBox.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C2270F388800932983 /* uBox.c */; };
+		467BA5E3270F388B00932983 /* uAlpha.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C3270F388800932983 /* uAlpha.c */; };
+		467BA5E4270F388B00932983 /* uFilesBatch2d.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C4270F388800932983 /* uFilesBatch2d.c */; };
+		467BA5E5270F388B00932983 /* uDialogX.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C5270F388800932983 /* uDialogX.c */; };
+		467BA5E6270F388B00932983 /* triangle.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C6270F388900932983 /* triangle.c */; };
+		467BA5E7270F388B00932983 /* TraceFindLines.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C7270F388900932983 /* TraceFindLines.c */; };
+		467BA5E8270F388B00932983 /* uFilesBatch1d.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C8270F388900932983 /* uFilesBatch1d.c */; };
+		467BA5E9270F388B00932983 /* uDraw.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5C9270F388900932983 /* uDraw.c */; };
+		467BA5EA270F388B00932983 /* uFilesBatch2d01.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5CA270F388900932983 /* uFilesBatch2d01.c */; };
+		467BA5EB270F388B00932983 /* uDrawswPopUp.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5CB270F388900932983 /* uDrawswPopUp.c */; };
+		467BA5EC270F388B00932983 /* TriN.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5CC270F388900932983 /* TriN.c */; };
+		467BA5ED270F388B00932983 /* uFilesBatch2dBlk.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5CF270F388A00932983 /* uFilesBatch2dBlk.c */; };
+		467BA5EE270F388B00932983 /* uFilesBatch2dBlk01.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5D0270F388A00932983 /* uFilesBatch2dBlk01.c */; };
+		467BA5F0270F388B00932983 /* TriN2.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5D3270F388A00932983 /* TriN2.c */; };
+		467BA5F1270F388B00932983 /* TriNC.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5D5270F388A00932983 /* TriNC.c */; };
+		467BA5F2270F388B00932983 /* uFiles.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5D6270F388A00932983 /* uFiles.c */; };
+		467BA5F3270F388B00932983 /* uEditText.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5D7270F388B00932983 /* uEditText.c */; };
+		467BA5F4270F388B00932983 /* uDrawlPopUp.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5D8270F388B00932983 /* uDrawlPopUp.c */; };
+		467BA5F5270F388B00932983 /* uFilesBatch3d.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5D9270F388B00932983 /* uFilesBatch3d.c */; };
+		467BA607270F38AF00932983 /* Table.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5F6270F38AD00932983 /* Table.c */; };
+		467BA608270F38AF00932983 /* Sphere.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5F7270F38AD00932983 /* Sphere.c */; };
+		467BA609270F38AF00932983 /* System.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5F8270F38AD00932983 /* System.c */; };
+		467BA60A270F38AF00932983 /* Spread.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5F9270F38AD00932983 /* Spread.c */; };
+		467BA60B270F38AF00932983 /* StatusWindow.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5FC270F38AE00932983 /* StatusWindow.c */; };
+		467BA60C270F38AF00932983 /* SendFileList.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5FE270F38AE00932983 /* SendFileList.c */; };
+		467BA60D270F38AF00932983 /* Streamlines3d.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA5FF270F38AE00932983 /* Streamlines3d.c */; };
+		467BA60E270F38AF00932983 /* SetPalMenu.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA600270F38AE00932983 /* SetPalMenu.c */; };
+		467BA60F270F38AF00932983 /* swapbytes.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA601270F38AE00932983 /* swapbytes.c */; };
+		467BA610270F38AF00932983 /* Streamline.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA604270F38AF00932983 /* Streamline.c */; };
+		467BA611270F38AF00932983 /* Teos2sds.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA605270F38AF00932983 /* Teos2sds.c */; };
+		467BA612270F38AF00932983 /* Shade.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA606270F38AF00932983 /* Shade.c */; };
+		467BA624270F38D000932983 /* SagePIO2D.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA613270F38CE00932983 /* SagePIO2D.c */; };
+		467BA625270F38D000932983 /* SagePIO3D.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA615270F38CE00932983 /* SagePIO3D.c */; };
+		467BA626270F38D000932983 /* SageTraceBangMeter.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA617270F38CF00932983 /* SageTraceBangMeter.c */; };
+		467BA627270F38D000932983 /* SagePIO2DDialogs.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA618270F38CF00932983 /* SagePIO2DDialogs.c */; };
+		467BA628270F38D000932983 /* SageBLK3d.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA619270F38CF00932983 /* SageBLK3d.c */; };
+		467BA629270F38D000932983 /* sageRewrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA61A270F38CF00932983 /* sageRewrite.c */; };
+		467BA62A270F38D000932983 /* SaveAllImages.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA61B270F38CF00932983 /* SaveAllImages.c */; };
+		467BA62B270F38D000932983 /* savescreen.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA61C270F38CF00932983 /* savescreen.c */; };
+		467BA62C270F38D000932983 /* Scanfile.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA61D270F38CF00932983 /* Scanfile.c */; };
+		467BA62D270F38D000932983 /* Sagetrace.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA620270F38D000932983 /* Sagetrace.c */; };
+		467BA62E270F38D000932983 /* Sagevol.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA621270F38D000932983 /* Sagevol.c */; };
+		467BA62F270F38D000932983 /* ScrollList.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA622270F38D000932983 /* ScrollList.c */; };
+		467BA64C270F38F800932983 /* RenderTrace.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA630270F38F400932983 /* RenderTrace.c */; };
+		467BA64D270F38F800932983 /* openTek.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA631270F38F400932983 /* openTek.c */; };
+		467BA64E270F38F800932983 /* RenderFlightAnimation.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA633270F38F500932983 /* RenderFlightAnimation.c */; };
+		467BA64F270F38F800932983 /* Object3d2.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA634270F38F500932983 /* Object3d2.c */; };
+		467BA650270F38F800932983 /* Render.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA635270F38F500932983 /* Render.c */; };
+		467BA651270F38F800932983 /* Ploti.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA636270F38F500932983 /* Ploti.c */; };
+		467BA653270F38F800932983 /* RenderScene.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA639270F38F600932983 /* RenderScene.c */; };
+		467BA654270F38F800932983 /* Net2X.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA63B270F38F600932983 /* Net2X.c */; };
+		467BA655270F38F800932983 /* Poly.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA63C270F38F600932983 /* Poly.c */; };
+		467BA656270F38F800932983 /* Raster2D.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA640270F38F600932983 /* Raster2D.c */; };
+		467BA657270F38F800932983 /* NetX.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA642270F38F700932983 /* NetX.c */; };
+		467BA658270F38F800932983 /* NewEdit.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA643270F38F700932983 /* NewEdit.c */; };
+		467BA65A270F38F800932983 /* Raster2D2.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA645270F38F700932983 /* Raster2D2.c */; };
+		467BA65B270F38F800932983 /* renderUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA646270F38F700932983 /* renderUtilities.c */; };
+		467BA65C270F38F800932983 /* Pqueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA648270F38F800932983 /* Pqueue.c */; };
+		467BA65D270F38F800932983 /* Object3d.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA649270F38F800932983 /* Object3d.c */; };
+		467BA67F270F391800932983 /* Find.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA660270F391400932983 /* Find.c */; };
+		467BA680270F391800932983 /* KdTree.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA662270F391400932983 /* KdTree.c */; };
+		467BA681270F391800932983 /* imagestuff.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA663270F391400932983 /* imagestuff.c */; };
+		467BA682270F391800932983 /* LoadJPG.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA665270F391500932983 /* LoadJPG.c */; };
+		467BA683270F391800932983 /* getPalette.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA666270F391500932983 /* getPalette.c */; };
+		467BA684270F391800932983 /* fileSend.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA667270F391500932983 /* fileSend.c */; };
+		467BA685270F391800932983 /* initPIOBlocked.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA668270F391500932983 /* initPIOBlocked.c */; };
+		467BA687270F391800932983 /* initPIO.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA66C270F391600932983 /* initPIO.c */; };
+		467BA688270F391800932983 /* FFT.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA66F270F391600932983 /* FFT.c */; };
+		467BA689270F391800932983 /* KdTreeTrace.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA670270F391600932983 /* KdTreeTrace.c */; };
+		467BA68B270F391800932983 /* FileManager.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA673270F391700932983 /* FileManager.c */; };
+		467BA68C270F391800932983 /* fileDialog.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA674270F391700932983 /* fileDialog.c */; };
+		467BA68D270F391800932983 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA676270F391700932983 /* Image.c */; };
+		467BA68E270F391800932983 /* File8.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA677270F391700932983 /* File8.c */; };
+		467BA68F270F391800932983 /* Intersect.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA678270F391700932983 /* Intersect.c */; };
+		467BA690270F391800932983 /* GWorldX.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA679270F391700932983 /* GWorldX.c */; };
+		467BA692270F391800932983 /* Keyframes.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA67C270F391800932983 /* Keyframes.c */; };
+		467BA6B0270F393A00932983 /* Do24to8.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA693270F393600932983 /* Do24to8.c */; };
+		467BA6B1270F393A00932983 /* CExpress.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA694270F393600932983 /* CExpress.c */; };
+		467BA6B2270F393A00932983 /* doListen.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA695270F393600932983 /* doListen.c */; };
+		467BA6B3270F393A00932983 /* Change.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA698270F393700932983 /* Change.c */; };
+		467BA6B4270F393A00932983 /* doSetImageInfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA699270F393700932983 /* doSetImageInfo.c */; };
+		467BA6B6270F393A00932983 /* EditList.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA69B270F393700932983 /* EditList.c */; };
+		467BA6B7270F393A00932983 /* doSage3DGet.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA69C270F393700932983 /* doSage3DGet.c */; };
+		467BA6B8270F393A00932983 /* doSaveImages.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA69D270F393700932983 /* doSaveImages.c */; };
+		467BA6B9270F393A00932983 /* Control.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA69E270F393700932983 /* Control.c */; };
+		467BA6BA270F393A00932983 /* Blks.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6A0270F393800932983 /* Blks.c */; };
+		467BA6BB270F393A00932983 /* cleanexit.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6A1270F393800932983 /* cleanexit.c */; };
+		467BA6BC270F393A00932983 /* CommonUtlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6A2270F393800932983 /* CommonUtlib.c */; };
+		467BA6BD270F393A00932983 /* doDataDump.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6A3270F393800932983 /* doDataDump.c */; };
+		467BA6BE270F393A00932983 /* Blocks.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6A7270F393900932983 /* Blocks.c */; };
+		467BA6BF270F393A00932983 /* DoTracingExport.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6A8270F393900932983 /* DoTracingExport.c */; };
+		467BA6C0270F393A00932983 /* Bound.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6A9270F393900932983 /* Bound.c */; };
+		467BA6C1270F393A00932983 /* cMalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6AC270F393900932983 /* cMalloc.c */; };
+		467BA6C2270F393A00932983 /* DoubleRecurse.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6AD270F393A00932983 /* DoubleRecurse.c */; };
+		467BA6C3270F393A00932983 /* doSavePlots.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6AE270F393A00932983 /* doSavePlots.c */; };
+		467BA6C4270F393A00932983 /* doGetPalette.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6AF270F393A00932983 /* doGetPalette.c */; };
+		467BA6CA270F395B00932983 /* BatchFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6C6270F395A00932983 /* BatchFile.c */; };
+		467BA6CB270F395B00932983 /* BatchDraw.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6C7270F395A00932983 /* BatchDraw.c */; };
+		467BA6CC270F395B00932983 /* BatchExpression.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6C8270F395A00932983 /* BatchExpression.c */; };
+		467BA6CE270F3AA100932983 /* macUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 467BA6CD270F3AA100932983 /* macUtilities.c */; };
+		8DD76FB00486AB0100D96B5E /* xShow-MPI.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6A0FF2C0290799A04C91782 /* xShow-MPI.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76FAF0486AB0100D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				8DD76FB00486AB0100D96B5E /* xShow-MPI.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		46683E5D13E1EF84007EACBA /* libdf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdf.a; path = "/usr/local/hdf-64/lib/libdf.a"; sourceTree = "<absolute>"; };
+		46683E5F13E1EF90007EACBA /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = "/usr/local/hdf-64/lib/libjpeg.a"; sourceTree = "<absolute>"; };
+		46683E6113E1EF99007EACBA /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = "/usr/local/hdf-64/lib/libz.a"; sourceTree = "<absolute>"; };
+		46683E6913E1EFFC007EACBA /* libX11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libX11.dylib; path = /usr/X11/lib/libX11.dylib; sourceTree = "<absolute>"; };
+		467BA56D270F381900932983 /* xStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xStrings.h; path = mysticPlot/xStrings.h; sourceTree = "<group>"; };
+		467BA56E270F381900932983 /* xStrings.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xStrings.c; path = mysticPlot/xStrings.c; sourceTree = "<group>"; };
+		467BA56F270F381A00932983 /* xText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xText.h; path = mysticPlot/xText.h; sourceTree = "<group>"; };
+		467BA570270F381A00932983 /* xText.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xText.c; path = mysticPlot/xText.c; sourceTree = "<group>"; };
+		467BA571270F381A00932983 /* xUtility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xUtility.c; path = mysticPlot/xUtility.c; sourceTree = "<group>"; };
+		467BA575270F385900932983 /* uFilesBatch3d01.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch3d01.c; path = mysticPlot/uFilesBatch3d01.c; sourceTree = "<group>"; };
+		467BA576270F385900932983 /* uTrue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uTrue.c; path = mysticPlot/uTrue.c; sourceTree = "<group>"; };
+		467BA577270F385A00932983 /* xAux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xAux.h; path = mysticPlot/xAux.h; sourceTree = "<group>"; };
+		467BA578270F385A00932983 /* Vrml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vrml.h; path = mysticPlot/Vrml.h; sourceTree = "<group>"; };
+		467BA579270F385A00932983 /* uRoundRect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uRoundRect.c; path = mysticPlot/uRoundRect.c; sourceTree = "<group>"; };
+		467BA57A270F385A00932983 /* Xappl1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Xappl1.c; path = mysticPlot/Xappl1.c; sourceTree = "<group>"; };
+		467BA57B270F385A00932983 /* xMenu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xMenu.c; path = mysticPlot/xMenu.c; sourceTree = "<group>"; };
+		467BA57C270F385A00932983 /* uOval.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uOval.c; path = mysticPlot/uOval.c; sourceTree = "<group>"; };
+		467BA57D270F385A00932983 /* uFilesBatch24.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch24.c; path = mysticPlot/uFilesBatch24.c; sourceTree = "<group>"; };
+		467BA57E270F385A00932983 /* uGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uGraph.h; path = mysticPlot/uGraph.h; sourceTree = "<group>"; };
+		467BA57F270F385A00932983 /* VoiceCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoiceCommand.h; path = mysticPlot/VoiceCommand.h; sourceTree = "<group>"; };
+		467BA580270F385A00932983 /* uGridPlot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uGridPlot.c; path = mysticPlot/uGridPlot.c; sourceTree = "<group>"; };
+		467BA581270F385A00932983 /* Xappl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Xappl.h; path = mysticPlot/Xappl.h; sourceTree = "<group>"; };
+		467BA582270F385B00932983 /* ulibTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ulibTypes.h; path = mysticPlot/ulibTypes.h; sourceTree = "<group>"; };
+		467BA583270F385B00932983 /* Universal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Universal.c; path = mysticPlot/Universal.c; sourceTree = "<group>"; };
+		467BA584270F385B00932983 /* uTek.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uTek.c; path = mysticPlot/uTek.c; sourceTree = "<group>"; };
+		467BA585270F385B00932983 /* uNetWork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uNetWork.h; path = mysticPlot/uNetWork.h; sourceTree = "<group>"; };
+		467BA587270F385B00932983 /* uFilesBatchSds3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatchSds3d.c; path = mysticPlot/uFilesBatchSds3d.c; sourceTree = "<group>"; };
+		467BA588270F385B00932983 /* uMABX.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uMABX.c; path = mysticPlot/uMABX.c; sourceTree = "<group>"; };
+		467BA589270F385B00932983 /* uLibX.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uLibX.c; path = mysticPlot/uLibX.c; sourceTree = "<group>"; };
+		467BA58A270F385B00932983 /* Vrml1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Vrml1.c; path = mysticPlot/Vrml1.c; sourceTree = "<group>"; };
+		467BA58B270F385C00932983 /* uFilesUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesUtilities.c; path = mysticPlot/uFilesUtilities.c; sourceTree = "<group>"; };
+		467BA58C270F385C00932983 /* Universal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Universal.h; path = mysticPlot/Universal.h; sourceTree = "<group>"; };
+		467BA58D270F385C00932983 /* xMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xMenu.h; path = mysticPlot/xMenu.h; sourceTree = "<group>"; };
+		467BA58E270F385C00932983 /* Vrml2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Vrml2.c; path = mysticPlot/Vrml2.c; sourceTree = "<group>"; };
+		467BA58F270F385C00932983 /* uFilesBatch3dBlk01.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch3dBlk01.c; path = mysticPlot/uFilesBatch3dBlk01.c; sourceTree = "<group>"; };
+		467BA590270F385C00932983 /* uFilesBatch3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uFilesBatch3d.h; path = mysticPlot/uFilesBatch3d.h; sourceTree = "<group>"; };
+		467BA591270F385C00932983 /* uGroup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uGroup.c; path = mysticPlot/uGroup.c; sourceTree = "<group>"; };
+		467BA592270F385C00932983 /* uLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uLib.h; path = mysticPlot/uLib.h; sourceTree = "<group>"; };
+		467BA593270F385D00932983 /* uLine.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uLine.c; path = mysticPlot/uLine.c; sourceTree = "<group>"; };
+		467BA594270F385D00932983 /* uNetWork.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uNetWork.c; path = mysticPlot/uNetWork.c; sourceTree = "<group>"; };
+		467BA595270F385D00932983 /* Volumetric.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Volumetric.c; path = mysticPlot/Volumetric.c; sourceTree = "<group>"; };
+		467BA596270F385D00932983 /* Vrml.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Vrml.c; path = mysticPlot/Vrml.c; sourceTree = "<group>"; };
+		467BA597270F385D00932983 /* Xappl2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Xappl2.c; path = mysticPlot/Xappl2.c; sourceTree = "<group>"; };
+		467BA598270F385D00932983 /* uFilesBatch3dBlk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch3dBlk.c; path = mysticPlot/uFilesBatch3dBlk.c; sourceTree = "<group>"; };
+		467BA599270F385D00932983 /* uFilesBatchSds2d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatchSds2d.c; path = mysticPlot/uFilesBatchSds2d.c; sourceTree = "<group>"; };
+		467BA59A270F385D00932983 /* Warning.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Warning.c; path = mysticPlot/Warning.c; sourceTree = "<group>"; };
+		467BA5B6270F388700932983 /* uFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uFiles.h; path = mysticPlot/uFiles.h; sourceTree = "<group>"; };
+		467BA5B7270F388700932983 /* uAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uAttributes.h; path = mysticPlot/uAttributes.h; sourceTree = "<group>"; };
+		467BA5B8270F388700932983 /* uDrawcPopUp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uDrawcPopUp.c; path = mysticPlot/uDrawcPopUp.c; sourceTree = "<group>"; };
+		467BA5B9270F388700932983 /* uDrawObjects.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uDrawObjects.c; path = mysticPlot/uDrawObjects.c; sourceTree = "<group>"; };
+		467BA5BA270F388700932983 /* uEditText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uEditText.h; path = mysticPlot/uEditText.h; sourceTree = "<group>"; };
+		467BA5BB270F388700932983 /* TracerDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracerDef.h; path = mysticPlot/TracerDef.h; sourceTree = "<group>"; };
+		467BA5BC270F388700932983 /* TriNCV.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TriNCV.c; path = mysticPlot/TriNCV.c; sourceTree = "<group>"; };
+		467BA5BD270F388800932983 /* uDrawsPopUp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uDrawsPopUp.c; path = mysticPlot/uDrawsPopUp.c; sourceTree = "<group>"; };
+		467BA5BE270F388800932983 /* Tools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Tools.c; path = mysticPlot/Tools.c; sourceTree = "<group>"; };
+		467BA5BF270F388800932983 /* uDrawspPopUp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uDrawspPopUp.c; path = mysticPlot/uDrawspPopUp.c; sourceTree = "<group>"; };
+		467BA5C0270F388800932983 /* TriC1N1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TriC1N1.c; path = mysticPlot/TriC1N1.c; sourceTree = "<group>"; };
+		467BA5C1270F388800932983 /* TextFileConvert.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TextFileConvert.c; path = mysticPlot/TextFileConvert.c; sourceTree = "<group>"; };
+		467BA5C2270F388800932983 /* uBox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uBox.c; path = mysticPlot/uBox.c; sourceTree = "<group>"; };
+		467BA5C3270F388800932983 /* uAlpha.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uAlpha.c; path = mysticPlot/uAlpha.c; sourceTree = "<group>"; };
+		467BA5C4270F388800932983 /* uFilesBatch2d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch2d.c; path = mysticPlot/uFilesBatch2d.c; sourceTree = "<group>"; };
+		467BA5C5270F388800932983 /* uDialogX.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uDialogX.c; path = mysticPlot/uDialogX.c; sourceTree = "<group>"; };
+		467BA5C6270F388900932983 /* triangle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = triangle.c; path = mysticPlot/triangle.c; sourceTree = "<group>"; };
+		467BA5C7270F388900932983 /* TraceFindLines.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TraceFindLines.c; path = mysticPlot/TraceFindLines.c; sourceTree = "<group>"; };
+		467BA5C8270F388900932983 /* uFilesBatch1d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch1d.c; path = mysticPlot/uFilesBatch1d.c; sourceTree = "<group>"; };
+		467BA5C9270F388900932983 /* uDraw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uDraw.c; path = mysticPlot/uDraw.c; sourceTree = "<group>"; };
+		467BA5CA270F388900932983 /* uFilesBatch2d01.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch2d01.c; path = mysticPlot/uFilesBatch2d01.c; sourceTree = "<group>"; };
+		467BA5CB270F388900932983 /* uDrawswPopUp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uDrawswPopUp.c; path = mysticPlot/uDrawswPopUp.c; sourceTree = "<group>"; };
+		467BA5CC270F388900932983 /* TriN.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TriN.c; path = mysticPlot/TriN.c; sourceTree = "<group>"; };
+		467BA5CD270F388900932983 /* uFilesBatch2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uFilesBatch2d.h; path = mysticPlot/uFilesBatch2d.h; sourceTree = "<group>"; };
+		467BA5CE270F388900932983 /* uDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uDialog.h; path = mysticPlot/uDialog.h; sourceTree = "<group>"; };
+		467BA5CF270F388A00932983 /* uFilesBatch2dBlk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch2dBlk.c; path = mysticPlot/uFilesBatch2dBlk.c; sourceTree = "<group>"; };
+		467BA5D0270F388A00932983 /* uFilesBatch2dBlk01.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch2dBlk01.c; path = mysticPlot/uFilesBatch2dBlk01.c; sourceTree = "<group>"; };
+		467BA5D1270F388A00932983 /* uDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uDraw.h; path = mysticPlot/uDraw.h; sourceTree = "<group>"; };
+		467BA5D3270F388A00932983 /* TriN2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TriN2.c; path = mysticPlot/TriN2.c; sourceTree = "<group>"; };
+		467BA5D4270F388A00932983 /* Tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tools.h; path = mysticPlot/Tools.h; sourceTree = "<group>"; };
+		467BA5D5270F388A00932983 /* TriNC.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = TriNC.c; path = mysticPlot/TriNC.c; sourceTree = "<group>"; };
+		467BA5D6270F388A00932983 /* uFiles.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFiles.c; path = mysticPlot/uFiles.c; sourceTree = "<group>"; };
+		467BA5D7270F388B00932983 /* uEditText.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uEditText.c; path = mysticPlot/uEditText.c; sourceTree = "<group>"; };
+		467BA5D8270F388B00932983 /* uDrawlPopUp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uDrawlPopUp.c; path = mysticPlot/uDrawlPopUp.c; sourceTree = "<group>"; };
+		467BA5D9270F388B00932983 /* uFilesBatch3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uFilesBatch3d.c; path = mysticPlot/uFilesBatch3d.c; sourceTree = "<group>"; };
+		467BA5F6270F38AD00932983 /* Table.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Table.c; path = mysticPlot/Table.c; sourceTree = "<group>"; };
+		467BA5F7270F38AD00932983 /* Sphere.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Sphere.c; path = mysticPlot/Sphere.c; sourceTree = "<group>"; };
+		467BA5F8270F38AD00932983 /* System.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = System.c; path = mysticPlot/System.c; sourceTree = "<group>"; };
+		467BA5F9270F38AD00932983 /* Spread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Spread.c; path = mysticPlot/Spread.c; sourceTree = "<group>"; };
+		467BA5FA270F38AE00932983 /* Streamline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Streamline.h; path = mysticPlot/Streamline.h; sourceTree = "<group>"; };
+		467BA5FB270F38AE00932983 /* Spread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Spread.h; path = mysticPlot/Spread.h; sourceTree = "<group>"; };
+		467BA5FC270F38AE00932983 /* StatusWindow.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = StatusWindow.c; path = mysticPlot/StatusWindow.c; sourceTree = "<group>"; };
+		467BA5FD270F38AE00932983 /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Table.h; path = mysticPlot/Table.h; sourceTree = "<group>"; };
+		467BA5FE270F38AE00932983 /* SendFileList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SendFileList.c; path = mysticPlot/SendFileList.c; sourceTree = "<group>"; };
+		467BA5FF270F38AE00932983 /* Streamlines3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Streamlines3d.c; path = mysticPlot/Streamlines3d.c; sourceTree = "<group>"; };
+		467BA600270F38AE00932983 /* SetPalMenu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SetPalMenu.c; path = mysticPlot/SetPalMenu.c; sourceTree = "<group>"; };
+		467BA601270F38AE00932983 /* swapbytes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = swapbytes.c; path = mysticPlot/swapbytes.c; sourceTree = "<group>"; };
+		467BA602270F38AF00932983 /* SetFrameData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetFrameData.h; path = mysticPlot/SetFrameData.h; sourceTree = "<group>"; };
+		467BA603270F38AF00932983 /* SysFontList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SysFontList.h; path = mysticPlot/SysFontList.h; sourceTree = "<group>"; };
+		467BA604270F38AF00932983 /* Streamline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Streamline.c; path = mysticPlot/Streamline.c; sourceTree = "<group>"; };
+		467BA605270F38AF00932983 /* Teos2sds.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Teos2sds.c; path = mysticPlot/Teos2sds.c; sourceTree = "<group>"; };
+		467BA606270F38AF00932983 /* Shade.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Shade.c; path = mysticPlot/Shade.c; sourceTree = "<group>"; };
+		467BA613270F38CE00932983 /* SagePIO2D.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SagePIO2D.c; path = mysticPlot/SagePIO2D.c; sourceTree = "<group>"; };
+		467BA614270F38CE00932983 /* SagePIO2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SagePIO2D.h; path = mysticPlot/SagePIO2D.h; sourceTree = "<group>"; };
+		467BA615270F38CE00932983 /* SagePIO3D.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SagePIO3D.c; path = mysticPlot/SagePIO3D.c; sourceTree = "<group>"; };
+		467BA616270F38CE00932983 /* Scanfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scanfile.h; path = mysticPlot/Scanfile.h; sourceTree = "<group>"; };
+		467BA617270F38CF00932983 /* SageTraceBangMeter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SageTraceBangMeter.c; path = mysticPlot/SageTraceBangMeter.c; sourceTree = "<group>"; };
+		467BA618270F38CF00932983 /* SagePIO2DDialogs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SagePIO2DDialogs.c; path = mysticPlot/SagePIO2DDialogs.c; sourceTree = "<group>"; };
+		467BA619270F38CF00932983 /* SageBLK3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SageBLK3d.c; path = mysticPlot/SageBLK3d.c; sourceTree = "<group>"; };
+		467BA61A270F38CF00932983 /* sageRewrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sageRewrite.c; path = mysticPlot/sageRewrite.c; sourceTree = "<group>"; };
+		467BA61B270F38CF00932983 /* SaveAllImages.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SaveAllImages.c; path = mysticPlot/SaveAllImages.c; sourceTree = "<group>"; };
+		467BA61C270F38CF00932983 /* savescreen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = savescreen.c; path = mysticPlot/savescreen.c; sourceTree = "<group>"; };
+		467BA61D270F38CF00932983 /* Scanfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Scanfile.c; path = mysticPlot/Scanfile.c; sourceTree = "<group>"; };
+		467BA61E270F38CF00932983 /* ScrollList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScrollList.h; path = mysticPlot/ScrollList.h; sourceTree = "<group>"; };
+		467BA61F270F38D000932983 /* SaveAllImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaveAllImages.h; path = mysticPlot/SaveAllImages.h; sourceTree = "<group>"; };
+		467BA620270F38D000932983 /* Sagetrace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Sagetrace.c; path = mysticPlot/Sagetrace.c; sourceTree = "<group>"; };
+		467BA621270F38D000932983 /* Sagevol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Sagevol.c; path = mysticPlot/Sagevol.c; sourceTree = "<group>"; };
+		467BA622270F38D000932983 /* ScrollList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ScrollList.c; path = mysticPlot/ScrollList.c; sourceTree = "<group>"; };
+		467BA623270F38D000932983 /* Sagevol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sagevol.h; path = mysticPlot/Sagevol.h; sourceTree = "<group>"; };
+		467BA630270F38F400932983 /* RenderTrace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = RenderTrace.c; path = mysticPlot/RenderTrace.c; sourceTree = "<group>"; };
+		467BA631270F38F400932983 /* openTek.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = openTek.c; path = mysticPlot/openTek.c; sourceTree = "<group>"; };
+		467BA632270F38F500932983 /* mThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mThread.h; path = mysticPlot/mThread.h; sourceTree = "<group>"; };
+		467BA633270F38F500932983 /* RenderFlightAnimation.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = RenderFlightAnimation.c; path = mysticPlot/RenderFlightAnimation.c; sourceTree = "<group>"; };
+		467BA634270F38F500932983 /* Object3d2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Object3d2.c; path = mysticPlot/Object3d2.c; sourceTree = "<group>"; };
+		467BA635270F38F500932983 /* Render.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Render.c; path = mysticPlot/Render.c; sourceTree = "<group>"; };
+		467BA636270F38F500932983 /* Ploti.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Ploti.c; path = mysticPlot/Ploti.c; sourceTree = "<group>"; };
+		467BA637270F38F500932983 /* Object3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Object3d.h; path = mysticPlot/Object3d.h; sourceTree = "<group>"; };
+		467BA639270F38F600932983 /* RenderScene.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = RenderScene.c; path = mysticPlot/RenderScene.c; sourceTree = "<group>"; };
+		467BA63A270F38F600932983 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = mysticPlot/Message.h; sourceTree = "<group>"; };
+		467BA63B270F38F600932983 /* Net2X.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Net2X.c; path = mysticPlot/Net2X.c; sourceTree = "<group>"; };
+		467BA63C270F38F600932983 /* Poly.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Poly.c; path = mysticPlot/Poly.c; sourceTree = "<group>"; };
+		467BA63D270F38F600932983 /* Net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Net.h; path = mysticPlot/Net.h; sourceTree = "<group>"; };
+		467BA63E270F38F600932983 /* Raster2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Raster2D.h; path = mysticPlot/Raster2D.h; sourceTree = "<group>"; };
+		467BA63F270F38F600932983 /* Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Render.h; path = mysticPlot/Render.h; sourceTree = "<group>"; };
+		467BA640270F38F600932983 /* Raster2D.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Raster2D.c; path = mysticPlot/Raster2D.c; sourceTree = "<group>"; };
+		467BA641270F38F700932983 /* NewEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewEdit.h; path = mysticPlot/NewEdit.h; sourceTree = "<group>"; };
+		467BA642270F38F700932983 /* NetX.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = NetX.c; path = mysticPlot/NetX.c; sourceTree = "<group>"; };
+		467BA643270F38F700932983 /* NewEdit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = NewEdit.c; path = mysticPlot/NewEdit.c; sourceTree = "<group>"; };
+		467BA645270F38F700932983 /* Raster2D2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Raster2D2.c; path = mysticPlot/Raster2D2.c; sourceTree = "<group>"; };
+		467BA646270F38F700932983 /* renderUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = renderUtilities.c; path = mysticPlot/renderUtilities.c; sourceTree = "<group>"; };
+		467BA647270F38F700932983 /* paletteDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = paletteDraw.h; path = mysticPlot/paletteDraw.h; sourceTree = "<group>"; };
+		467BA648270F38F800932983 /* Pqueue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Pqueue.c; path = mysticPlot/Pqueue.c; sourceTree = "<group>"; };
+		467BA649270F38F800932983 /* Object3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Object3d.c; path = mysticPlot/Object3d.c; sourceTree = "<group>"; };
+		467BA64A270F38F800932983 /* Open.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = Open.r; path = mysticPlot/Open.r; sourceTree = "<group>"; };
+		467BA64B270F38F800932983 /* mysticPlot.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; name = mysticPlot.gz; path = mysticPlot/mysticPlot.gz; sourceTree = "<group>"; };
+		467BA65E270F391400932983 /* Extern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Extern.h; path = mysticPlot/Extern.h; sourceTree = "<group>"; };
+		467BA65F270F391400932983 /* Linedata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Linedata.h; path = mysticPlot/Linedata.h; sourceTree = "<group>"; };
+		467BA660270F391400932983 /* Find.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Find.c; path = mysticPlot/Find.c; sourceTree = "<group>"; };
+		467BA661270F391400932983 /* File8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = File8.h; path = mysticPlot/File8.h; sourceTree = "<group>"; };
+		467BA662270F391400932983 /* KdTree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = KdTree.c; path = mysticPlot/KdTree.c; sourceTree = "<group>"; };
+		467BA663270F391400932983 /* imagestuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = imagestuff.c; path = mysticPlot/imagestuff.c; sourceTree = "<group>"; };
+		467BA664270F391400932983 /* fileDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fileDialog.h; path = mysticPlot/fileDialog.h; sourceTree = "<group>"; };
+		467BA665270F391500932983 /* LoadJPG.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = LoadJPG.c; path = mysticPlot/LoadJPG.c; sourceTree = "<group>"; };
+		467BA666270F391500932983 /* getPalette.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = getPalette.c; path = mysticPlot/getPalette.c; sourceTree = "<group>"; };
+		467BA667270F391500932983 /* fileSend.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fileSend.c; path = mysticPlot/fileSend.c; sourceTree = "<group>"; };
+		467BA668270F391500932983 /* initPIOBlocked.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = initPIOBlocked.c; path = mysticPlot/initPIOBlocked.c; sourceTree = "<group>"; };
+		467BA669270F391500932983 /* Installed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Installed.h; path = mysticPlot/Installed.h; sourceTree = "<group>"; };
+		467BA66B270F391500932983 /* KdTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KdTree.h; path = mysticPlot/KdTree.h; sourceTree = "<group>"; };
+		467BA66C270F391600932983 /* initPIO.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = initPIO.c; path = mysticPlot/initPIO.c; sourceTree = "<group>"; };
+		467BA66D270F391600932983 /* GWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GWorld.h; path = mysticPlot/GWorld.h; sourceTree = "<group>"; };
+		467BA66E270F391600932983 /* FileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileManager.h; path = mysticPlot/FileManager.h; sourceTree = "<group>"; };
+		467BA66F270F391600932983 /* FFT.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = FFT.c; path = mysticPlot/FFT.c; sourceTree = "<group>"; };
+		467BA670270F391600932983 /* KdTreeTrace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = KdTreeTrace.c; path = mysticPlot/KdTreeTrace.c; sourceTree = "<group>"; };
+		467BA671270F391600932983 /* initPIOBlocked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = initPIOBlocked.h; path = mysticPlot/initPIOBlocked.h; sourceTree = "<group>"; };
+		467BA673270F391700932983 /* FileManager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = FileManager.c; path = mysticPlot/FileManager.c; sourceTree = "<group>"; };
+		467BA674270F391700932983 /* fileDialog.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fileDialog.c; path = mysticPlot/fileDialog.c; sourceTree = "<group>"; };
+		467BA675270F391700932983 /* image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = image.h; path = mysticPlot/image.h; sourceTree = "<group>"; };
+		467BA676270F391700932983 /* Image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Image.c; path = mysticPlot/Image.c; sourceTree = "<group>"; };
+		467BA677270F391700932983 /* File8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = File8.c; path = mysticPlot/File8.c; sourceTree = "<group>"; };
+		467BA678270F391700932983 /* Intersect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Intersect.c; path = mysticPlot/Intersect.c; sourceTree = "<group>"; };
+		467BA679270F391700932983 /* GWorldX.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = GWorldX.c; path = mysticPlot/GWorldX.c; sourceTree = "<group>"; };
+		467BA67A270F391800932983 /* HdfFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HdfFiles.h; path = mysticPlot/HdfFiles.h; sourceTree = "<group>"; };
+		467BA67C270F391800932983 /* Keyframes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Keyframes.c; path = mysticPlot/Keyframes.c; sourceTree = "<group>"; };
+		467BA67D270F391800932983 /* Limits2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Limits2.h; path = mysticPlot/Limits2.h; sourceTree = "<group>"; };
+		467BA67E270F391800932983 /* fileSend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fileSend.h; path = mysticPlot/fileSend.h; sourceTree = "<group>"; };
+		467BA693270F393600932983 /* Do24to8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Do24to8.c; path = mysticPlot/Do24to8.c; sourceTree = "<group>"; };
+		467BA694270F393600932983 /* CExpress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = CExpress.c; path = mysticPlot/CExpress.c; sourceTree = "<group>"; };
+		467BA695270F393600932983 /* doListen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = doListen.c; path = mysticPlot/doListen.c; sourceTree = "<group>"; };
+		467BA696270F393600932983 /* Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Control.h; path = mysticPlot/Control.h; sourceTree = "<group>"; };
+		467BA697270F393600932983 /* doSage3DGet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = doSage3DGet.h; path = mysticPlot/doSage3DGet.h; sourceTree = "<group>"; };
+		467BA698270F393700932983 /* Change.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Change.c; path = mysticPlot/Change.c; sourceTree = "<group>"; };
+		467BA699270F393700932983 /* doSetImageInfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = doSetImageInfo.c; path = mysticPlot/doSetImageInfo.c; sourceTree = "<group>"; };
+		467BA69B270F393700932983 /* EditList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = EditList.c; path = mysticPlot/EditList.c; sourceTree = "<group>"; };
+		467BA69C270F393700932983 /* doSage3DGet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = doSage3DGet.c; path = mysticPlot/doSage3DGet.c; sourceTree = "<group>"; };
+		467BA69D270F393700932983 /* doSaveImages.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = doSaveImages.c; path = mysticPlot/doSaveImages.c; sourceTree = "<group>"; };
+		467BA69E270F393700932983 /* Control.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Control.c; path = mysticPlot/Control.c; sourceTree = "<group>"; };
+		467BA69F270F393800932983 /* Defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defs.h; path = mysticPlot/Defs.h; sourceTree = "<group>"; };
+		467BA6A0270F393800932983 /* Blks.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Blks.c; path = mysticPlot/Blks.c; sourceTree = "<group>"; };
+		467BA6A1270F393800932983 /* cleanexit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cleanexit.c; path = mysticPlot/cleanexit.c; sourceTree = "<group>"; };
+		467BA6A2270F393800932983 /* CommonUtlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = CommonUtlib.c; path = mysticPlot/CommonUtlib.c; sourceTree = "<group>"; };
+		467BA6A3270F393800932983 /* doDataDump.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = doDataDump.c; path = mysticPlot/doDataDump.c; sourceTree = "<group>"; };
+		467BA6A4270F393800932983 /* DoubleRecurse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DoubleRecurse.h; path = mysticPlot/DoubleRecurse.h; sourceTree = "<group>"; };
+		467BA6A5270F393800932983 /* CExpress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CExpress.h; path = mysticPlot/CExpress.h; sourceTree = "<group>"; };
+		467BA6A6270F393900932983 /* EditList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditList.h; path = mysticPlot/EditList.h; sourceTree = "<group>"; };
+		467BA6A7270F393900932983 /* Blocks.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Blocks.c; path = mysticPlot/Blocks.c; sourceTree = "<group>"; };
+		467BA6A8270F393900932983 /* DoTracingExport.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DoTracingExport.c; path = mysticPlot/DoTracingExport.c; sourceTree = "<group>"; };
+		467BA6A9270F393900932983 /* Bound.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Bound.c; path = mysticPlot/Bound.c; sourceTree = "<group>"; };
+		467BA6AA270F393900932983 /* Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Blocks.h; path = mysticPlot/Blocks.h; sourceTree = "<group>"; };
+		467BA6AB270F393900932983 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Doxyfile; path = mysticPlot/Doxyfile; sourceTree = "<group>"; };
+		467BA6AC270F393900932983 /* cMalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cMalloc.c; path = mysticPlot/cMalloc.c; sourceTree = "<group>"; };
+		467BA6AD270F393A00932983 /* DoubleRecurse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DoubleRecurse.c; path = mysticPlot/DoubleRecurse.c; sourceTree = "<group>"; };
+		467BA6AE270F393A00932983 /* doSavePlots.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = doSavePlots.c; path = mysticPlot/doSavePlots.c; sourceTree = "<group>"; };
+		467BA6AF270F393A00932983 /* doGetPalette.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = doGetPalette.c; path = mysticPlot/doGetPalette.c; sourceTree = "<group>"; };
+		467BA6C5270F395A00932983 /* Areadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Areadata.h; path = mysticPlot/Areadata.h; sourceTree = "<group>"; };
+		467BA6C6270F395A00932983 /* BatchFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BatchFile.c; path = mysticPlot/BatchFile.c; sourceTree = "<group>"; };
+		467BA6C7270F395A00932983 /* BatchDraw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BatchDraw.c; path = mysticPlot/BatchDraw.c; sourceTree = "<group>"; };
+		467BA6C8270F395A00932983 /* BatchExpression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BatchExpression.c; path = mysticPlot/BatchExpression.c; sourceTree = "<group>"; };
+		467BA6C9270F395B00932983 /* BatchFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BatchFile.h; path = mysticPlot/BatchFile.h; sourceTree = "<group>"; };
+		467BA6CD270F3AA100932983 /* macUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = macUtilities.c; path = mysticPlot/macUtilities.c; sourceTree = "<group>"; };
+		8DD76FB20486AB0100D96B5E /* xShow-MPI */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "xShow-MPI"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C6A0FF2C0290799A04C91782 /* xShow-MPI.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = "xShow-MPI.1"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DD76FAD0486AB0100D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46683E5E13E1EF84007EACBA /* libdf.a in Frameworks */,
+				46683E6013E1EF90007EACBA /* libjpeg.a in Frameworks */,
+				46683E6213E1EF99007EACBA /* libz.a in Frameworks */,
+				46683E6A13E1EFFC007EACBA /* libX11.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* xShow-MPI */ = {
+			isa = PBXGroup;
+			children = (
+				467BA6CD270F3AA100932983 /* macUtilities.c */,
+				467BA6C5270F395A00932983 /* Areadata.h */,
+				467BA6C7270F395A00932983 /* BatchDraw.c */,
+				467BA6C8270F395A00932983 /* BatchExpression.c */,
+				467BA6C6270F395A00932983 /* BatchFile.c */,
+				467BA6C9270F395B00932983 /* BatchFile.h */,
+				467BA6A0270F393800932983 /* Blks.c */,
+				467BA6A7270F393900932983 /* Blocks.c */,
+				467BA6AA270F393900932983 /* Blocks.h */,
+				467BA6A9270F393900932983 /* Bound.c */,
+				467BA694270F393600932983 /* CExpress.c */,
+				467BA6A5270F393800932983 /* CExpress.h */,
+				467BA698270F393700932983 /* Change.c */,
+				467BA6A1270F393800932983 /* cleanexit.c */,
+				467BA6AC270F393900932983 /* cMalloc.c */,
+				467BA6A2270F393800932983 /* CommonUtlib.c */,
+				467BA69E270F393700932983 /* Control.c */,
+				467BA696270F393600932983 /* Control.h */,
+				467BA69F270F393800932983 /* Defs.h */,
+				467BA693270F393600932983 /* Do24to8.c */,
+				467BA6A3270F393800932983 /* doDataDump.c */,
+				467BA6AF270F393A00932983 /* doGetPalette.c */,
+				467BA695270F393600932983 /* doListen.c */,
+				467BA69C270F393700932983 /* doSage3DGet.c */,
+				467BA697270F393600932983 /* doSage3DGet.h */,
+				467BA69D270F393700932983 /* doSaveImages.c */,
+				467BA6AE270F393A00932983 /* doSavePlots.c */,
+				467BA699270F393700932983 /* doSetImageInfo.c */,
+				467BA6A8270F393900932983 /* DoTracingExport.c */,
+				467BA6AD270F393A00932983 /* DoubleRecurse.c */,
+				467BA6A4270F393800932983 /* DoubleRecurse.h */,
+				467BA6AB270F393900932983 /* Doxyfile */,
+				467BA69B270F393700932983 /* EditList.c */,
+				467BA6A6270F393900932983 /* EditList.h */,
+				467BA65E270F391400932983 /* Extern.h */,
+				467BA66F270F391600932983 /* FFT.c */,
+				467BA677270F391700932983 /* File8.c */,
+				467BA661270F391400932983 /* File8.h */,
+				467BA674270F391700932983 /* fileDialog.c */,
+				467BA664270F391400932983 /* fileDialog.h */,
+				467BA673270F391700932983 /* FileManager.c */,
+				467BA66E270F391600932983 /* FileManager.h */,
+				467BA667270F391500932983 /* fileSend.c */,
+				467BA67E270F391800932983 /* fileSend.h */,
+				467BA660270F391400932983 /* Find.c */,
+				467BA666270F391500932983 /* getPalette.c */,
+				467BA66D270F391600932983 /* GWorld.h */,
+				467BA679270F391700932983 /* GWorldX.c */,
+				467BA67A270F391800932983 /* HdfFiles.h */,
+				467BA676270F391700932983 /* Image.c */,
+				467BA675270F391700932983 /* image.h */,
+				467BA663270F391400932983 /* imagestuff.c */,
+				467BA66C270F391600932983 /* initPIO.c */,
+				467BA668270F391500932983 /* initPIOBlocked.c */,
+				467BA671270F391600932983 /* initPIOBlocked.h */,
+				467BA669270F391500932983 /* Installed.h */,
+				467BA678270F391700932983 /* Intersect.c */,
+				467BA662270F391400932983 /* KdTree.c */,
+				467BA66B270F391500932983 /* KdTree.h */,
+				467BA670270F391600932983 /* KdTreeTrace.c */,
+				467BA67C270F391800932983 /* Keyframes.c */,
+				467BA67D270F391800932983 /* Limits2.h */,
+				467BA65F270F391400932983 /* Linedata.h */,
+				467BA665270F391500932983 /* LoadJPG.c */,
+				467BA63A270F38F600932983 /* Message.h */,
+				467BA632270F38F500932983 /* mThread.h */,
+				467BA64B270F38F800932983 /* mysticPlot.gz */,
+				467BA63D270F38F600932983 /* Net.h */,
+				467BA63B270F38F600932983 /* Net2X.c */,
+				467BA642270F38F700932983 /* NetX.c */,
+				467BA643270F38F700932983 /* NewEdit.c */,
+				467BA641270F38F700932983 /* NewEdit.h */,
+				467BA649270F38F800932983 /* Object3d.c */,
+				467BA637270F38F500932983 /* Object3d.h */,
+				467BA634270F38F500932983 /* Object3d2.c */,
+				467BA64A270F38F800932983 /* Open.r */,
+				467BA631270F38F400932983 /* openTek.c */,
+				467BA647270F38F700932983 /* paletteDraw.h */,
+				467BA636270F38F500932983 /* Ploti.c */,
+				467BA63C270F38F600932983 /* Poly.c */,
+				467BA648270F38F800932983 /* Pqueue.c */,
+				467BA640270F38F600932983 /* Raster2D.c */,
+				467BA63E270F38F600932983 /* Raster2D.h */,
+				467BA645270F38F700932983 /* Raster2D2.c */,
+				467BA635270F38F500932983 /* Render.c */,
+				467BA63F270F38F600932983 /* Render.h */,
+				467BA633270F38F500932983 /* RenderFlightAnimation.c */,
+				467BA639270F38F600932983 /* RenderScene.c */,
+				467BA630270F38F400932983 /* RenderTrace.c */,
+				467BA646270F38F700932983 /* renderUtilities.c */,
+				467BA619270F38CF00932983 /* SageBLK3d.c */,
+				467BA613270F38CE00932983 /* SagePIO2D.c */,
+				467BA614270F38CE00932983 /* SagePIO2D.h */,
+				467BA618270F38CF00932983 /* SagePIO2DDialogs.c */,
+				467BA615270F38CE00932983 /* SagePIO3D.c */,
+				467BA61A270F38CF00932983 /* sageRewrite.c */,
+				467BA620270F38D000932983 /* Sagetrace.c */,
+				467BA617270F38CF00932983 /* SageTraceBangMeter.c */,
+				467BA621270F38D000932983 /* Sagevol.c */,
+				467BA623270F38D000932983 /* Sagevol.h */,
+				467BA61B270F38CF00932983 /* SaveAllImages.c */,
+				467BA61F270F38D000932983 /* SaveAllImages.h */,
+				467BA61C270F38CF00932983 /* savescreen.c */,
+				467BA61D270F38CF00932983 /* Scanfile.c */,
+				467BA616270F38CE00932983 /* Scanfile.h */,
+				467BA622270F38D000932983 /* ScrollList.c */,
+				467BA61E270F38CF00932983 /* ScrollList.h */,
+				467BA5FE270F38AE00932983 /* SendFileList.c */,
+				467BA602270F38AF00932983 /* SetFrameData.h */,
+				467BA600270F38AE00932983 /* SetPalMenu.c */,
+				467BA606270F38AF00932983 /* Shade.c */,
+				467BA5F7270F38AD00932983 /* Sphere.c */,
+				467BA5F9270F38AD00932983 /* Spread.c */,
+				467BA5FB270F38AE00932983 /* Spread.h */,
+				467BA5FC270F38AE00932983 /* StatusWindow.c */,
+				467BA604270F38AF00932983 /* Streamline.c */,
+				467BA5FA270F38AE00932983 /* Streamline.h */,
+				467BA5FF270F38AE00932983 /* Streamlines3d.c */,
+				467BA601270F38AE00932983 /* swapbytes.c */,
+				467BA603270F38AF00932983 /* SysFontList.h */,
+				467BA5F8270F38AD00932983 /* System.c */,
+				467BA5F6270F38AD00932983 /* Table.c */,
+				467BA5FD270F38AE00932983 /* Table.h */,
+				467BA605270F38AF00932983 /* Teos2sds.c */,
+				467BA5C1270F388800932983 /* TextFileConvert.c */,
+				467BA5BE270F388800932983 /* Tools.c */,
+				467BA5D4270F388A00932983 /* Tools.h */,
+				467BA5C7270F388900932983 /* TraceFindLines.c */,
+				467BA5BB270F388700932983 /* TracerDef.h */,
+				467BA5C6270F388900932983 /* triangle.c */,
+				467BA5C0270F388800932983 /* TriC1N1.c */,
+				467BA5CC270F388900932983 /* TriN.c */,
+				467BA5D3270F388A00932983 /* TriN2.c */,
+				467BA5D5270F388A00932983 /* TriNC.c */,
+				467BA5BC270F388700932983 /* TriNCV.c */,
+				467BA5C3270F388800932983 /* uAlpha.c */,
+				467BA5B7270F388700932983 /* uAttributes.h */,
+				467BA5C2270F388800932983 /* uBox.c */,
+				467BA5CE270F388900932983 /* uDialog.h */,
+				467BA5C5270F388800932983 /* uDialogX.c */,
+				467BA5C9270F388900932983 /* uDraw.c */,
+				467BA5D1270F388A00932983 /* uDraw.h */,
+				467BA5B8270F388700932983 /* uDrawcPopUp.c */,
+				467BA5D8270F388B00932983 /* uDrawlPopUp.c */,
+				467BA5B9270F388700932983 /* uDrawObjects.c */,
+				467BA5BD270F388800932983 /* uDrawsPopUp.c */,
+				467BA5BF270F388800932983 /* uDrawspPopUp.c */,
+				467BA5CB270F388900932983 /* uDrawswPopUp.c */,
+				467BA5D7270F388B00932983 /* uEditText.c */,
+				467BA5BA270F388700932983 /* uEditText.h */,
+				467BA5D6270F388A00932983 /* uFiles.c */,
+				467BA5B6270F388700932983 /* uFiles.h */,
+				467BA5C8270F388900932983 /* uFilesBatch1d.c */,
+				467BA5C4270F388800932983 /* uFilesBatch2d.c */,
+				467BA5CD270F388900932983 /* uFilesBatch2d.h */,
+				467BA5CA270F388900932983 /* uFilesBatch2d01.c */,
+				467BA5CF270F388A00932983 /* uFilesBatch2dBlk.c */,
+				467BA5D0270F388A00932983 /* uFilesBatch2dBlk01.c */,
+				467BA5D9270F388B00932983 /* uFilesBatch3d.c */,
+				467BA590270F385C00932983 /* uFilesBatch3d.h */,
+				467BA575270F385900932983 /* uFilesBatch3d01.c */,
+				467BA598270F385D00932983 /* uFilesBatch3dBlk.c */,
+				467BA58F270F385C00932983 /* uFilesBatch3dBlk01.c */,
+				467BA57D270F385A00932983 /* uFilesBatch24.c */,
+				467BA599270F385D00932983 /* uFilesBatchSds2d.c */,
+				467BA587270F385B00932983 /* uFilesBatchSds3d.c */,
+				467BA58B270F385C00932983 /* uFilesUtilities.c */,
+				467BA57E270F385A00932983 /* uGraph.h */,
+				467BA580270F385A00932983 /* uGridPlot.c */,
+				467BA591270F385C00932983 /* uGroup.c */,
+				467BA592270F385C00932983 /* uLib.h */,
+				467BA582270F385B00932983 /* ulibTypes.h */,
+				467BA589270F385B00932983 /* uLibX.c */,
+				467BA593270F385D00932983 /* uLine.c */,
+				467BA588270F385B00932983 /* uMABX.c */,
+				467BA594270F385D00932983 /* uNetWork.c */,
+				467BA585270F385B00932983 /* uNetWork.h */,
+				467BA583270F385B00932983 /* Universal.c */,
+				467BA58C270F385C00932983 /* Universal.h */,
+				467BA57C270F385A00932983 /* uOval.c */,
+				467BA579270F385A00932983 /* uRoundRect.c */,
+				467BA584270F385B00932983 /* uTek.c */,
+				467BA576270F385900932983 /* uTrue.c */,
+				467BA57F270F385A00932983 /* VoiceCommand.h */,
+				467BA595270F385D00932983 /* Volumetric.c */,
+				467BA596270F385D00932983 /* Vrml.c */,
+				467BA578270F385A00932983 /* Vrml.h */,
+				467BA58A270F385B00932983 /* Vrml1.c */,
+				467BA58E270F385C00932983 /* Vrml2.c */,
+				467BA59A270F385D00932983 /* Warning.c */,
+				467BA581270F385A00932983 /* Xappl.h */,
+				467BA57A270F385A00932983 /* Xappl1.c */,
+				467BA597270F385D00932983 /* Xappl2.c */,
+				467BA577270F385A00932983 /* xAux.h */,
+				467BA57B270F385A00932983 /* xMenu.c */,
+				467BA58D270F385C00932983 /* xMenu.h */,
+				467BA56E270F381900932983 /* xStrings.c */,
+				467BA56D270F381900932983 /* xStrings.h */,
+				467BA570270F381A00932983 /* xText.c */,
+				467BA56F270F381A00932983 /* xText.h */,
+				467BA571270F381A00932983 /* xUtility.c */,
+				46683E5513E1EF14007EACBA /* Libraries */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = "xShow-MPI";
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76FB20486AB0100D96B5E /* xShow-MPI */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		46683E5513E1EF14007EACBA /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				46683E6913E1EFFC007EACBA /* libX11.dylib */,
+				46683E5D13E1EF84007EACBA /* libdf.a */,
+				46683E5F13E1EF90007EACBA /* libjpeg.a */,
+				46683E6113E1EF99007EACBA /* libz.a */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				C6A0FF2C0290799A04C91782 /* xShow-MPI.1 */,
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8DD76FA90486AB0100D96B5E /* xShow-MPI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "xShow-MPI" */;
+			buildPhases = (
+				8DD76FAB0486AB0100D96B5E /* Sources */,
+				8DD76FAD0486AB0100D96B5E /* Frameworks */,
+				8DD76FAF0486AB0100D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "xShow-MPI";
+			productInstallPath = "$(HOME)/bin";
+			productName = "xShow-MPI";
+			productReference = 8DD76FB20486AB0100D96B5E /* xShow-MPI */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "xShow-MPI" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* xShow-MPI */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DD76FA90486AB0100D96B5E /* xShow-MPI */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DD76FAB0486AB0100D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				467BA656270F38F800932983 /* Raster2D.c in Sources */,
+				467BA5EB270F388B00932983 /* uDrawswPopUp.c in Sources */,
+				467BA5B1270F385D00932983 /* Vrml.c in Sources */,
+				467BA5E9270F388B00932983 /* uDraw.c in Sources */,
+				467BA683270F391800932983 /* getPalette.c in Sources */,
+				467BA6C0270F393A00932983 /* Bound.c in Sources */,
+				467BA5A9270F385D00932983 /* Vrml1.c in Sources */,
+				467BA64F270F38F800932983 /* Object3d2.c in Sources */,
+				467BA6B3270F393A00932983 /* Change.c in Sources */,
+				467BA6B7270F393A00932983 /* doSage3DGet.c in Sources */,
+				467BA650270F38F800932983 /* Render.c in Sources */,
+				467BA64D270F38F800932983 /* openTek.c in Sources */,
+				467BA684270F391800932983 /* fileSend.c in Sources */,
+				467BA6BD270F393A00932983 /* doDataDump.c in Sources */,
+				467BA5ED270F388B00932983 /* uFilesBatch2dBlk.c in Sources */,
+				467BA60C270F38AF00932983 /* SendFileList.c in Sources */,
+				467BA6BF270F393A00932983 /* DoTracingExport.c in Sources */,
+				467BA62E270F38D000932983 /* Sagevol.c in Sources */,
+				467BA5A4270F385D00932983 /* uTek.c in Sources */,
+				467BA65B270F38F800932983 /* renderUtilities.c in Sources */,
+				467BA65D270F38F800932983 /* Object3d.c in Sources */,
+				467BA687270F391800932983 /* initPIO.c in Sources */,
+				467BA62F270F38D000932983 /* ScrollList.c in Sources */,
+				467BA60E270F38AF00932983 /* SetPalMenu.c in Sources */,
+				467BA5A1270F385D00932983 /* uFilesBatch24.c in Sources */,
+				467BA5E6270F388B00932983 /* triangle.c in Sources */,
+				467BA68F270F391800932983 /* Intersect.c in Sources */,
+				467BA681270F391800932983 /* imagestuff.c in Sources */,
+				467BA685270F391800932983 /* initPIOBlocked.c in Sources */,
+				467BA5AD270F385D00932983 /* uGroup.c in Sources */,
+				467BA5EA270F388B00932983 /* uFilesBatch2d01.c in Sources */,
+				467BA5EE270F388B00932983 /* uFilesBatch2dBlk01.c in Sources */,
+				467BA5B4270F385D00932983 /* uFilesBatchSds2d.c in Sources */,
+				467BA5B5270F385D00932983 /* Warning.c in Sources */,
+				467BA626270F38D000932983 /* SageTraceBangMeter.c in Sources */,
+				467BA5AE270F385D00932983 /* uLine.c in Sources */,
+				467BA5DC270F388B00932983 /* TriNCV.c in Sources */,
+				467BA5AC270F385D00932983 /* uFilesBatch3dBlk01.c in Sources */,
+				467BA690270F391800932983 /* GWorldX.c in Sources */,
+				467BA5F4270F388B00932983 /* uDrawlPopUp.c in Sources */,
+				467BA6BB270F393A00932983 /* cleanexit.c in Sources */,
+				467BA62C270F38D000932983 /* Scanfile.c in Sources */,
+				467BA629270F38D000932983 /* sageRewrite.c in Sources */,
+				467BA5A6270F385D00932983 /* uFilesBatchSds3d.c in Sources */,
+				467BA68E270F391800932983 /* File8.c in Sources */,
+				467BA5A3270F385D00932983 /* Universal.c in Sources */,
+				467BA610270F38AF00932983 /* Streamline.c in Sources */,
+				467BA609270F38AF00932983 /* System.c in Sources */,
+				467BA5A8270F385D00932983 /* uLibX.c in Sources */,
+				467BA680270F391800932983 /* KdTree.c in Sources */,
+				467BA689270F391800932983 /* KdTreeTrace.c in Sources */,
+				467BA62D270F38D000932983 /* Sagetrace.c in Sources */,
+				467BA5E2270F388B00932983 /* uBox.c in Sources */,
+				467BA5DB270F388B00932983 /* uDrawObjects.c in Sources */,
+				467BA5E5270F388B00932983 /* uDialogX.c in Sources */,
+				467BA5A7270F385D00932983 /* uMABX.c in Sources */,
+				467BA5DD270F388B00932983 /* uDrawsPopUp.c in Sources */,
+				467BA62B270F38D000932983 /* savescreen.c in Sources */,
+				467BA5DF270F388B00932983 /* uDrawspPopUp.c in Sources */,
+				467BA611270F38AF00932983 /* Teos2sds.c in Sources */,
+				467BA624270F38D000932983 /* SagePIO2D.c in Sources */,
+				467BA68D270F391800932983 /* Image.c in Sources */,
+				467BA5F2270F388B00932983 /* uFiles.c in Sources */,
+				467BA653270F38F800932983 /* RenderScene.c in Sources */,
+				467BA612270F38AF00932983 /* Shade.c in Sources */,
+				467BA608270F38AF00932983 /* Sphere.c in Sources */,
+				467BA60A270F38AF00932983 /* Spread.c in Sources */,
+				467BA64E270F38F800932983 /* RenderFlightAnimation.c in Sources */,
+				467BA65C270F38F800932983 /* Pqueue.c in Sources */,
+				467BA5F0270F388B00932983 /* TriN2.c in Sources */,
+				467BA654270F38F800932983 /* Net2X.c in Sources */,
+				467BA65A270F38F800932983 /* Raster2D2.c in Sources */,
+				467BA5E8270F388B00932983 /* uFilesBatch1d.c in Sources */,
+				467BA627270F38D000932983 /* SagePIO2DDialogs.c in Sources */,
+				467BA5EC270F388B00932983 /* TriN.c in Sources */,
+				467BA688270F391800932983 /* FFT.c in Sources */,
+				467BA5E4270F388B00932983 /* uFilesBatch2d.c in Sources */,
+				467BA655270F38F800932983 /* Poly.c in Sources */,
+				467BA59D270F385D00932983 /* uRoundRect.c in Sources */,
+				467BA692270F391800932983 /* Keyframes.c in Sources */,
+				467BA5E3270F388B00932983 /* uAlpha.c in Sources */,
+				467BA628270F38D000932983 /* SageBLK3d.c in Sources */,
+				467BA6CA270F395B00932983 /* BatchFile.c in Sources */,
+				467BA5B3270F385D00932983 /* uFilesBatch3dBlk.c in Sources */,
+				467BA6B8270F393A00932983 /* doSaveImages.c in Sources */,
+				467BA5F5270F388B00932983 /* uFilesBatch3d.c in Sources */,
+				467BA60F270F38AF00932983 /* swapbytes.c in Sources */,
+				467BA59B270F385D00932983 /* uFilesBatch3d01.c in Sources */,
+				467BA6B9270F393A00932983 /* Control.c in Sources */,
+				467BA6B1270F393A00932983 /* CExpress.c in Sources */,
+				467BA5DA270F388B00932983 /* uDrawcPopUp.c in Sources */,
+				467BA658270F38F800932983 /* NewEdit.c in Sources */,
+				467BA62A270F38D000932983 /* SaveAllImages.c in Sources */,
+				467BA60D270F38AF00932983 /* Streamlines3d.c in Sources */,
+				467BA6C2270F393A00932983 /* DoubleRecurse.c in Sources */,
+				467BA5E0270F388B00932983 /* TriC1N1.c in Sources */,
+				467BA5F1270F388B00932983 /* TriNC.c in Sources */,
+				467BA6CC270F395B00932983 /* BatchExpression.c in Sources */,
+				467BA572270F381A00932983 /* xStrings.c in Sources */,
+				467BA60B270F38AF00932983 /* StatusWindow.c in Sources */,
+				467BA6C4270F393A00932983 /* doGetPalette.c in Sources */,
+				467BA5E1270F388B00932983 /* TextFileConvert.c in Sources */,
+				467BA6C1270F393A00932983 /* cMalloc.c in Sources */,
+				467BA68C270F391800932983 /* fileDialog.c in Sources */,
+				467BA657270F38F800932983 /* NetX.c in Sources */,
+				467BA5A0270F385D00932983 /* uOval.c in Sources */,
+				467BA6B2270F393A00932983 /* doListen.c in Sources */,
+				467BA5B0270F385D00932983 /* Volumetric.c in Sources */,
+				467BA574270F381A00932983 /* xUtility.c in Sources */,
+				467BA651270F38F800932983 /* Ploti.c in Sources */,
+				467BA6BA270F393A00932983 /* Blks.c in Sources */,
+				467BA5A2270F385D00932983 /* uGridPlot.c in Sources */,
+				467BA64C270F38F800932983 /* RenderTrace.c in Sources */,
+				467BA625270F38D000932983 /* SagePIO3D.c in Sources */,
+				467BA607270F38AF00932983 /* Table.c in Sources */,
+				467BA682270F391800932983 /* LoadJPG.c in Sources */,
+				467BA6CB270F395B00932983 /* BatchDraw.c in Sources */,
+				467BA68B270F391800932983 /* FileManager.c in Sources */,
+				467BA5DE270F388B00932983 /* Tools.c in Sources */,
+				467BA6B4270F393A00932983 /* doSetImageInfo.c in Sources */,
+				467BA573270F381A00932983 /* xText.c in Sources */,
+				467BA6B6270F393A00932983 /* EditList.c in Sources */,
+				467BA5AF270F385D00932983 /* uNetWork.c in Sources */,
+				467BA59F270F385D00932983 /* xMenu.c in Sources */,
+				467BA5B2270F385D00932983 /* Xappl2.c in Sources */,
+				467BA59C270F385D00932983 /* uTrue.c in Sources */,
+				467BA6BC270F393A00932983 /* CommonUtlib.c in Sources */,
+				467BA5E7270F388B00932983 /* TraceFindLines.c in Sources */,
+				467BA67F270F391800932983 /* Find.c in Sources */,
+				467BA6CE270F3AA100932983 /* macUtilities.c in Sources */,
+				467BA5F3270F388B00932983 /* uEditText.c in Sources */,
+				467BA6B0270F393A00932983 /* Do24to8.c in Sources */,
+				467BA6C3270F393A00932983 /* doSavePlots.c in Sources */,
+				467BA5AA270F385D00932983 /* uFilesUtilities.c in Sources */,
+				467BA59E270F385D00932983 /* Xappl1.c in Sources */,
+				467BA6BE270F393A00932983 /* Blocks.c in Sources */,
+				467BA5AB270F385D00932983 /* Vrml2.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB928608733DD80010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					/opt/X11/include,
+					/usr/local/include,
+				);
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/lib,
+					/opt/X11/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				PRODUCT_NAME = "xShow-MPI";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1DEB928708733DD80010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = (
+					/opt/X11/include,
+					/usr/local/include,
+				);
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/lib,
+					/opt/X11/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				PRODUCT_NAME = "xShow-MPI";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1DEB928A08733DD80010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_RESOURCES,
+					PC,
+					SUN,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/usr/local/hdf-64/include";
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1DEB928B08733DD80010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_RESOURCES,
+					PC,
+					SUN,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/usr/local/hdf-64/include";
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "xShow-MPI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928608733DD80010E9CD /* Debug */,
+				1DEB928708733DD80010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "xShow-MPI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928A08733DD80010E9CD /* Debug */,
+				1DEB928B08733DD80010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

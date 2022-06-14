@@ -1,0 +1,5 @@
+{
+
+    window("out",sizeof(s));
+    out=fabs(s:pres-d)/max(fabs(d));
+}

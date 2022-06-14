@@ -1,0 +1,8 @@
+{
+    pointplotset(s,1,0,0);
+    window("out",sizeof(s));
+    dx=s:cell_velocity(0);
+    out=sqrt(dx*dx);
+    pointplotout(out,s);
+    out=2.0*sqrt(dx*dx);
+}

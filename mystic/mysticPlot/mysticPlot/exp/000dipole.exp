@@ -1,0 +1,36 @@
+{
+
+    /* in phase dipole */
+    /* do auto 0 - 20  */
+
+    pi=4.0*atan(1.0);
+    frequency = 28e6;
+    w=2*pi*frequency;
+    c = 3e8;
+    wavelength = c/frequency;
+
+    wscale=w/c;
+
+    d=0.1*wavelength+frame*0.1*wavelength;
+
+    fac = d/wavelength;
+
+    print("wavelength %g",wavelength);
+    print(" d %g ",d);
+    print(" fac %g\n",fac);
+
+    n=400;
+    window("out",size(n+1,n+1));
+    x=xfill(out,-5*wavelength,5*wavelength/(.5*n));
+    y=yfill(out,-5*wavelength,5*wavelength/(.5*n));
+    r1 =  sqrt((x-.5*d)*(x-.5*d)+(y*y));
+    r2 =  sqrt((x+.5*d)*(x+.5*d)+(y*y));
+    if((r1 > .5) && (r2 > .5)){
+        out = sqrt(2)*sqrt(1+cos(wscale*(r1-r2)));
+    }else{
+        out = 0;
+    }
+    m=max(out);
+    print(" max %g\n",m);
+
+}

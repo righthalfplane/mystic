@@ -1,0 +1,24 @@
+{
+    a=scale(s,401,401);
+    b=scale(a,201,201);
+    c=scale(b,401,401);
+    window("out",sizeof(a));
+    out=a-c;
+
+    zero=sizeof(out);
+    zero = 0;
+    nonzero = zero;
+    if(out == 0){
+      zero =  1;
+    }else{
+      nonzero = 1;
+    }
+       
+    zs=sum(zero);
+    ns=sum(nonzero);
+
+    print("zs %g ",zs);
+    print("ns %g ",ns);
+    print("ns+zs %g\n",ns+zs);
+
+}

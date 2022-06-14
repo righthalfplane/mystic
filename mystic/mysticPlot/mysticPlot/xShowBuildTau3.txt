@@ -1,0 +1,7 @@
+#!/bin/tcsh
+
+set path = ( ~/taulocal/apple/bin $path )
+setenv TAU_OPTIONS "-optPDTInst -optRevert -optTauSelectFile=select.tau"
+setenv TAU_MAKEFILE /Users/dir/taulocal/apple/lib/Makefile.tau-mpi-pdt
+make -f makefileDARWINTAU
+

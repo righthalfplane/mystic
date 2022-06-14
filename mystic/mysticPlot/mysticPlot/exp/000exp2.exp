@@ -1,0 +1,11 @@
+{
+       pi=4.0*atan(1.0);
+    
+    print("pi %f\n",pi);
+    print("sin(pi) %f\n",sin(pi));
+    print("sin(pi/2) %f\n",sin(pi/2));
+     
+    print("cos(pi) %f\n",cos(pi));
+    print("cos(pi/2) %f\n",cos(pi/2));
+    print("tan(1.0) %f\n",tan(1.0));
+}

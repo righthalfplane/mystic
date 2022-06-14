@@ -1,0 +1,14 @@
+# tcsh
+foreach i ($argv[1-])
+  echo "START OF START OF START OF START OF " $i
+  rm INPUT OUTPUT TAPE* fort.* unit.*
+  cp $i INPUT
+  dstatgs
+  cat OUTPUT
+  cp dtape.in INPUT
+  mysticd
+  cat OUTPUT
+  rm INPUT OUTPUT TAPE* fort.* unit.*
+  echo "END OF END OF END OF END OF END OF " $i
+end
+

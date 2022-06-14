@@ -1,0 +1,6 @@
+{
+
+    window("out",sizeof(s));
+    out=fabs(s-d);
+    print("frame = %g\n",frame);
+}

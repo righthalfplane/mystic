@@ -1,0 +1,16 @@
+# tcsh
+
+if(!(-d ../results_GF))mkdir ../results_GF
+
+if(!(-d ../results_GF/mysticD))mkdir ../results_GF/mysticD
+
+foreach i ($argv[1-])
+  echo "START OF START OF START OF START OF " $i
+  rm input output INPUT OUTPUT TAPE* fort.* unit.* tape.* tape33 tape43 tape.*
+  grid23G $i
+  mysticdGD < tape33 >$i.txt
+  mv $i.txt ../results_GF/mysticD
+  rm input output INPUT OUTPUT TAPE* fort.* unit.* tape33 tape43 tape.*
+  echo "END OF END OF END OF END OF END OF " $i
+end
+

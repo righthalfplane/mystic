@@ -1,0 +1,5 @@
+{
+    lineplotset(t, 0.15,3.2,0.0 ,0.15,0.0,0.0, 0);
+    out=t;
+    lineplotout(out,t);
+}

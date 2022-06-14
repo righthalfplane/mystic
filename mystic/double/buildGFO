@@ -1,0 +1,13 @@
+rm *.o dstatgsG mysticdGD
+gfortran -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -O1 -std=legacy -Wno-argument-mismatch -c  mysticd.f
+gfortran -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -O1 -std=legacy -Wno-argument-mismatch -c  mystice1.f
+gfortran -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8  -O1 -std=legacy -Wno-argument-mismatch -c  mystice2.f
+cc -O1 -c ciolib.c
+cc -O1 -c showlib.c
+c++ -O1 -c esplot.cpp
+c++ -o mysticdGD mysticd.o mystice1.o mystice2.o ciolib.o showlib.o esplot.o /usr/local/gfortran/lib/*.dylib
+mv mysticdGD ~/utlib/
+gfortran  -fno-aggressive-loop-optimizations -fno-automatic -fdefault-real-8 -fdefault-integer-8 -fdefault-double-8 -O1 -std=legacy -Wno-argument-mismatch -o dstatgsGD dstatgs.f
+mv dstatgsGD ~/utlib/
+rm *.o
+

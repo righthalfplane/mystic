@@ -1,0 +1,23 @@
+{
+
+    window("out",sizeof(is));
+    out=fabs(p-ip);
+
+    print("max = %g\n",100*max(out)/max(fabs(p)));
+
+    out=fabs(p-ih);
+
+    print("max = %g\n",100*max(out)/max(fabs(p)));
+
+    out=fabs(p-hp);
+
+    print("max = %g\n",100*max(out)/max(fabs(p)));
+
+    out=fabs(p-hh);
+
+    print("max = %g\n",100*max(out)/max(fabs(p)));
+
+    out=fabs(p-hs);
+
+    print("max = %g\n",100*max(out)/max(fabs(p)));
+}

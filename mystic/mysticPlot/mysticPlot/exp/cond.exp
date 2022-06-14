@@ -1,0 +1,33 @@
+{
+
+    print("Testing Conditionals.\n",0);
+
+    if (0) print("error %g\n",10);
+    if (1) ; else  print("error %g\n",20);
+    i = 0;
+    if (i)  print("error %g\n",30);
+    if (i > 0)  print("error %g\n",40);
+    if (i < 0)  print("error %g\n",50);
+    if (i != 0)  print("error %g\n",60);
+    if (i == 0) ; else  print("error %g\n",70);
+    if (i <= 0) ; else  print("error %g\n",80);
+    if (i >= 0) ; else  print("error %g\n",90);
+    if (i > 0) i = 4; else i = 3;
+    if (i != 3)  print("error %g\n",100);
+    if (i == 0)  print("error %g\n",110);
+    if (i == 4)  print("error %g\n",120);
+    i = 0;
+    j = 0;
+    if (i && j)  print("error %g\n",130);
+    if (i || j)  print("error %g\n",140);
+    if (!i) ; else  print("error %g\n",150);
+    j = 1;
+    if (i && j)  print("error %g\n",160);
+    if (i || j) ; else  print("error %g\n",170);
+    if (!j)  print("error %g\n",180);
+    i = 2;
+    if (i && j) ; else  print("error %g\n",190);
+    if (i || j) ; else  print("error %g\n",200);
+    if (!i)  print("error %g\n",210);
+    print("Testing Conditionals. Done\n",0);
+}

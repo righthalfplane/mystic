@@ -1,0 +1,5 @@
+{
+    lineplotset(s, 0.001,5.0,0.0 ,0.001,0.0,0.0, 500);
+    outs=s:pres;
+    lineplotout(outs,s);
+}

@@ -1,0 +1,27 @@
+$ large dof test
+poff elem node dof
+node 8 1
+ 1 0. 0.
+50 10. 10. 10.
+fix 1 1
+end
+reac 12
+res 2 3 50 1 1
+ind 3 4 270.0e-9 1 1
+ind 4 5 330.0e-9 1 1
+ind 5 6 330.0e-9 1 1
+ind 6 7 330.0e-9 1 1
+ind 7 8 180.0e-9 1 1
+cap 3 3  82.0e-12 1 1
+cap 4 4 130.0e-12 1 1
+cap 5 5 130.0e-12 1 1
+cap 6 6 130.0e-12 1 1
+cap 7 7 110.0e-12 1 1
+res 8 8 50 1 1
+form
+load
+2 1. 1 0
+end
+solv 10 end
+stop
+

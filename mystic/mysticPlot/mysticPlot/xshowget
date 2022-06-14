@@ -1,0 +1,9 @@
+cp /Users/dir/Code-Repository/xcode/xShow17.0e5/xShow-Source/*.c .
+cp /Users/dir/Code-Repository/xcode/xShow17.0e5/xShow-Source/*.h .
+cp /Users/dir/Code-Repository/xcode/xShow17.0e5/Render-Source/*.c .
+cp /Users/dir/Code-Repository/xcode/xShow17.0e5/Render-Source/*.h .
+cp /Users/dir/Code-Repository/xcode/xShow17.0e5/Show-Common/*.c .
+cp /Users/dir/Code-Repository/xcode/xShow17.0e5/Show-Common/*.h .
+cp /Users/dir/Code-Repository/xcode/xShow17.0e5/MPI-Source/*.c .
+cp /Users/dir/Code-Repository/xcode/xShow17.0e5/MPI-Source/*.h .
+mactounix *.c *.h

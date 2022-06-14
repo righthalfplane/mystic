@@ -1,0 +1,8 @@
+{
+     vmax=max(w);
+     vmin=min(w);
+     
+     print("frame %g ",frame);
+     print("vmax %g ",vmax);
+     print("vmin %g\n",vmin);
+}

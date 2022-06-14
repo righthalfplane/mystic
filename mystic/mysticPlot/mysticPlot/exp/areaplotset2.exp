@@ -1,0 +1,8 @@
+{
+    areaplotset(s,0,0,0, 1.0,3.5,0,100,350,1);
+    areaplotset(d,0,0,0, 1.0,3.5,0,100,350,1);
+    window("outs",size(100,350));
+    window("outd",size(100,350));
+    outs=s:syy;
+    outd=d;
+}

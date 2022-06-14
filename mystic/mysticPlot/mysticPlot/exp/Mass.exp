@@ -1,0 +1,18 @@
+{
+    pi=4.0*atan(1.0);
+    rmin=0;
+    rmax=0.5;
+    nr=100;
+    dr=(rmax-rmin)/nr;
+    ymin=0.0;
+    ymax=3.24;
+    ny=648;
+    dy=(ymax-ymin)/ny;
+    areaplotset(density,rmin,ymin,0, rmax,ymax,0,nr,ny,1);
+    window("mass",sizeof(density));
+    r=xfill(density,rmin+0.5*dr,dr);
+    volume=2*dr*dy*pi*r;
+    mass=volume*density;
+    total= sum(mass);
+    print("total mass %g\n",total);
+}

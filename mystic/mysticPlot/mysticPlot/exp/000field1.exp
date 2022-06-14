@@ -1,0 +1,29 @@
+{
+    /* out of phase */
+    /* do auto 0 - 30      */
+    pi=4.0*atan(1.0);
+    frequency = 28e6;
+    w=2*pi*frequency;
+    speed     = 3e8;
+    wavelength = speed/frequency;
+
+    fac = 2;
+    wscale=2*pi/wavelength;
+    d= wavelength/fac;
+
+    d=0.05*wavelength+frame*0.05*wavelength
+
+
+    print("wavelength %g",wavelength);
+    print(" d %g ",d);
+    print(" fac %g\n",d/wavelength);
+
+    n=400;
+    window("out",size(n+1,n+1));
+
+    x=xfill(out,-5*wavelength,5*wavelength/(.5*n));
+    y=yfill(out,-5*wavelength,5*wavelength/(.5*n));
+    r1 =  sqrt((x-.5*d)*(x-.5*d)+(y*y));
+    r2 =  sqrt((x+.5*d)*(x+.5*d)+(y*y));
+    out = fabs(sin(wscale*r1)+sin(wscale*r2+pi/2));
+}

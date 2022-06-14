@@ -1,0 +1,5 @@
+name scene.sds 200 200 200
+limits 0 24 0 24 0 24
+sphere 12 18 3 2.25 7.
+cone 12 24 0 12 24 6 3 3 9
+stop

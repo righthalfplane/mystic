@@ -1,0 +1,15 @@
+{
+    b=clip(s,100,300,100,300);
+    c=size(400,400);
+
+			
+    c=insert(c,b,0,0);
+    b += 100;
+    c=insert(c,b,200,0);
+    b += 100;
+    c=insert(c,b,0,200);
+    b += 100;
+    c=insert(c,b,200,200);
+    window("out",sizeof(c));
+    out=c;
+}

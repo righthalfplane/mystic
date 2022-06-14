@@ -1,0 +1,14 @@
+{
+    lineplotset(s, 0.1,3.2,0.0 ,0.1,0.0,0.0, 500);
+    lineplotset(d, 0.1,3.2,0.0 ,0.1,0.0,0.0, 500);
+/*
+    sxx=s:sxx;
+    sxy=s:sxy;
+    syy=s:syy;
+    sj2= sqrt(3.0*(sxx*sxx+syy*syy+sxx*syy+sxy*sxy));
+*/
+    outs=s:pres;
+    outd=d;
+    lineplotout(outs,s);
+    lineplotout(outd,d);
+}

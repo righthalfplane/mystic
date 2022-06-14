@@ -1,0 +1,38 @@
+{
+
+	/* in phase dipole */
+	/* do auto 0 - 20  */
+
+	pi=4.0*atan(1.0);
+	frequency = 28e6;
+	w=2*pi*frequency;
+	c = 3e8;
+	wavelength = c/frequency;
+
+	print("wavelength %g",wavelength);
+
+	lh=wavelength/pi;
+	i=1.0;
+	p=1.0;
+	k=2*pi/wavelength;
+	h1=2;
+
+
+	n=100;
+	e=size3(n+1,n+1,n+1);
+	x=xfill(e,-5*wavelength,5*wavelength/(.5*n));
+	y=yfill(e,-5*wavelength,5*wavelength/(.5*n));
+	z=zfill(e,-5*wavelength,5*wavelength/(.5*n));
+	r =  sqrt(x*x+y*y);
+	r1 =  sqrt((h1-z)*(h1-z)+r*r);
+	r2 = sqrt((h1+z)*(h1+z)+r*r);
+	if((r1 > .5) && (r2 > .5)){
+	    e = 60*pi*lh*i*sqrt((1./r1-p/r2)*(1./r1-p/r2)+
+	                         4*p*sin(.5*k*(r2-r1))*sin(.5*k*(r2-r1))/(r1*r2))/wavelength;
+	 }else{
+	    e = 0;
+	}
+	m=max(e);
+	print(" max %g\n",m);
+	writesds(e);
+}

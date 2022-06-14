@@ -1,0 +1,9 @@
+{
+
+    window("out",sizeof(s));
+    dx=s:cell_velocity(0);
+    dy=s:cell_velocity(1);
+
+    out=sqrt(dx*dx+dy*dy);
+
+}

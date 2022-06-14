@@ -1,0 +1,30 @@
+{
+    window("out",size(400,400));
+    i=sizeof(out);
+    j=sizeof(out);
+    x=xfill(out,0,.02);
+    y=yfill(out,0,.02);
+    r=sqrt((x-4.0)*(x-4.0)+(y-4.0)*(y-4.0));
+    if(r == 0){
+        i=1.0;
+    }else{
+        i=sin(r)/r;
+    }
+
+    if(x > 4){
+      if(y > 4){
+         j=1;
+      }else{
+         j= -1;
+      }
+    }else{
+      if(y > 4){
+         j= -1;
+      }else{
+         j= 1;
+      }
+    }
+
+    out=4*i+2*j;
+
+}

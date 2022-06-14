@@ -1,0 +1,13 @@
+{
+    window("out",size(400,400));
+    x=xfill(out,0,.02);
+    y=yfill(out,0,.02);
+    r=(frame+1)*sqrt((x-4.0)*(x-4.0)+(y-4.0)*(y-4.0));
+    if(r == 0){
+        out=100.0;
+    }else{
+        out=100*sin(r)/r;
+    }
+    writesds(out);
+
+}
