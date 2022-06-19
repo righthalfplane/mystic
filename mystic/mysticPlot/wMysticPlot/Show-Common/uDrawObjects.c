@@ -54,14 +54,14 @@ static struct uAttributes *ObjectAttributes(struct DObject *Object);
 static int ObjectSetSelectedRegion(struct DObject *Object,DOListPtr l);
 static int ObjectDrawSelected(struct DObject *o,DOListPtr l);
 
-static struct DObject *ObjectDuplicate(DObjPtr o,int iDup,double *xOff,double *yOff){yOff=yOff;iDup=iDup;xOff=xOff;o=o;return NULL;}
-static struct DObject *ObjectMove(DObjPtr o,double *dx,double *dy){dx=dx;dy=dy;o=o;return NULL;}
-static struct DObject *ObjectKillSelected(DObjPtr o){o=o;return NULL;}
-static char *ObjectCopy(DObjPtr o,long *Length) {o=o;Length=Length;return NULL;}
+static struct DObject *ObjectDuplicate(DObjPtr o,int iDup,double *xOff,double *yOff){return NULL;}
+static struct DObject *ObjectMove(DObjPtr o,double *dx,double *dy){return NULL;}
+static struct DObject *ObjectKillSelected(DObjPtr o){return NULL;}
+static char *ObjectCopy(DObjPtr o,long *Length) {return NULL;}
 
-static int  ObjectGetMessage(DObjPtr o,long MType,void *MData){o=o;MType=MType;MData=MData;return 0;}
+static int  ObjectGetMessage(DObjPtr o,long MType,void *MData){return 0;}
 
-static DObjPtr ObjectDoInformation(DObjPtr o){o=o;return NULL;}
+static DObjPtr ObjectDoInformation(DObjPtr o){return NULL;}
 
 static void ObjectAttribute(DObjPtr o,struct uAttributes *Attributes,int Flag);
 
@@ -137,7 +137,7 @@ int DOListReadWrite(DOListPtr l,FILE8 *inOut,int flag)
 	if(flag == 1){
 		if(l->oCount > 0){
 		    if(l->itemList)cFree((char *)l->itemList);
-		    l->itemList=cMalloc(l->oCount*sizeof(float),8327);
+		    l->itemList=(float *)cMalloc(l->oCount*sizeof(float),8327);
 		    if(!l->itemList)return 1;
 		    
 		    nn=0;
@@ -947,7 +947,7 @@ ErrorOut:
 	DOListPackAll(l);
 	
 	for(n=0;n<l->oCount;++n){
-	    if((Current == l->oCurrent[n]))goto Found2;
+	    if(Current == l->oCurrent[n])goto Found2;
 	}
 	WarningBatch("COListSetAnimation Object Not found\n");
 	return;
@@ -2216,7 +2216,7 @@ int DOListGetMessage(DOListPtr l,long MessageType,void *MessageData)
 	
 	if(!l)return 1;
 	
-	m=MessageData;
+	m=(struct Message1000 *)MessageData;
 	
 	for(n=0;n<l->oCount;++n){
 	    DObjPtr Current;	
@@ -2342,7 +2342,7 @@ void DOListSetMoveUndo(DOListPtr l)
 }
 int  DOListUndoMove(void *v)
 {
-	DOListPtr l=v;
+	DOListPtr l=(DOListPtr)v;
 	IconPtr myIcon;
 	
 	if(!l)return 1;
@@ -2357,7 +2357,7 @@ int  DOListUndoMove(void *v)
 }
 int DOListRedoMove(void *v)
 {
-	DOListPtr l=v;
+	DOListPtr l=(DOListPtr)v;
 	IconPtr myIcon;
 	
 	if(!l)return 1;
@@ -2680,7 +2680,7 @@ void DOListSetDeleteUndo(DOListPtr l)
 }
 int DOListUnDoDelete(void *v)
 {
-	DOListPtr l=v;
+	DOListPtr l=(DOListPtr)v;
 	IconPtr myIcon;
 	
 	if(!l)return 1;
@@ -2695,7 +2695,7 @@ int DOListUnDoDelete(void *v)
 }
 int DOListReDoDelete(void *v)
 {
-	DOListPtr l=v;
+	DOListPtr l=(DOListPtr)v;
 	IconPtr myIcon;
 	
 	if(!l)return 1;
@@ -2724,7 +2724,7 @@ void DOListSetChangeUndo(DOListPtr l)
 }
 int DOListUndoChange(void *v)
 {
-	DOListPtr l=v;
+	DOListPtr l=(DOListPtr)v;
 	IconPtr myIcon;
 	
 	if(!l)return 1;
@@ -2739,7 +2739,7 @@ int DOListUndoChange(void *v)
 }
 int  DOListRedoChange(void *v)
 {
-	DOListPtr l=v;
+	DOListPtr l=(DOListPtr)v;
 	IconPtr myIcon;
 	
 	if(!l)return 1;
@@ -2766,7 +2766,7 @@ void DOListSetNewUndo(DOListPtr l)
 int DOListUndoNew(void *v)
 {
 	IconPtr myIcon;
-	DOListPtr l=v;
+	DOListPtr l=(DOListPtr)v;
 	
 	if(!l)return 1;
 	myIcon=l->myIcon;
@@ -2781,7 +2781,7 @@ int DOListUndoNew(void *v)
 int DOListRedoNew(void *v)
 {
 	IconPtr myIcon;
-	DOListPtr l=v;
+	DOListPtr l=(DOListPtr)v;
 	
 	if(!l)return 1;
 	myIcon=l->myIcon;
@@ -3057,7 +3057,7 @@ int DOSetDrawCanvas(DOListPtr d)
 	d->length=0;
 	
 	if(d->data)cFree((char *)d->data);
-	d->data=cMalloc(length,8264);
+	d->data=(unsigned char *)cMalloc(length,8264);
 	
 	if(!d->data)return 1;
 	
@@ -3540,7 +3540,7 @@ struct DObject *ObjectCreate(char *name,int type,rRect *box,long size)
 static int ObjectSelectedPoint(DObjPtr o,rPoint *ClickPoint)
 {
 	if(!o)return 0;
-	ClickPoint=ClickPoint;
+	//ClickPoint=ClickPoint;
 	return o->Selected;
 }
 
@@ -3556,7 +3556,7 @@ static void ObjectSelectOne(DObjPtr o,rPoint *ClickPoint)
 	myIcon=l->myIcon;
 	if(!myIcon)return;
 	
-	ClickPoint=ClickPoint;
+	//ClickPoint=ClickPoint;
 	if(!(o->Selected)){
 		uSetPenXOR(TRUE,myIcon);	    
 	    o->Selected=TRUE;
@@ -3578,7 +3578,7 @@ static void ObjectDeSelectOne(DObjPtr o,rPoint *ClickPoint)
 	myIcon=l->myIcon;
 	if(!myIcon)return;
 	
-	ClickPoint=ClickPoint;
+	//ClickPoint=ClickPoint;
 	if(o->Selected){
 		uSetPenXOR(TRUE,myIcon);	    
 	    if(o->DrawSelected){
@@ -3663,7 +3663,7 @@ static int ObjectSetFrame(struct DObject *Object,long FrameCount)
 {
 	if(!Object)return 1;
 	
-	FrameCount=FrameCount;
+	//FrameCount=FrameCount;
 	
 	return 0;
 	
@@ -3799,7 +3799,7 @@ int SaveCopy(char *obj,long Length,char **list,long *Total)
 	
 	save = *list;
 	size = *Total + Length;
-	if((put=cMalloc(size,8049)) == NULL){
+	if((put=(char *)cMalloc(size,8049)) == NULL){
 	    cFree((char *)obj);
 	    if(save)cFree((char *)save);
 	    *list=NULL;

@@ -687,7 +687,7 @@ static int doFind(IconPtr myIcon)
 	r->FilesSearched=0;
 	r->linecount=0;
 	r->LinesSearched=0;
-	r->buffin=cMalloc(IO_BUFFER2,92872);
+	r->buffin=(char *)cMalloc(IO_BUFFER2,92872);
 	if(!r->buffin)goto ErrorOut;
 	    
 	Files=uOpenFileDialog(myIcon,TypeList);		

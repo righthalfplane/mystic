@@ -241,7 +241,7 @@ static uAlphaPtr uAlphadoBoxes(uAlphaPtr b,rRect *r,struct uAttributes *Attribut
 	pBox->AlphaNumber=b->AlphaNumber;
 	
 	if(b->fileText && b->fileLength > 0){
-	    pBox->fileText=cMalloc(b->fileLength,8252);
+	    pBox->fileText=(char *)cMalloc(b->fileLength,8252);
 	    if(!pBox->fileText){
 	        WarningBatch("uAlphadoBoxes Out of Memory\n");
 	        goto ErrorOut;
@@ -437,7 +437,7 @@ uAlphaPtr uAlphaAlpha2(uAlphaPtr Pastin,struct DOList *l)
 	b->n=Pastin->n;
 	b->save[b->n]=0;
 	if(Pastin->fileLength > 0){
-	    b->fileText=cMalloc(Pastin->fileLength,8253);
+	    b->fileText=(char *)cMalloc(Pastin->fileLength,8253);
 	    if(!b->fileText){
 	        WarningBatch("CAlphaCAlpha2 Out of Memory\n");
 	        goto ErrorOut;

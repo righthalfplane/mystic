@@ -728,26 +728,26 @@ static int TableGetMessage(IconPtr myIcon,long MessageType,void *MessageData)
 		}
 		goto OK;
 	case MessageType_GET_LINE_DATA:
-	    li=MessageData;
+	    li=(struct linedata *)MessageData;
 	    ret = SendMessageByName(s->BatchName,MessageType_GET_LINE_DATA,li);
 	    goto ErrorOut;
 	case MessageType_GET_AREA_DATA:
-	    ai=MessageData;
+	    ai=(struct areadata *)MessageData;
 		ret=SendMessageByName(s->BatchName,MessageType_GET_AREA_DATA,ai);
 		if(!ret)myIcon->limits=s->Files->limits;
 	    goto ErrorOut;	    
 	case MessageType_GET_REGION_DATA:
-	    sd=MessageData;
+	    sd=(struct SetFrameData  *)MessageData;
 	    if(myIcon->pGetData){
 	    	ret = (*myIcon->pGetData)(myIcon,sd->CurrentFrame,sd);
 	    }
 	    goto ErrorOut;
 	case MessageType_SET_AREA_RANGE:
-	    ai=MessageData;
+	    ai=(struct areadata *)MessageData;
 	    ret = SendMessageByName(s->BatchName,MessageType_SET_AREA_RANGE,ai);
 	    goto ErrorOut;
 	case MessageType_SET_REGION_DATA:
-	    sd=MessageData;
+	    sd=(struct SetFrameData  *)MessageData;
 	    if(myIcon->pPutData){
 	    	ret = (*myIcon->pPutData)(myIcon,sd->CurrentFrame,sd);	
 	    	if(ret){
@@ -778,7 +778,7 @@ static int TableGetMessage(IconPtr myIcon,long MessageType,void *MessageData)
 	    }
 	    goto ErrorOut;
 	case MessageType_GET_LIMITS_DATA:
-	    limitl=MessageData;
+	    limitl=(struct LIMITS *)MessageData;
 	    if(!limitl)goto ErrorOut;
 	    limits=NULL;
 		FileGetLimits(&limits,limitl->CurrentFrame,s->Files);
@@ -952,7 +952,7 @@ static int DrawIt(IconPtr myIcon)
 	sd->pd 	   =  s->pd;
 	sd->pa 	   =  s->pa;
 	
-	if(s->pioName){
+	if(s->pioName[0]){
 		mstrncpy(sd->pioName,s->pioName,255);
 		sd->pioIndex=s->pioIndex;			    
 	}						
@@ -1213,7 +1213,7 @@ static int ListdoSave(IconPtr myIcon,int nFlag)
 	if(!w)return 1;
 	if(!w->Spread)return 1;
 	
-	nFlag=nFlag;
+	//nFlag=nFlag;
 	
 	if(myIcon->FileSave){
 		GetWindowName(myIcon,(char *)fName,0);

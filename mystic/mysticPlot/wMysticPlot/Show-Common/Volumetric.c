@@ -398,7 +398,7 @@ int FilesOpenVolumetric(struct FileInfo2 *files)
 }
 IconPtr  NewVolumetricWindow(IconPtr myIconIn)
 {
-	myIconIn=myIconIn;
+	//myIconIn=myIconIn;
 	return  OpenVolumetricWindow(NULL);
 }
 
@@ -1514,7 +1514,7 @@ static int RenderGetMessage(IconPtr myIcon,long MessageType,void *MessageData)
 	    ret = doSetAreaRange(ai); */
 	    goto ErrorOut;
 	case MessageType_GET_LINE_DATA:
-	    li=MessageData;
+	    li=(struct linedata *)MessageData;
 	    ret = SendMessageByName(s->BatchName,MessageType_GET_LINE_DATA,li);
 	    goto OK;
 	case MessageType_GET_FILE_LIST:
@@ -1619,7 +1619,7 @@ static int adjustPaletteV(struct vScene *scene,int mat)
 {
 
 	if(!scene)return 1;
-	mat=mat;
+	//mat=mat;
 		
 	return 0;
 }
@@ -1901,7 +1901,7 @@ static void tMoveControls(IconPtr myIcon)
 }
 static int tdothumb(controlPtr control,IconPtr myIcon)
 {
-	control=control;
+	//control=control;
 	return tMoveDy(myIcon);
 }
 static int tdoPageUp(controlPtr control,short part,IconPtr myIcon)
@@ -1910,7 +1910,7 @@ static int tdoPageUp(controlPtr control,short part,IconPtr myIcon)
 		
 		if(!myIcon || !control)return 0;
 		
-		part=part;
+		//part=part;
 		dy=0;
 		if(control == myIcon->VControl){
 		    dy= myIcon->uviewRect.ysize;
@@ -1929,7 +1929,7 @@ static int tdoPageDown(controlPtr control,short part,IconPtr myIcon)
 
 		if(!myIcon || !control)return 0;
 		
-		part=part;
+		//part=part;
 		dy=0;
 		if(control == myIcon->VControl){
 		    dy= myIcon->uviewRect.ysize;
@@ -1946,7 +1946,7 @@ static int tgoUp(controlPtr control,short part,IconPtr myIcon)
 		int old;
 	
 		if(!myIcon || !control)return 0;
-		part=part;
+		//part=part;
 		old=(int)uGetControlValue(control);
 		uSetControlValue(control,old-8);
 		if(uGetControlValue(control) == old)return 0;
@@ -1958,7 +1958,7 @@ static int tgoDown(controlPtr control,short part,IconPtr myIcon)
 		int old;
 		
 		if(!myIcon || !control)return 0;
-		part=part;
+		//part=part;
 		old=(int)uGetControlValue(control);
 		uSetControlValue(control,old+8);
 		if(uGetControlValue(control) == old)return 0;
@@ -2965,7 +2965,7 @@ int CenterScreenVol(IconPtr myIcon,int flag)
 	
 	range=&s->sd.range;
 	
-	flag=flag;
+	//flag=flag;
 	
 	if(range->xminData > 1e59){
 	    goto ErrorOut;
@@ -4443,7 +4443,7 @@ static int RenderVolume(IconPtr myIcon,int flag)
 	sd->CurrentFrame=s->CurrentFrame;
 	sd->type = FRAME_DATA_RASTER;
 
-	if(s->pioName){
+	if(s->pioName[0]){
 		mstrncpy(sd->pioName,s->pioName,255);
 		sd->pioIndex=s->pioIndex;			    
 	}						
@@ -4462,7 +4462,7 @@ static int RenderVolume(IconPtr myIcon,int flag)
 		return 1;
 	}
 	
-    s->buffer=sd->data;
+    s->buffer=(unsigned char *)sd->data;
     s->xsize=sd->xsize;
     s->ysize=sd->ysize;
 
@@ -5032,13 +5032,13 @@ static void tDumpItP(IconPtr myIcon,uRect *PageViewi,int scale)
 #else
 static void tPrint(IconPtr myIcon)
 {
-	myIcon=myIcon;
+	//myIcon=myIcon;
 }
 static void tDumpItP(IconPtr myIcon,uRect *PageViewi,int scale)
 {
-	myIcon=myIcon;
-	PageViewi=PageViewi;
-	scale=scale;
+	//myIcon=myIcon;
+	//PageViewi=PageViewi;
+	//scale=scale;
 }
 #endif
 

@@ -32,7 +32,7 @@ int IsShift(void);
 
 
 
-char WarningBuff[256];
+char WarningBuff[1024];
 
 
 #endif

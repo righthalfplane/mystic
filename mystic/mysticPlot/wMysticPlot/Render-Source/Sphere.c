@@ -77,7 +77,7 @@ static int SphereNormal(Object * obj, Isect * hit,Point P,Point N)
 	
 	sp = (SphereData *) obj -> o_data ;
 	
-	hit=hit;
+	//hit=hit;
 
 	VecSub(P, sp -> sph_center, N);
 	(void) VecNormalize(N);

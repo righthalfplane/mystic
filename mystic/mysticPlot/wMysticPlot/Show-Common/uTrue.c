@@ -347,7 +347,7 @@ static int uTrueSetFrame(struct DObject *Object,long CurrentFrame)
     
     ret=1;
     
-    data=NULL;
+    data=(unsigned char *)NULL;
     
     if(b->TrueType < 7){		
 		if(FilesSetFrame(CurrentFrame,b->Files))return 1;
@@ -372,7 +372,7 @@ static int uTrueSetFrame(struct DObject *Object,long CurrentFrame)
 
 		s->typePlotRange = FRAME_RANGE_LIMITS;
 				
-		if(b->pioName){
+		if(b->pioName[0]){
 			mstrncpy(s->pioName,b->pioName,255);
 			s->pioIndex=b->pioIndex;			    
 		}						
@@ -383,11 +383,11 @@ static int uTrueSetFrame(struct DObject *Object,long CurrentFrame)
 		    	mstrncpy(b->pioName,"density",255);
 		   	 	b->pioIndex=0;
 		    }
-    		data=s->data;
+    		data=(unsigned char *)s->data;
 			goto ErrorOut;
 		}		
 
-    	data=s->data;
+    	data=(unsigned char *)s->data;
 
     	b->pd=s->pd;
     		
@@ -1779,7 +1779,7 @@ static int uTrueReplaceImage(uTruePtr b,long xsizei,long ysizei,unsigned char *i
 			    cFree((char *)b->dataPtr);
 			    b->dataPtr=NULL;
 			}
-			if((b->dataPtr=cMalloc(length,8076)) == NULL){
+			if((b->dataPtr=(unsigned char *)cMalloc(length,8076)) == NULL){
 			    sprintf(WarningBuff,"uTrueReplaceImage Out Of Memory Requested (%ld)\n",length);
 			    WarningBatch(WarningBuff);
 			    return 1;
@@ -1836,7 +1836,7 @@ static int uTrueMessage(DObjPtr o,long MessageType,void *MessageData)
 	
 	if(!b || !MessageData)return 1;
 	
-	m=MessageData;
+	m=(struct Message1000 *)MessageData;
 	
 	switch(MessageType){
 	case MessageType_GET_FILE_OWNER:
@@ -2257,7 +2257,7 @@ uTruePtr uTrueTrue(long xs,long ys,rRect *r,struct uAttributes *Attribute,struct
 	b->xsize=xs;
 	b->ysize=ys;
 	b->length=b->xsize*b->ysize*3;
-	if((b->dataPtr=cMalloc(b->length,8037)) == NULL){
+	if((b->dataPtr=(unsigned char *)cMalloc(b->length,8037)) == NULL){
 	    sprintf(WarningBuff,"uTrueTrue Out Of Memory Requested (%ld)\n",b->length);
 	    WarningBatch(WarningBuff);
 	   goto ErrorOut;
@@ -2326,7 +2326,7 @@ uTruePtr uTrueTrue2(uTruePtr Pastin,DOListPtr l)
 	mstrncpy(b->pioName,Pastin->pioName,sizeof(b->pioName));
 	b->pioIndex=Pastin->pioIndex;			    	
 	length=b->xsize*b->ysize*3;
-	if((b->dataPtr=cMalloc(length,8078)) == NULL){
+	if((b->dataPtr=(unsigned char *)cMalloc(length,8078)) == NULL){
 	    sprintf(WarningBuff,"CTrueCTrue2 Out Of Memory Requested (%ld)\n",length);
 	    WarningBatch(WarningBuff);
 	    goto ErrorOut;

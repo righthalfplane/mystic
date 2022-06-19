@@ -4940,7 +4940,6 @@ int FileSDS2DInfo(char **ImageName,long *xsize,long *ysize,
 	*ysize=Files->SDS2DList[CurrentFrame].ysize;
 	*Length=Files->SDS2DList[CurrentFrame].length;
 	*ImageName= FilesImageName(Files,CurrentFrame);
-	Files->limits=Files->SDS2DList[CurrentFrame].limits;
 	return 0;	
 }
 int FilesGetSDS2Ddata(double **data,long *length,

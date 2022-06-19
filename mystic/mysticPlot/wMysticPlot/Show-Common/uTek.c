@@ -172,7 +172,7 @@ static int uTekSetFrame(struct DObject *Object,long CurrentFrame)
 	
 	if((length > b->length) || !b->dataPtr){
 		if(b->dataPtr)cFree((char *)b->dataPtr);
-		b->dataPtr=cMalloc(length,8621);
+		b->dataPtr=(unsigned char *)cMalloc(length,8621);
 		if(!b->dataPtr)return 1;
 	}
 	
@@ -540,7 +540,7 @@ static uTekPtr uTekdoBoxes(uTekPtr b,rRect *r,struct uAttributes *vAttributes)
 	}
 	if(b->length > Image->length){
 	    if(Image->dataPtr)cFree((char *)Image->dataPtr);
-	    Image->dataPtr=cMalloc(b->length,6234);
+	    Image->dataPtr=(unsigned char *)cMalloc(b->length,6234);
 	    if(!Image->dataPtr){
 	        uTekDelete((DObjPtr)Image);
 	        return NULL;
@@ -711,7 +711,7 @@ uTekPtr uTekImage(long xs,long ys,rRect *r,struct uAttributes *Attribute,struct 
 	b->xsize=xs;
 	b->ysize=ys;
 	b->length=b->xsize*b->ysize*3;
-	if((b->dataPtr=cMalloc(b->length,8037)) == NULL){
+	if((b->dataPtr=(unsigned char *)cMalloc(b->length,8037)) == NULL){
 	    sprintf(WarningBuff,"uTekImage Out Of Memory Requested (%ld)\n",b->length);
 	    WarningBatch(WarningBuff);
 	   goto ErrorOut;
@@ -745,7 +745,7 @@ uTekPtr uTekImage2(uTekPtr Pastin,DOListPtr l)
 	b->Files=Pastin->Files;
 	b->CurrentFrame=Pastin->CurrentFrame;
 	length=Pastin->length;
-	if((b->dataPtr=cMalloc(length,8039)) == NULL){
+	if((b->dataPtr=(unsigned char *)cMalloc(length,8039)) == NULL){
 	    sprintf(WarningBuff,"uTekImage2 Out Of Memory Requested (%ld)\n",length);
 	    WarningBatch(WarningBuff);
 	    goto ErrorOut;

@@ -13,7 +13,7 @@ int doVrmlTexture(ColorVEC surf_color,double s1x,double s2x,long ns,long ip,stru
 static int PolyPrint (Object * obj);
 static int PolyIntersect (Object *obj, Ray *ray, Isect *hit);
 static int PolyNormal (Object *obj, Isect *hit,Point P,Point N);
-static int PolyShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color col,Ray *ray);
+static int PolyShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color7 col,Ray *ray);
 
 typedef struct t_polydata {
 	int 	poly_npoints ;
@@ -37,7 +37,7 @@ static ObjectProcs PolyProcs = {
 	PolyNormal,
 	PolyShade,
 } ;
-static int PolyShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color col,Ray *ray)
+static int PolyShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color7 col,Ray *ray)
 {
 	PolyData *qp;
 	struct tState *tS;
@@ -53,9 +53,9 @@ static int PolyShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect
 	Flt		diff ;
 	Flt 	spec ;
 	Flt 	costheta,costheta2 ;
-	Color	surfcolor;
+	Color7	surfcolor;
 	
-	hit=hit;
+	//hit=hit;
 	
 	tray.Q=ray->Q;
 	tray.Qsize=ray->Qsize;
@@ -65,8 +65,8 @@ static int PolyShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect
 	
 	specular[0] = specular[1] = specular[2] = 0.0 ;
 	
-	level=level;
-	weight=weight;
+	//level=level;
+	//weight=weight;
 	
 	qp = (PolyData *) obj -> o_data ;
 	if(!qp)return 0;
@@ -301,8 +301,8 @@ static int PolyNormal(Object *obj, Isect *hit,Point P,Point N)
 	
 	if(!obj)return 1;
 	pd = (PolyData *) obj -> o_data ;
-	hit=hit;
-	P=P;
+	//hit=hit;
+	//P=P;
 	VecCopy(pd -> poly_normal, N);
 	return 0;
 }

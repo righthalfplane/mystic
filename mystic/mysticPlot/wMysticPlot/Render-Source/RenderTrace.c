@@ -95,7 +95,7 @@ ObjectProcs NullProcs = {
 	NullNormal
 } ;
 int CleanTracing(void);
-int Trace(int level, Flt weight, Ray *ray, Color color);
+int Trace(int level, Flt weight, Ray *ray, Color7 color);
 int TraceIt(mThread *Threads);
 static int AllocatedTracing(void);
 static int startLights(struct Scene *scene);
@@ -588,7 +588,7 @@ int TraceIt(mThread *Threads)
 	float *dp;
 	struct P p,Eye;
 	Ray 	ray ;
-	Color	color,csum;
+	Color7	color,csum;
 	int xResolution;
 	long JitterCount;
 	int i,j,jn;
@@ -681,7 +681,7 @@ int TraceIt(mThread *Threads)
 	
 	DallocatePQueue(&ray);
 	
-	sprintf(WarningBuff,"TraceIt smin %ld smax %ld\n",Threads->smin,Threads->smax);
+    sprintf(WarningBuff,"TraceIt smin %ld smax %ld\n",Threads->smin,Threads->smax);
 	if(scene->debug > 1)WarningBatch(WarningBuff);
 	
 ErrorOut:
@@ -801,7 +801,7 @@ ErrorOut:
 	return 0;
 }
 */
-int Trace(int level, Flt weight, Ray *ray, Color color)
+int Trace(int level, Flt weight, Ray *ray, Color7 color)
 {
 	Object *prim ;
 	Vec P, N ;
@@ -878,7 +878,7 @@ static int doAddShadow4G(long *ndata,double *xdata,double *ydata,double *zdata,d
 	
 	if(!ndata || !xdata || !ydata || !zdata || !scene || !gdata)return 1;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 	
 	ret=1;
 	for(nn=0;nn<nel;++nn){	    
@@ -982,7 +982,7 @@ static int doAddShadow4P(long *ndata,double *xdata,double *ydata,double *zdata,d
 	
 	if(!ndata || !xdata || !ydata || !zdata || !scene || !nvdata)return 1;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 	
 	ret=1;
 	for(nn=0;nn<nel;++nn){	    
@@ -1083,7 +1083,7 @@ static int doAddShadow4(long *ndata,double *xdata,double *ydata,double *zdata,do
 	
 	if(!ndata || !xdata || !ydata || !zdata || !scene)return 1;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 	
 	ret=1;
 	for(nn=0;nn<nel;++nn){	    
@@ -1187,7 +1187,7 @@ static int doAddShadow(long *ndata,double *xdata,double *ydata,double *zdata,dou
 	
 	if(!ndata || !xdata || !ydata || !zdata || !scene)return 1;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 	
 	ret=1;
 	for(nn=0;nn<nel;++nn){	    
@@ -1267,7 +1267,7 @@ static int doAddShadowG(long *ndata,double *xdata,double *ydata,double *zdata,do
 	
 	if(!ndata || !xdata || !ydata || !zdata || !scene || !gdata)return 1;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 	
 	ret=1;
 	for(nn=0;nn<nel;++nn){	    
@@ -1346,7 +1346,7 @@ static int doAddShadowP(long *ndata,double *xdata,double *ydata,double *zdata,do
 	
 	if(!ndata || !xdata || !ydata || !zdata || !scene || !nvdata)return 1;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 	
 	ret=1;
 	for(nn=0;nn<nel;++nn){	    
@@ -1420,15 +1420,15 @@ static int doAddShadowVRML(long *ndata,long *matdata,float *normal,long normmax,
 	
 	s=NULL;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 
 	ncell=0;
 	
 	SkipPoly=0;
 	
-	vdata=vdata;
+	//vdata=vdata;
 
-	normmax=normmax;
+	//normmax=normmax;
 
 
 	if(scene->material){

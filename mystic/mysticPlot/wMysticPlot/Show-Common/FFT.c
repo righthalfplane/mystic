@@ -23,7 +23,7 @@ int window(struct complex2 *rt,int nfft,int num,int direction);
 
 extern int WarningBatch(char *message);
 void *cMalloc(unsigned long ,int tag);
-extern char WarningBuff[256];
+extern char WarningBuff[1024];
 int cFree(char *);
 
 int doFFT3D(double *x,double *y,long xsize,long ysize,long zsize,int direction,int filter);

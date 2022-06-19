@@ -202,7 +202,7 @@ int iMakePoly(struct Scene *scene,Surface *s,int npoints, double * points,struct
 	
 	if(!points || !tS || !scene)return 1;
 	
-	s=s;
+	//s=s;
 	
 	n=3*npoints;
 
@@ -628,7 +628,7 @@ int iMakeTriNCV(struct Scene *scene,int npoints,Surface *s, Vec *points,Vec *nor
 	
 	if(!points || !normals || !tS)return 1;
 	
-	s=s;
+	//s=s;
 	
 	if(npoints == 3){
 	    
@@ -655,7 +655,7 @@ int iMakeTriNC(struct Scene *scene,int npoints,Surface *s, Vec *points,Vec *norm
 	float color[12];
 	if(!points || !normals || !scene)return 1;
 	
-	s=s;
+	//s=s;
 	
 	if(npoints == 3){
 	    CountTri++;
@@ -1496,7 +1496,7 @@ static int doAddShadowP(long *ndata,double *xdata,double *ydata,double *zdata,do
 	
 	if(!ndata || !xdata || !ydata || !zdata || !scene || !nvdata)return 1;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 	
 	ret=1;
 	for(nn=0;nn<nel;++nn){	    
@@ -1621,7 +1621,7 @@ static int doAddShadow4P(long *ndata,double *xdata,double *ydata,double *zdata,d
 	
 	if(!ndata || !xdata || !ydata || !zdata || !scene || !nvdata)return 1;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 	
 	ret=1;
 	for(nn=0;nn<nel;++nn){	    
@@ -1783,15 +1783,15 @@ static int doAddShadowVRML(long *ndata,long *matdata,float *normal,long normmax,
 	
 	s=NULL;
 	
-	CellCount=CellCount;
+	//CellCount=CellCount;
 
 	ncell=0;
 	
 	SkipPoly=0;
 	
-	vdata=vdata;
+	//vdata=vdata;
 
-	normmax=normmax;
+	//normmax=normmax;
 
 
 	if(scene->material){

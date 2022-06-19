@@ -398,17 +398,17 @@ Found:
 				if(skipUniversal(length,in))goto ErrorOut;
 	    		continue;
 	    	}
-	    	if(getUniversalRect(TableList[n].data,in))goto ErrorOut; 
+	    	if(getUniversalRect((uRect *)TableList[n].data,in))goto ErrorOut; 
 		}else if(!strcmp(head,"STRI")){
 	    	if(TableList[n].dataType == universal_TypeString){
-	    		if(getUniversalString(TableList[n].data,length,TableList[n].space,in))goto ErrorOut; 
+	    		if(getUniversalString((char *)TableList[n].data,length,TableList[n].space,in))goto ErrorOut; 
 	    	}else if(TableList[n].dataType == universal_TypeStringPtr){
-	    		if(getUniversalStringPtr(TableList[n].data,length,in))goto ErrorOut; 
+	    		if(getUniversalStringPtr((char **)TableList[n].data,length,in))goto ErrorOut; 
 	    	}else if(TableList[n].dataType == universal_TypeBytePtr){
-	    		if(getUniversalStringPtr(TableList[n].data,length,in))goto ErrorOut; 
+	    		if(getUniversalStringPtr((char **)TableList[n].data,length,in))goto ErrorOut; 
 	    		TableList[n].space=length;
 	    	}else if(TableList[n].dataType == universal_TypeBytes){
-	    		if(getUniversalBytes(TableList[n].data,length,TableList[n].space,in))goto ErrorOut; 
+	    		if(getUniversalBytes((char *)TableList[n].data,length,TableList[n].space,in))goto ErrorOut; 
 	    	}else{
 				sprintf(WarningBuff,"getUniversalTable %s tag %d Type Miss-Match Table Entry %d - Skipped\n",
 				        TableList[n].name,TableList[n].dataType,n);
@@ -430,11 +430,11 @@ Found:
 		}else if(!strcmp(head,"FILE")){
 	    	if(TableList[n].dataType == universal_TypeFilesPtr){
 	    	    if(uPref.Files)uPref.Files2=uPref.Files;
-	    	    uPref.Files=cMalloc(sizeof(struct FileList),8765);
+	    	    uPref.Files=(struct FileList *)cMalloc(sizeof(struct FileList),8765);
 	    	    if(!uPref.Files)goto ErrorOut;
 				zerol((char *)uPref.Files,sizeof(struct FileList));
 	    		if(getUniversalFILE(uPref.Files,in))goto ErrorOut;
-	    		p=TableList[n].data;
+	    		p=(char **)TableList[n].data;
 	    		if(p)*p=NULL;	
 	    		if(!uPref.config){
 	    		    FileListFree(uPref.Files);
@@ -457,7 +457,7 @@ Found:
 	    	}		
 		}else if(!strcmp(head,"PALS")){
 	    	if(TableList[n].dataType == universal_TypePaletteList){
-	    		if(getUniversalPalette(TableList[n].data,in))goto ErrorOut;
+	    		if(getUniversalPalette((struct universalListOfPalettes *)TableList[n].data,in))goto ErrorOut;
 	    	}
 		}else{
 			sprintf(WarningBuff,"getUniversalTable %s tag %ld conversion Missing - Skipped\n",head,tag);
@@ -858,7 +858,7 @@ int doUniversalGlobal(IconPtr myIcon,int flag,FILE8 *inOut)
 	
 	ret=1;
 	
-	myIcon=myIcon;
+	//myIcon=myIcon;
 	
 	if(flag == universal_ReadData){
 		return getUniversalTable(&Global,inOut);
@@ -923,24 +923,24 @@ int putUniversalTable(int windowType,universalTablePtr Table,FILE8 *out)
 					WarningBatch(WarningBuff);
 		    		continue;
 		    	}
-				if(saveUniversalRect(TableList[n].data,TableList[n].tag,out))return 1;
+				if(saveUniversalRect((uRect *)TableList[n].data,TableList[n].tag,out))return 1;
 			}else if(!strcmp(TableList[n].name,"STRI")){
 		    	if(TableList[n].dataType == universal_TypeString){
-					if(saveUniversalString(TableList[n].data,TableList[n].tag,out))return 1;
+					if(saveUniversalString((char *)TableList[n].data,TableList[n].tag,out))return 1;
 		    	}else if(TableList[n].dataType == universal_TypeStringPtr){
-		    	    data=TableList[n].data;
+		    	    data=(char **)TableList[n].data;
 		    	    if(!data || !*data){
 		    			continue;
 		    	    }
 					if(saveUniversalString(*data,TableList[n].tag,out))return 1;
 		    	}else if(TableList[n].dataType == universal_TypeBytePtr){
-		    	    data=TableList[n].data;
+		    	    data=(char **)TableList[n].data;
 		    	    if((TableList[n].space <= 0) || !data || !*data){
 		    			continue;
 		    	    }		    	    
 					if(saveUniversalBytes(*data,TableList[n].tag,TableList[n].space,out))return 1;
 		    	}else if(TableList[n].dataType == universal_TypeBytes){
-		    	    data=TableList[n].data;
+		    	    data=(char **)TableList[n].data;
 		    	    if((TableList[n].space <= 0) || !data){
 		    			continue;
 		    	    }		    	    
@@ -969,7 +969,7 @@ int putUniversalTable(int windowType,universalTablePtr Table,FILE8 *out)
 		    	}		
 			}else if(!strcmp(TableList[n].name,"FILE")){
 		    	if(TableList[n].dataType == universal_TypeFilesPtr){
-		    	    data=TableList[n].data;
+		    	    data=(char **)TableList[n].data;
 		    	    if(!data || !*data){
 		    			continue;
 		    	    }
@@ -1020,14 +1020,14 @@ int moveUniversalTable(universalTablePtr Table,int flag)
 	    return 1;
 	}
 	
-	start=Table->tableStatic;
+	start=(char *)Table->tableStatic;
 	if(!start){
 		sprintf(WarningBuff,"moveUniversalTable NULL start infomation\n");
 	    WarningBatch(WarningBuff);
 	    return 1;
 	}
 
-	put=out;
+	put=(char *)out;
 
 	for(n=0;n<Table->TableCount;++n){
 	
@@ -1252,10 +1252,10 @@ int freeUniversalTable(universalTablePtr Table)
 		
 	for(n=0;n<Table->TableCount;++n){
 		if(TableList[n].dataType == universal_TypeStringPtr){
-		    cp=TableList[n].data;
+		    cp=(char **)TableList[n].data;
 			if(cp && *cp){
 			    cFree((char *)(*cp));
-				*cp=NULL;
+				*cp=(char *)NULL;
 			}
 		}else if(TableList[n].dataType == universal_TypeTable){
 		    freeUniversalTable((universalTablePtr)TableList[n].data);
@@ -1487,9 +1487,9 @@ int getUniversalReal(void *Save,int type,long length,long *space,FILE8 *in)
 		if(!space)return 1;
 	    *space=0;	    
 		if(length <= 0)return 0;
-	    sPtr=Save;
+	    sPtr=(float **)Save;
 	    if(*sPtr)cFree((char *)*sPtr);
-	    *sPtr=cMalloc(length,9727);
+	    *sPtr=(float *)cMalloc(length,9727);
 	    if(!*sPtr)return 1;
 	    *space=length/4;	    
 	    sFloat = *sPtr;
@@ -1501,9 +1501,9 @@ int getUniversalReal(void *Save,int type,long length,long *space,FILE8 *in)
 		if(!space)return 1;
 	    *space=0;	    
 		if(length <= 0)return 0;
-	    dPtr=Save;
+	    dPtr=(double **)Save;
 	    if(*dPtr)cFree((char *)*dPtr);
-	    *dPtr=cMalloc(length,9728);
+	    *dPtr=(double *)cMalloc(length,9728);
 	    if(!*dPtr)return 1;
 	    *space=length/8;	    
 	    dFloat = *dPtr;
@@ -1515,9 +1515,9 @@ int getUniversalReal(void *Save,int type,long length,long *space,FILE8 *in)
 		if(!space)return 1;
 	    *space=0;	    
 		if(length <= 0)return 0;
-	    lPtr=Save;
+	    lPtr=(long **)Save;
 	    if(*lPtr)cFree((char *)*lPtr);
-	    *lPtr=cMalloc(length,9729);
+	    *lPtr=(long *)cMalloc(length,9729);
 	    if(!*lPtr)return 1;
 	    *space=length/4;	    
 	    lFloat = *lPtr;
@@ -1532,10 +1532,10 @@ int getUniversalReal(void *Save,int type,long length,long *space,FILE8 *in)
 	if(getFloat8(&data,in))return 1;
 	
 	if(type == universal_TypeInt){
-	    sInt=Save;
+	    sInt=(int *)Save;
 	    *sInt=(int)data;
 	}else if(type == universal_TypeLong){
-	    sLong=Save;
+	    sLong=(long *)Save;
 	    *sLong=(long)data;
 	}
 
@@ -1559,7 +1559,7 @@ int saveUniversalReal(void *Save,long tag,int type,long space,FILE8 *out)
 	if(type == universal_TypeRealArrayPtr){
 		if(space < 0)space=0;
 		if(saveUniversalHeader("REAL",tag,4L*space,out))return 1;
-	    sPtr=Save;
+	    sPtr=(float **)Save;
 	    sFloat = *sPtr;
 		for(n=0;n<space;++n){
 			if(putFloat8(sFloat[n],out))return 1;
@@ -1568,7 +1568,7 @@ int saveUniversalReal(void *Save,long tag,int type,long space,FILE8 *out)
 	}else if(type == universal_TypeDoubleArrayPtr){
 		if(space < 0)space=0;
 		if(saveUniversalHeader("REAL",tag,8L*space,out))return 1;
-	    dPtr=Save;
+	    dPtr=(double **)Save;
 	    dFloat = *dPtr;
 		for(n=0;n<space;++n){
 			if(putDouble8(dFloat[n],out))return 1;
@@ -1577,7 +1577,7 @@ int saveUniversalReal(void *Save,long tag,int type,long space,FILE8 *out)
 	}else if(type == universal_TypeDoubleLongPtr){
 		if(space < 0)space=0;
 		if(saveUniversalHeader("REAL",tag,4L*space,out))return 1;
-	    lPtr=Save;
+	    lPtr=(long **)Save;
 	    lFloat = *lPtr;
 		for(n=0;n<space;++n){
 			if(putLong8(lFloat[n],out))return 1;
@@ -1588,10 +1588,10 @@ int saveUniversalReal(void *Save,long tag,int type,long space,FILE8 *out)
 	if(saveUniversalHeader("REAL",tag,4L,out))return 1;
 	
 	if(type == universal_TypeInt){
-	    sInt=Save;
+	    sInt=(int *)Save;
 	    data=(float)(*sInt);
 	}else if(type == universal_TypeLong){
-	    sLong=Save;
+	    sLong=(long *)Save;
 	    data= (float)(*sLong);
 	}
 	if(putFloat8(data,out))return 1;
@@ -1616,7 +1616,7 @@ int getUniversalDouble(void *Save,int type,long length,long space,FILE8 *in)
 		    WarningBatch(WarningBuff);
 	        return 1;
 	    }
-	    sDouble=Save;
+	    sDouble=(double *)Save;
 	    for(n=0;n<space;++n){
 			if(getDouble8(&sDouble[n],in))return 1;
 	    }
@@ -1626,13 +1626,13 @@ int getUniversalDouble(void *Save,int type,long length,long space,FILE8 *in)
 	if(getDouble8(&data,in))return 1;
 	
 	if(type == universal_TypeInt){
-	    sInt=Save;
+	    sInt=(int *)Save;
 	    *sInt=(int)data;
 	}else if(type == universal_TypeLong){
-	    sLong=Save;
+	    sLong=(long *)Save;
 	    *sLong=(long)data;
 	}else if(type == universal_TypeDouble){
-	    sDouble=Save;
+	    sDouble=(double *)Save;
 	    *sDouble=data;
 	}
 
@@ -1651,7 +1651,7 @@ int saveUniversalDouble(void *Save,long tag,int type,long space,FILE8 *out)
 	if(type == universal_TypeDoubleArray){
 		if(space < 0)space=0;
 		if(saveUniversalHeader("DOUB",tag,8L*space,out))return 1;
-	    sDouble=Save;
+	    sDouble=(double *)Save;
 		for(n=0;n<space;++n){
 			if(putDouble8(sDouble[n],out))return 1;
 		}
@@ -1661,13 +1661,13 @@ int saveUniversalDouble(void *Save,long tag,int type,long space,FILE8 *out)
 	if(saveUniversalHeader("DOUB",tag,8L,out))return 1;
 	
 	if(type == universal_TypeInt){
-	    sInt=Save;
+	    sInt=(int *)Save;
 	    data=(double)(*sInt);
 	}else if(type == universal_TypeLong){
-	    sLong=Save;
+	    sLong=(long *)Save;
 	    data=(double)*sLong;
 	}else if(type == universal_TypeDouble){
-	    sDouble=Save;
+	    sDouble=(double *)Save;
 	    data=*sDouble;
 	}
 	
@@ -1854,7 +1854,7 @@ static int saveRelativePath(struct FileInfo2 *Files,long tag,FILE8 *out)
 	int k,n,nc,j;
 	int n3;
 	
-	if(!Files || !Files->directory || !out)return 1;
+	if(!Files || !Files->directory[0] || !out)return 1;
 	if(!uPref.readWritePath)return 0;
 	
 	tag = -1;
@@ -1926,7 +1926,7 @@ int saveUniversalFILE(struct FileInfo2 **FilesIn,long tag,FILE8 *out)
 	
 	if(!FileOpenIsOpen(Files))return 0;
 	
-	if(!Files || !Files->directory || (Files->FileCount <= 0) || !Files->FilesNames)return 0;
+	if(!Files || !Files->directory[0] || (Files->FileCount <= 0) || !Files->FilesNames)return 0;
 	
 	if(saveRelativePath(Files,tag,out))return 1;
 	

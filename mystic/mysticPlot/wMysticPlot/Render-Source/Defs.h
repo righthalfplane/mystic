@@ -41,7 +41,7 @@
 typedef double Flt ;
 typedef Flt Vec[3] ;
 #endif
-typedef Vec Color ;
+typedef Vec Color7 ;
 typedef Vec Point ;
 typedef Vec ColorVEC ;
  
@@ -220,7 +220,7 @@ Object *MakeSphere(Surface *s,Vec pos,Flt radius);
 
 Object *MakePoly(Surface *s,int npoints, Vec * points,struct tState *tS);
 
-int Shade(Ray *ray,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color col);
+int Shade(Ray *ray,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color7 col);
 
 Object *MakeTriC1N1(int npoints,Surface *s, Vec *points,Vec *normals,Vec *col);
 

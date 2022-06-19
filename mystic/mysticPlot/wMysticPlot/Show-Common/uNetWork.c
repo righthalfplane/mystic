@@ -695,7 +695,7 @@ static int uLIMI(struct uNetWork *uNet,IconPtr myIcon)
 
 	if(NetByte(uNet->Net,&n))return 1;
 	
-	limits=cMalloc(n+4,6291);
+	limits=(char *)cMalloc(n+4,6291);
 	if(!limits)return 1;
 	
 	if(n > 0){
@@ -745,7 +745,7 @@ static int uTEKB(struct uNetWork *uNet,IconPtr myIcon)
 	    }
 	}
 
-	buff=cMalloc(length,8178);
+	buff=(char *)cMalloc(length,8178);
 	if(!buff){
 	    Flush(uNet->Net,length8);
 	    return 1;

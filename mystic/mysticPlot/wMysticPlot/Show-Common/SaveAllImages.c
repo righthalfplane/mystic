@@ -41,9 +41,9 @@ struct ImageSaveList *SaveAllImages(char *name,struct FileInfo2 *Files)
 	ret=1;
 	uGetPort(&Port);
 	
-	Images=NULL;
+	Images=(struct ImageSaveList *)NULL;
 	
-	uR=NULL;
+	uR=(uDialogReturn *)NULL;
 	
 	uList=uDialogOpen(name,&Rect1,ItemCount);
 	
@@ -79,7 +79,7 @@ ErrorOut:
 
     if(ret){
 	    if(Images)ImageFreeList(Images);
-	    Images=NULL;
+	    Images=(struct ImageSaveList *)NULL;
 	}
 	
     if(uList)uDialogClose(uList);
@@ -98,9 +98,9 @@ struct ImageSaveList *ImagesGet(struct uDialogStruct *uList,struct FileInfo2 *Fi
 	long lcount,count,n,cf;
 	int done,ret;
 	
-	if(!uList || !Files)return NULL;
+	if(!uList || !Files)return (struct ImageSaveList *)NULL;
 	
-	Images=NULL;
+	Images=(struct ImageSaveList *)NULL;
 
 	ret=uDialogSet(uList,2L,
               uDialogGetScrollList,&list2,
@@ -158,7 +158,7 @@ ErrorOut:
 
 	if(Images)ImageFreeList(Images);
 	
-	return NULL;
+	return (struct ImageSaveList *)NULL;
 }
 static int doScale2SetButtons(struct uDialogStruct *uList)
 {
@@ -316,16 +316,16 @@ struct ImageSaveList *CreateImageList(long count)
 {
 	struct ImageSaveList *Images;
 	
-	if(count <= 0)return NULL;
+	if(count <= 0)return (struct ImageSaveList *)NULL;
 	
 	Images=(struct ImageSaveList *)cMalloc(sizeof(struct ImageSaveList),8199);
-	if(!Images)return NULL;
+	if(!Images)return (struct ImageSaveList *)NULL;
 	zerol((char *)Images,sizeof(struct ImageSaveList));
 	
 	Images->imageList=(long *)cMalloc(count*sizeof(long),8200);
 	if(!Images->imageList){
 	    cFree((char *)Images);
-	    return NULL;
+	    return (struct ImageSaveList *)NULL;
 	}
 	zerol((char *)Images->imageList,sizeof(count*sizeof(long)));
 	Images->count=count;

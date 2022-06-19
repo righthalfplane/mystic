@@ -5,7 +5,7 @@
 #include <setjmp.h>
 
 
-extern char WarningBuff[256];
+extern char WarningBuff[1024];
 extern int WarningBatch(char *Message);
 extern int SetBuffers(long Length);
 extern int cFree(char *ptr);

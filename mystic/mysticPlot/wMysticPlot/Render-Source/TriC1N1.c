@@ -55,10 +55,10 @@ static int TriNShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect
 	qp = (TriNData *) obj -> o_data ;
 	if(!qp)return 0;
 		
-	I=I;
-	hit=hit;
-	level=level;
-	weight=weight;
+	//I=I;
+	//hit=hit;
+	//level=level;
+	//weight=weight;
 	
 	tray.Q=ray->Q;
 	tray.Qsize=ray->Qsize;
@@ -272,8 +272,8 @@ static int TriNNormal(Object *obj, Isect *hit, Point P, Point N)
 	
 	qp = (TriNData *) obj -> o_data ;
 	
-	P=P;
-	hit=hit;
+	//P=P;
+	//hit=hit;
 	
 
 	N[0]=qp->n1[0];

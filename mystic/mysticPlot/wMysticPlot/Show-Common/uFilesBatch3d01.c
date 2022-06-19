@@ -3452,7 +3452,7 @@ static int doBlockGradientsGet(struct FileInfo2 *Files,long start,long BlockSize
 	
 	ret=1;
 	
-	start=start;
+	//start=start;
 	
 	BlockSizeStart=BlockSize;
 	
@@ -4703,15 +4703,15 @@ static int pioDraw(struct FileInfo2 *Files,unsigned char *buff,long CurrentFrame
 
 	length=pio->range.ixmax*pio->range.iymax;
 	d=(double *)buff;
-	setFloat(d,length);
-    if(getPlotData(Files,d,CurrentFrame)){
+	setFloat((double *)d,length);
+    if(getPlotData(Files,(double *)d,CurrentFrame)){
 	    sprintf(WarningBuff,"doSage2DGetData - getPlotData Error\n");
 	    WarningBatch(WarningBuff);
 		return 1;
     }	
 
 	if(pio->pd.AreaFill){	    	    
-	    FloatToImage(d,length,&pio->pd,NULL);
+	    FloatToImage((double *)d,length,&pio->pd,NULL);
 	}else{
 		zerol((char *)d,length*sizeof(double));
 	}
@@ -5091,15 +5091,15 @@ static int FloatAndRaster(struct FileInfo2 *Files,long CurrentFrame,struct SetFr
 		goto ErrorOut;
     }
 
-	setFloat(sd->data,length);
-    if(getPlotData(Files,sd->data,CurrentFrame)){
+	setFloat((double *)sd->data,length);
+    if(getPlotData(Files,(double *)sd->data,CurrentFrame)){
 	    sprintf(WarningBuff,"FloatAndRaster - getPlotData Error\n");
 	    WarningBatch(WarningBuff);
 		goto ErrorOut;
     }	
 
     zerol((char *)sd->data2,length);
-    if(getPlotImage(Files,sd->data2,CurrentFrame)){
+    if(getPlotImage(Files,(unsigned char *)sd->data2,CurrentFrame)){
 		goto ErrorOut;
     }	
   

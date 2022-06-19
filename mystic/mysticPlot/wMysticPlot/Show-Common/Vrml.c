@@ -830,7 +830,7 @@ struct vrmlObjects *TextureCoordinate2(struct Parser *p)
 	r->duplicateObject=dTextureCoordinate2;
 
 	op=&r->pointdata;
-	a=op;
+	a=(struct checker *)op;
 
 	if(check2(a,sizeof(double)))goto ErrorOut;
 
@@ -2172,7 +2172,7 @@ struct vrmlObjects *Coordinate3(struct Parser *p)
 
 
 	op=&r->pointdata;
-	a=op;
+	a=(struct checker *)op;
 
 	if(check2(a,sizeof(double)))goto ErrorOut;
 
@@ -2505,19 +2505,19 @@ struct vrmlObjects *Material(struct Parser *p)
 	r->duplicateObject=dMaterial;
 
 	op=&r->ambientdata;
-	a[0]=op;
+	a[0]=(struct fallocate *)op;
 	op=&r->diffusedata;
-	a[1]=op;
+	a[1]=(struct fallocate *)op;
 	op=&r->speculardata;
-	a[2]=op;
+	a[2]=(struct fallocate *)op;
 	op=&r->emissivedata;
-	a[3]=op;
+	a[3]=(struct fallocate *)op;
 	op=&r->shinedata;
-	a[4]=op;
+	a[4]=(struct fallocate *)op;
 	op=&r->transdata;
-	a[5]=op;
+	a[5]=(struct fallocate *)op;
 	op=&r->flagsdata;
-	a[6]=op;
+	a[6]=(struct fallocate *)op;
 
 	for(n=0;n<6;++n){
 	    if(check2((struct checker *)a[n],sizeof(double)))goto ErrorOut;
@@ -2623,7 +2623,7 @@ Ok:
 
 	    if(n >= r->emissive/3){
 	        op=&r->emissivedata;
-	        if(check2(op,sizeof(double)))goto ErrorOut;
+	        if(check2((struct checker *)op,sizeof(double)))goto ErrorOut;
 			r->emissive  = 3*(n+1);
 	    }else{
 	        r->flagsdata[n] |= M_EMISSIVE;
@@ -2639,7 +2639,7 @@ Ok:
 
 	    if(n >= r->specular/3){
 	        op=&r->speculardata;
-	        if(check2(op,sizeof(double)))goto ErrorOut;
+	        if(check2((struct checker *)op,sizeof(double)))goto ErrorOut;
 			r->specular = 3*(n+1);
 	    }else{
 	        r->flagsdata[n] |= M_SPECULAR;
@@ -2647,7 +2647,7 @@ Ok:
 
 	    if(n >= r->trans){
 	        op=&r->transdata;
-	        if(check2(op,sizeof(double)))goto ErrorOut;
+	        if(check2((struct checker *)op,sizeof(double)))goto ErrorOut;
 			r->trans = n+1;
 	    }else{
 	        r->flagsdata[n] |= M_TRANSPARENT;
@@ -2655,7 +2655,7 @@ Ok:
 
 	    if(n >= r->shine){
 	        op=&r->shinedata;
-	        if(check2(op,sizeof(double)))goto ErrorOut;
+	        if(check2((struct checker *)op,sizeof(double)))goto ErrorOut;
 			r->shinedata[n]=.2f;
 			r->shine = n+1;
 	    }
@@ -2665,7 +2665,7 @@ Ok:
 	    if(checkfix((struct checker *)a[n],sizeof(double)))goto ErrorOut;
 	}
 	op=&r->flagsdata;
-	if(checkfix(op,sizeof(long)))goto ErrorOut;
+	if(checkfix((struct checker *)op,sizeof(long)))goto ErrorOut;
 
 	r->max=max;
 	return (struct vrmlObjects *)r;
@@ -3030,7 +3030,7 @@ static struct vrmlObjects *dSeparator(struct vrmlObjects *vrml)
 	s1->CountMax=0;
 
 	op=&s1->o;
-	ck = op;
+	ck = (struct checker *)op;
 
 	if(s2->o){
 	    for(n=0;n<s2->Count;++n){
@@ -3053,7 +3053,7 @@ static struct vrmlObjects *dSeparator(struct vrmlObjects *vrml)
 ErrorOut:
     sprintf(WarningBuff,"Error dSeparator\n");
 	WarningBatch(WarningBuff);
-	vrml=NULL;
+	vrml=(struct vrmlObjects *)NULL;
 	return vrml;
 }
 struct vrmlObjects *Separator(struct Parser *p,int type)
@@ -3136,8 +3136,8 @@ ErrorOut:
 	sprintf(WarningBuff,"Error in Separator\n");
 	WarningBatch(WarningBuff);
 	op=&list;
-	freeVrmlObjectList(op);
-	vrml=NULL;
+	freeVrmlObjectList((struct vrmlObjects *)op);
+	vrml=(struct vrmlObjects *)NULL;
 	return vrml;
 }
 int freeVrmlObjectList(struct vrmlObjects *vrml)
@@ -3167,7 +3167,7 @@ int putObjectName(char *name,struct vrmlObjects *vrml,struct Parser *p)
 	if(!name || !vrml || !p)return 1;
 
 	op=&p->list;
-	ck = op;
+	ck = (struct checker *)op;
 
 	if(check2(ck,sizeof(struct vrmlNamelist)))return 1;
 

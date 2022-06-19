@@ -1,4 +1,15 @@
+/*
+ *  uFilesBatch2dBlkMPI01.c
+ *  xShow
+ *
+ *  Created by Dale Ranta on 11/17/11.
+ *  Copyright 2011 SAIC. All rights reserved.
+ *
+ */
+
 #define EXTERN22 extern
+
+#include <mpi.h>
 #include "Xappl.h"
 #include "uLib.h"
 #include "uDialog.h"
@@ -13,15 +24,21 @@
 #include "uFilesBatch2d.h"
 #include "Blocks.h"
 
-int doSage2DGetDataBlks(struct FileInfo2 *Files,long CurrentFrame,struct SetFrameData *sd);
+int BlksReadMPI(MPI_File mpifile,struct FileInfo2 *Files,unsigned long flags,long nb,long BlockSize,long CurrentFrame);
+
+int GetCurrentFilePath(struct FileInfo2 *Files,long CurrentFrame,char *filePath,long size);
+
+int SendToOthers(void *data,int length,int source);
+
+int SendToAll(void *data,int length);
+
+int Sage2DGetDataBlk2(struct FileInfo2 *Files,long CurrentFrame,struct SetFrameData *sd);
+
+int doSage2DGetLineDataBlk2(struct FileInfo2 *Files,struct linedata *li);
 
 static int doSage2DGetGeneratData(struct areadata *ai,struct FileInfo2 *Files);
 
 static int intcmp1(const void *xx,const  void *yy);
-
-int pioDrawLasers2d(struct FileInfo2 *Files,struct screenData *ss,struct dRange *r);
-
-int pioDrawTracers2d(struct FileInfo2 *Files,struct screenData *ss,struct dRange *r);
 
 int setFloat(double *d,long length);
 
@@ -52,7 +69,7 @@ static int getReflectedData(struct FileInfo2 *Files,double *sout,long CurrentFra
 
 static int getPlotData(struct FileInfo2 *Files,double *sout,long CurrentFrame);
 
-int doSage2DGetAreaDataBlk(struct FileInfo2 *Files,struct areadata *ai);
+int doSage2DGetAreaDataBlk2(struct FileInfo2 *Files,struct areadata *ai);
 
 static int getPlotImage(struct FileInfo2 *Files,unsigned char *buff,long CurrentFrame);
 
@@ -74,7 +91,6 @@ static int pioDraw2(struct FileInfo2 *Files,double *data,unsigned char *buff,lon
 
 static int doPointGetData(struct FileInfo2 *Files,struct linedata *li);
 
-int doSage2DGetLineDataBlks(struct FileInfo2 *Files,struct linedata *li);
 
 static int pioGetValue(struct FilePIOInfo *pio,double x,double y,double *v,long *index);
 
@@ -117,6 +133,7 @@ struct streamStruct{
 
 static int pioDrawStream2d(struct FileInfo2 *Files,struct screenData *ss,struct dRange *r)
 {
+	MPI_File mpifile;
 	struct streamStruct *stream;
 	struct FilePIOInfo *pio;
 	struct HeaderBlock *block;
@@ -142,8 +159,9 @@ static int pioDrawStream2d(struct FileInfo2 *Files,struct screenData *ss,struct 
 	int ipass;
 	int nGrad;
 	int ret;
-	long BlockSize,BlockSizeSave,numcell,numcellSave,nb;
+	long BlockSize,BlockSizeSave,numcell,numcellSave;
 	long CurrentFrame;
+	int nnn,kk;
 
 	if(!Files || !ss || !r)return 1;
 	pio = &Files->pioData;
@@ -225,7 +243,9 @@ static int pioDrawStream2d(struct FileInfo2 *Files,struct screenData *ss,struct 
     setPioScales(pio);
 	
  	if(BlksStart(Files,flags))goto ErrorOut;
-   
+	
+   	MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
+
     /*
     sprintf(WarningBuff,"Range xmin %g ymin %g xmax %g ymax %g\n",pio->xmin,pio->ymin,pio->xmax,pio->ymax);
     WarningBatch(WarningBuff);
@@ -243,220 +263,231 @@ StartAgain:
 	numcell=numcellSave;
 	BlockSize=BlockSizeSave;
 	
-	for(nb=0;nb<block->nBlocks;++nb){
-	
-		BlockSize=(long)(block->nBlockSize[nb]);
-		
-		pio->numcell=BlockSize;
-		
-		if(BlksRead(Files,flags,nb,BlockSize,CurrentFrame))goto ErrorOut;
+	for(nnn=0;nnn<block->nBlocks;nnn += xg.size){
+		for(kk=0;kk<xg.size;++kk){
+		    int nb=(nnn + kk) % (int)(block->nBlocks);
+			int np=(nnn + kk) % xg.size;
+			
+			if(np == xg.rank){
+				BlockSize=block->nBlockSize[nb];
 					
-		doRangeBlock(Files);
-/*
-		if(pio->doGradients){		
-			if(doBlockGradientsVel(Files,nff,BlockSize,CurrentFrame))goto ErrorOut;
-		}
-*/
-    
-    	lo_x=pio->next[0];
-    	hi_x=pio->next[1];
-    	lo_y=pio->next[2];
-    	hi_y=pio->next[3];
-    		
-        nGrad=-1;
-		gradxV1=0;
-		gradyV1=0;
-		gradxV2=0;
-		gradyV2=0;
- 	
-	    for(n=0;n<count;++n){
-	    	double v;
-	        for(k=0;k<2;++k){
-	            if(k == 0){
-	               if(stream[n].doneFore)continue;
-		        	x1=x=stream[n].xFore;
-		        	y1=y=stream[n].yFore;
-   					nstep=stream[n].stepsFore;
-	            }else{
-	               if(stream[n].doneBack)continue;
-		        	x1=x=stream[n].xBack;
-		        	y1=y=stream[n].yBack;
-   					nstep=stream[n].stepsBack;
-	            }
-		        ne=-1;
-		        nn=n;
-doAgain3:
-				
-		    	if(!pioGetValue(pio,x,y,&v,&ne)){
-		    	    continue;
-		    	}
-	            if(k == 0){
-		    		stream[n].foundFore=TRUE;
-	            }else{
-		    		stream[n].foundBack=TRUE;
-	            }
-	    		if(streamGradients){
-	    		    if(nGrad != ne){
-			    		gradxV1=0;
-			    		gradyV1=0;
-			    		gradxV2=0;
-			    		gradyV2=0;
-			    		
-			    		n2=(long)(lo_x[ne]-1);
-	        			k2=(int)(pio->level[n2]);
-	        			ke=(int)(pio->level[ne]);
-	                	gradl = (pio->vectorx[ne]-pio->vectorx[n2])/(pio->dx2[ke]+pio->dx2[k2]);
-	                	
-			    		n2=(long)(hi_x[ne]-1);
-	        			k2=(int)(pio->level[n2]);
-	        			ke=(int)(pio->level[ne]);
-	                	gradh = (pio->vectorx[n2]-pio->vectorx[ne])/(pio->dx2[ke]+pio->dx2[k2]);
-	                	
-						gradxV1 = 0.5*(gradl+gradh);
+				pio->numcell=BlockSize;
 						
-			    		n2=(long)(lo_x[ne]-1);
-	        			k2=(int)(pio->level[n2]);
-	        			ke=(int)(pio->level[ne]);
-	                	gradl = (pio->vectory[ne]-pio->vectory[n2])/(pio->dx2[ke]+pio->dx2[k2]);
-	                	
-			    		n2=(long)(hi_x[ne]-1);
-	        			k2=(int)(pio->level[n2]);
-	        			ke=(int)(pio->level[ne]);
-	                	gradh = (pio->vectory[n2]-pio->vectory[ne])/(pio->dx2[ke]+pio->dx2[k2]);
-	                	
-						gradxV2 = 0.5*(gradl+gradh);
+				if(BlksReadMPI(mpifile,Files,flags,nb,block->xBlockSize[nb],CurrentFrame))goto ErrorOut;
+							
+				doRangeBlock(Files);
+		/*
+				if(pio->doGradients){		
+					if(doBlockGradientsVel(Files,nff,BlockSize,CurrentFrame))goto ErrorOut;
+				}
+		*/
+			
+				lo_x=pio->next[0];
+				hi_x=pio->next[1];
+				lo_y=pio->next[2];
+				hi_y=pio->next[3];
+					
+				nGrad=-1;
+				gradxV1=0;
+				gradyV1=0;
+				gradxV2=0;
+				gradyV2=0;
+			
+				for(n=0;n<count;++n){
+					double v;
+					for(k=0;k<2;++k){
+						if(k == 0){
+						   if(stream[n].doneFore)continue;
+							x1=x=stream[n].xFore;
+							y1=y=stream[n].yFore;
+							nstep=stream[n].stepsFore;
+						}else{
+						   if(stream[n].doneBack)continue;
+							x1=x=stream[n].xBack;
+							y1=y=stream[n].yBack;
+							nstep=stream[n].stepsBack;
+						}
+						ne=-1;
+						nn=n;
+		doAgain3:
+						
+						if(!pioGetValue(pio,x,y,&v,&ne)){
+							continue;
+						}
+						if(k == 0){
+							stream[n].foundFore=TRUE;
+						}else{
+							stream[n].foundBack=TRUE;
+						}
+						if(streamGradients){
+							if(nGrad != ne){
+								gradxV1=0;
+								gradyV1=0;
+								gradxV2=0;
+								gradyV2=0;
+								
+								n2=(long)(lo_x[ne]-1);
+								k2=(int)(pio->level[n2]);
+								ke=(int)(pio->level[ne]);
+								gradl = (pio->vectorx[ne]-pio->vectorx[n2])/(pio->dx2[ke]+pio->dx2[k2]);
+								
+								n2=(long)(hi_x[ne]-1);
+								k2=(int)(pio->level[n2]);
+								ke=(int)(pio->level[ne]);
+								gradh = (pio->vectorx[n2]-pio->vectorx[ne])/(pio->dx2[ke]+pio->dx2[k2]);
+								
+								gradxV1 = 0.5*(gradl+gradh);
+								
+								n2=(long)(lo_x[ne]-1);
+								k2=(int)(pio->level[n2]);
+								ke=(int)(pio->level[ne]);
+								gradl = (pio->vectory[ne]-pio->vectory[n2])/(pio->dx2[ke]+pio->dx2[k2]);
+								
+								n2=(long)(hi_x[ne]-1);
+								k2=(int)(pio->level[n2]);
+								ke=(int)(pio->level[ne]);
+								gradh = (pio->vectory[n2]-pio->vectory[ne])/(pio->dx2[ke]+pio->dx2[k2]);
+								
+								gradxV2 = 0.5*(gradl+gradh);
 
-			    		n2=(long)(lo_y[ne]-1);
-	        			k2=(int)(pio->level[n2]);
-	        			ke=(int)(pio->level[ne]);
-	                	gradl = (pio->vectorx[ne]-pio->vectorx[n2])/(pio->dy2[ke]+pio->dy2[k2]);
-	                	
-			    		n2=(long)(hi_y[ne]-1);
-	        			k2=(int)(pio->level[n2]);
-	        			ke=(int)(pio->level[ne]);
-	                	gradh = (pio->vectorx[n2]-pio->vectorx[ne])/(pio->dy2[ke]+pio->dy2[k2]);
-	                	
-						gradyV1 = 0.5*(gradl+gradh);
+								n2=(long)(lo_y[ne]-1);
+								k2=(int)(pio->level[n2]);
+								ke=(int)(pio->level[ne]);
+								gradl = (pio->vectorx[ne]-pio->vectorx[n2])/(pio->dy2[ke]+pio->dy2[k2]);
+								
+								n2=(long)(hi_y[ne]-1);
+								k2=(int)(pio->level[n2]);
+								ke=(int)(pio->level[ne]);
+								gradh = (pio->vectorx[n2]-pio->vectorx[ne])/(pio->dy2[ke]+pio->dy2[k2]);
+								
+								gradyV1 = 0.5*(gradl+gradh);
 
-			    		n2=(long)(lo_y[ne]-1);
-	        			k2=(int)(pio->level[n2]);
-	        			ke=(int)(pio->level[ne]);
-	                	gradl = (pio->vectory[ne]-pio->vectory[n2])/(pio->dy2[ke]+pio->dy2[k2]);
-	                	
-			    		n2=(long)(hi_y[ne]-1);
-	        			k2=(int)(pio->level[n2]);
-	        			ke=(int)(pio->level[ne]);
-	                	gradh = (pio->vectory[n2]-pio->vectory[ne])/(pio->dy2[ke]+pio->dy2[k2]);
-	                	
-						gradyV2 = 0.5*(gradl+gradh);
-                	
-	    			}
-			    		
+								n2=(long)(lo_y[ne]-1);
+								k2=(int)(pio->level[n2]);
+								ke=(int)(pio->level[ne]);
+								gradl = (pio->vectory[ne]-pio->vectory[n2])/(pio->dy2[ke]+pio->dy2[k2]);
+								
+								n2=(long)(hi_y[ne]-1);
+								k2=(int)(pio->level[n2]);
+								ke=(int)(pio->level[ne]);
+								gradh = (pio->vectory[n2]-pio->vectory[ne])/(pio->dy2[ke]+pio->dy2[k2]);
+								
+								gradyV2 = 0.5*(gradl+gradh);
+							
+							}
+								
 
-	    		    nGrad=ne;
-		    	    vx= pio->vectorx[ne]+gradxV1*(x-pio->xcenter[ne])+gradyV1*(y-pio->ycenter[ne]);
-		    	    vy= pio->vectory[ne]+gradxV2*(x-pio->xcenter[ne])+gradyV2*(y-pio->ycenter[ne]);
-/*		    	    
-		    	    sprintf(WarningBuff,"ne %ld n2 %ld %g %g %g %g",ne,n2,gradxV1,gradxV2,gradyV1,gradyV2);
-		    	    WarningBatchFast(WarningBuff);
-*/
-	    		}else{
-		    	    vx= pio->vectorx[ne];
-		    	    vy= pio->vectory[ne];
-	    		}
-		   
-		    	vlen=sqrt(vx*vx+vy*vy);
-		    	
-		    	if(vlen > 0){
-		    		if(k == 0){
-		    	    	sx=dv*vx/vlen;
-		    			sy=dv*vy/vlen;
-		    		}else{
-		    	    	sx = -dv*vx/vlen;
-		    			sy = -dv*vy/vlen;
-		    		}
-		    		x2=x1+sx;  /* move one screen pixel distance */
-		    		y2=y1+sy;	    		
+							nGrad=ne;
+							vx= pio->vectorx[ne]+gradxV1*(x-pio->xcenter[ne])+gradyV1*(y-pio->ycenter[ne]);
+							vy= pio->vectory[ne]+gradxV2*(x-pio->xcenter[ne])+gradyV2*(y-pio->ycenter[ne]);
+		/*		    	    
+							sprintf(WarningBuff,"ne %ld n2 %ld %g %g %g %g",ne,n2,gradxV1,gradxV2,gradyV1,gradyV2);
+							WarningBatchFast(WarningBuff);
+		*/
+						}else{
+							vx= pio->vectorx[ne];
+							vy= pio->vectory[ne];
+						}
+				   
+						vlen=sqrt(vx*vx+vy*vy);
+						
+						if(vlen > 0){
+							if(k == 0){
+								sx=dv*vx/vlen;
+								sy=dv*vy/vlen;
+							}else{
+								sx = -dv*vx/vlen;
+								sy = -dv*vy/vlen;
+							}
+							x2=x1+sx;  /* move one screen pixel distance */
+							y2=y1+sy;	    		
 
-				    if(!isOut(&x1,&y1,&x2,&y2,r)){
-				        RealLoc(pio,&x1,&y1,&ix,&iy);
-				        MoveB(ix,iy);
-				        RealLoc(pio,&x2,&y2,&ix,&iy);
-				        LineB(ix,iy,255,ss);
-				    }
-		    		
-		    		
-		    	}else{
-		    		x2=x;
-		    		y2=y;	    		
-		    		
-				    if(!isOut(&x1,&y1,&x2,&y2,r)){
-				        RealLoc(pio,&x1,&y1,&ix,&iy);
-				        MoveB(ix,iy);
-				        RealLoc(pio,&x2,&y2,&ix,&iy);
-				        LineB(ix,iy,255,ss);
-				    }
-		            if(k == 0){
-		               stream[n].doneFore = TRUE;
-		            }else{
-		               stream[n].doneBack = TRUE;
-		            }
-		            /*
-    	    		sprintf(WarningBuff,"Point  %g %g zero Velocity\n",x2,y2);
-    	    		WarningBatch(WarningBuff);
-    	    		*/
-		    		continue;
-		    	}    	
-		    	  	
-		    	x=x1=x2;
-		    	y=y1=y2;
-		    	if(++nstep > streamSteps){
-		            if(k == 0){
-		            /*
-    	    			sprintf(WarningBuff,"Point %ld  Fore %g %g exceed Steps\n",(long)n,x2,y2);
-    	    			WarningBatch(WarningBuff);
-    	    	    */
-		               stream[n].doneFore = TRUE;
-		            }else{
-		            /*
-    	    			sprintf(WarningBuff,"Point %ld  Back %g %g exceed Steps\n",(long)n,x2,y2);
-    	    			WarningBatch(WarningBuff);
-    	    		*/
-		               stream[n].doneBack = TRUE;
-		            }
-		    	    continue;
-		    	}
-	            if(k == 0){
-		        	stream[n].xFore=x;
-		        	stream[n].yFore=y;
-   					stream[n].stepsFore=nstep;
-	            }else{
-		        	stream[n].xBack=x;
-		        	stream[n].yBack=y;
-   					stream[n].stepsBack=nstep;
-	            }
-		    	goto doAgain3;
-	    	}
-	    	
-	    	
+							if(!isOut(&x1,&y1,&x2,&y2,r)){
+								RealLoc(pio,&x1,&y1,&ix,&iy);
+								MoveB(ix,iy);
+								RealLoc(pio,&x2,&y2,&ix,&iy);
+								LineB(ix,iy,255,ss);
+							}
+							
+							
+						}else{
+							x2=x;
+							y2=y;	    		
+							
+							if(!isOut(&x1,&y1,&x2,&y2,r)){
+								RealLoc(pio,&x1,&y1,&ix,&iy);
+								MoveB(ix,iy);
+								RealLoc(pio,&x2,&y2,&ix,&iy);
+								LineB(ix,iy,255,ss);
+							}
+							if(k == 0){
+							   stream[n].doneFore = TRUE;
+							}else{
+							   stream[n].doneBack = TRUE;
+							}
+							/*
+							sprintf(WarningBuff,"Point  %g %g zero Velocity\n",x2,y2);
+							WarningBatch(WarningBuff);
+							*/
+							continue;
+						}    	
+							
+						x=x1=x2;
+						y=y1=y2;
+						if(++nstep > streamSteps){
+							if(k == 0){
+							/*
+								sprintf(WarningBuff,"Point %ld  Fore %g %g exceed Steps\n",(long)n,x2,y2);
+								WarningBatch(WarningBuff);
+							*/
+							   stream[n].doneFore = TRUE;
+							}else{
+							/*
+								sprintf(WarningBuff,"Point %ld  Back %g %g exceed Steps\n",(long)n,x2,y2);
+								WarningBatch(WarningBuff);
+							*/
+							   stream[n].doneBack = TRUE;
+							}
+							continue;
+						}
+						if(k == 0){
+							stream[n].xFore=x;
+							stream[n].yFore=y;
+							stream[n].stepsFore=nstep;
+						}else{
+							stream[n].xBack=x;
+							stream[n].yBack=y;
+							stream[n].stepsBack=nstep;
+						}
+						goto doAgain3;
+					}
+				}
+	        }
 	    }
-	
 	}
+
+	for(n=0;n<count;++n){
+	    int foundFore,foundBack,iAm,iAmR;
+		iAmR=0;
+		if(stream[n].foundFore || stream[n].foundBack)iAmR=xg.rank;
+		MPI_Reduce ( &stream[n].foundFore, &foundFore, 1, MPI_INT, MPI_MAX, xg.root, MPI_COMM_WORLD );
+		MPI_Reduce ( &stream[n].foundBack, &foundBack, 1, MPI_INT, MPI_MAX, xg.root, MPI_COMM_WORLD );
+		MPI_Reduce ( &iAmR, &iAm, 1, MPI_INT, MPI_MAX, xg.root, MPI_COMM_WORLD );
+		SendToAll(&iAm,sizeof(iAm));
+		SendToAll(&foundFore,sizeof(foundFore));
+		SendToAll(&foundBack,sizeof(foundBack));
+		if((foundFore || foundBack)){
+			SendToOthers(&stream[n],sizeof(struct streamStruct),iAm);
+		}
+	}
+	
 	
 	idone=0;
 	for(n=0;n<count;++n){
 		if(!stream[n].foundFore){
-		/*
-    	    sprintf(WarningBuff,"Point Fore %g %g not Found\n",stream[n].xFore,stream[n].yFore);
-    	    WarningBatch(WarningBuff);
-    	*/
 		    stream[n].doneFore=TRUE;
 		}
 		if(!stream[n].foundBack){
-		/*
-    	    sprintf(WarningBuff,"Point Back %g %g not Found\n",stream[n].xBack,stream[n].yBack);
-    	    WarningBatch(WarningBuff);
-    	*/
 		    stream[n].doneBack=TRUE;
 		}
 		if(stream[n].doneFore)idone += 1;
@@ -476,8 +507,12 @@ doAgain3:
 
 	ret=0;
 ErrorOut:
+	if(ret != 0){
+	    fprintf(stderr,"pioDrawStream2d Error Exit\n");
+	}
+	MPI_File_close(&mpifile);
 	
-	BlocksEnd(Files,flags);
+	BlksEnd(Files,flags);
     if(stream)cFree((char *)stream);
     pio->BlockSize=BlockSizeSave;
     pio->numcell=numcellSave;
@@ -631,6 +666,7 @@ static int doCell(long ne,struct DrawInfo *info)
 }
 static int doSage2DGetGeneratData(struct areadata *ai,struct FileInfo2 *Files)
 {
+	MPI_File mpifile;
     struct FilePIOInfo *pio;
 	struct DrawInfo info;
 	unsigned long flags;
@@ -638,7 +674,8 @@ static int doSage2DGetGeneratData(struct areadata *ai,struct FileInfo2 *Files)
 	struct PIO_BLK *sage;
 	long CurrentFrame;
 	long BlockSize;
-    long nb,n;		
+    long length,nn,n;		
+	int ret;
 	
 	
 	if(!ai || !ai->data || !Files)return 1;
@@ -646,8 +683,14 @@ static int doSage2DGetGeneratData(struct areadata *ai,struct FileInfo2 *Files)
 	sage=&pio->sageBlk;
 	if(!sage)return 1;
 	
+	ret=1;
+	
 	CurrentFrame=ai->CurrentFrame;
 	
+	length=ai->xsize*ai->ysize;
+	
+	for(n=0;n<length;++n)ai->data[n]=-1e66;
+		
 	zerol((char *)&info,sizeof(struct DrawInfo));
 
 	info.pio=pio;
@@ -716,33 +759,62 @@ static int doSage2DGetGeneratData(struct areadata *ai,struct FileInfo2 *Files)
 
     setPioScales(pio);
     
-	for(nb=0;nb<block->nBlocks;++nb){
+	MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
 	
-		BlockSize=(long)(block->nBlockSize[nb]);
+	for(nn=0;nn<block->nBlocks;nn += xg.size){
+        int kk;
+		for(kk=0;kk<xg.size;++kk){
+		    int nb=(nn + kk) % (int)(block->nBlocks);
+			int np=(nn + kk) % xg.size;
 		
-		pio->numcell=BlockSize;
+			if(np == xg.rank){
 		
-		if(BlksRead(Files,flags,nb,BlockSize,CurrentFrame))goto ErrorOut;
-		
-		doRangeBlock(Files);
+				BlockSize=block->nBlockSize[nb];
+				pio->numcell=BlockSize;
+						
+				if(BlksReadMPI(mpifile,Files,flags,nb,block->xBlockSize[nb],CurrentFrame))goto ErrorOut;
 				
-		if(pio->doGradients){		
-			if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
-			if(!pio->gradx || !pio->grady){
-				pio->doGradients = FALSE;
+				doRangeBlock(Files);
+						
+				if(pio->doGradients){		
+					if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
+					if(!pio->gradx || !pio->grady){
+						pio->doGradients = FALSE;
+					}
+				}
+
+				for(n=0;n<BlockSize;++n){		
+					if(pio->daughter[n])continue;	        
+					if(doCell(n,&info))break;	        
+				}
 			}
 		}
-
-		for(n=0;n<BlockSize;++n){		
-	        if(pio->daughter[n])continue;	        
-    		if(doCell(n,&info))break;	        
-		}
-		
 	}
+	
+	MPI_File_close(&mpifile);
     
+	{
+		double *soutg;
+		
+		soutg=NULL;
+		if(xg.rank == xg.root){
+			soutg=(double *)cMalloc(length*sizeof(double),9786);
+			if(!soutg)goto ErrorOut;
+		}
+	
+		MPI_Reduce ( ai->data, soutg, length, MPI_DOUBLE, MPI_MAX, xg.root, MPI_COMM_WORLD );
+		
+		if(xg.rank == xg.root){
+			if(ai->data)cFree((char *)ai->data);
+			ai->data=soutg;
+		}
+			
+	}
+    ret = 0;
+	
 ErrorOut:
-	BlocksEnd(Files,flags);
-	return  0;
+	BlksEnd(Files,flags);
+	return  ret;
 }
 static int doBlockGradients(struct FileInfo2 *Files,long start,long BlockSize,long CurrentFrame)
 {
@@ -871,14 +943,16 @@ static int doBlockGradients(struct FileInfo2 *Files,long start,long BlockSize,lo
 
 static int doIntegrateLine(struct FileInfo2 *Files,struct linedata *li)
 {
-	long nff,BlockSize,BlockSizeSave,numcell,numcellSave,nb;
+	MPI_File mpifile;
+	long nff,BlockSize,BlockSizeSave,numcell,numcellSave;
 	struct FilePIOInfo *pio;
 	struct HeaderBlock *block;
 	struct PIO_BLK *sage;
 	double *xD,*yD,s,s1,s2,s3,s4,dx2,dy2;
 	double x1,y1,x2,y2,x,y,xo,yo,dx,dy,integral;
 	double length;
-	long nd,np,ne,n,ns;
+	long nd,np,ne,n,ns,nn;
+	long np1,np2;
 	double rxmin,rxmax,rymin,rymax,amax;
 	double xmin,xmax,ymin,ymax;
 	double llength;
@@ -981,432 +1055,526 @@ static int doIntegrateLine(struct FileInfo2 *Files,struct linedata *li)
 	rymin=amax;
 	rymax=-amax;	
 	
+	np1=-1;
+	np2=-1;
+	
 	numcell=pio->numcell;
 	BlockSize=pio->BlockSize;
-    nb=0;
+	
+	
+	MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
+
  	nff=0;
-	for(nb=0;nb<block->nBlocks;++nb){
+	for(nn=0;nn<block->nBlocks;nn += xg.size){
+        int kk;
+		for(kk=0;kk<xg.size;++kk){
+		    int nb=(nn + kk) % (int)(block->nBlocks);
+			int np=(nn + kk) % xg.size;
+		
+			if(np == xg.rank){
 	
-		BlockSize=(long)(block->nBlockSize[nb]);
-		
-		pio->numcell=BlockSize;
-		
-		if(BlksRead(Files,B_2D_STANDARD,nb,BlockSize,CurrentFrame))goto ErrorOut;
+				BlockSize=block->nBlockSize[nb];
 				
-		doRangeBlock(Files);
+				pio->numcell=BlockSize;
+				
+				if(BlksReadMPI(mpifile,Files,B_3D_STANDARD,nb,block->xBlockSize[nb],CurrentFrame))goto ErrorOut;
+				
+			doRangeBlock(Files);
 
-		dx2=pio->xmax-pio->xmin;
-		dy2=pio->ymax-pio->ymin;
-		
-	    xmin=pio->xmin-dx2*1.0000001;
-	    xmax=pio->xmax+dx2*1.0000001;
-	    ymin=pio->ymin-dy2*1.0000001;
-	    ymax=pio->ymax+dy2*1.0000001;
-		
-        i1=0;
-        i2=0;
-        if(x1 < xmin || x1 > xmax)i1=1;
-        if(x2 < xmin || x2 > xmax)i2=1;
-        if(y1 < ymin || y1 > ymax)i1=1;
-        if(y2 < ymin || y2 > ymax)i2=1;
-        if(i1 == 0 || i2 == 0){
-      	  	goto Inside1;
-        }
-        
- 	    ihit=0;
-	    if(fabs(rx) > mx){
-	        s1=((pio->xmin)-x1)/rx;
-	        yy=y1+s1*ry;
-	        if(yy < ymin || yy > ymax){
-	            ;
-	        }else{
-	            if(s1 >= 0 && s1 <= 1.0)ihit |= 1;   /* hit low x */
-	        }	        
-	        s2=((pio->xmax)-x1)/rx;
-        	yy=y1+s2*ry;
-	        if(yy < ymin || yy > ymax){
-	            ;
-	        }else{
-	            if(s2 >= 0 && s2 <= 1.0)ihit |= 2;   /* hit hi x */
-	        }	
-	    }        
-	        
-	    if(fabs(ry) > mx){
-	        s3=((pio->ymin)-y1)/ry;
-            xx=x1+s3*rx;	                
-	        if(xx < xmin || xx > xmax){
-	            ;
-	        }else{
-	            if(s3 >= 0 && s3 <= 1.0)ihit |= 4;   /* hit low y */
-	        }	        
-	        s4=((pio->ymax)-y1)/ry;
-            xx=x1+s4*rx;	                
-	        if(xx < xmin || xx > xmax){
-	            ;
-	        }else{
-	           if(s4 >= 0 && s4 <= 1.0)ihit |= 8;    /* hit hi y */
-	        }	        
-	    }
-	    
-	    if(ihit == 0){
-	    /*
-	        sprintf(WarningBuff,"Block Skipped %ld\n",nff);
-	        WarningBatch(WarningBuff);
-	    */
-	        goto NextBlock;
-        }
-/*   
-	No Gradients for integrated lines
-	
-*/
-		
-Inside1:
-		for(ne=0;ne<pio->numcell;++ne){
-		    double value,xc,yc,dl1;
-		    double s;
-		    long k;
-		    if(pio->daughter[ne] || !pio->active[ne])continue;
-		    
-		    k=(long)(pio->level[ne]);
-	        xc=pio->xcenter[ne];
-		    dx2=pio->dx2[k];
-		    xmin=xc-dx2*1.0000001;
-		    xmax=xc+dx2*1.0000001;
-	        yc=pio->ycenter[ne];
-		    dy2=pio->dx2[k];
-		    ymin=yc-dy2*1.0000001;
-		    ymax=yc+dy2*1.0000001;
-		    
-		    s1=s2=s3=s4=-1;
-	 	    
-	        i1=0;
-	        i2=0;
-	        if(x1 < xmin || x1 > xmax)i1=1;
-	        if(x2 < xmin || x2 > xmax)i2=1;
-	        if(y1 < ymin || y1 > ymax)i1=1;
-	        if(y2 < ymin || y2 > ymax)i2=1;
-	        if(i1 == 0 && i2 == 0){
-	      	  sl=0.0;
-	      	  sh=1.0;
-	      	  goto BothInside;
-	        }
-	 	    
-	 	    ihit=0;
-		    if(fabs(rx) > mx){
-		        s1=((xc-dx2)-x1)/rx;
-		        yy=y1+s1*ry;
-		        if(yy < ymin || yy > ymax){
-		            ;
-		        }else{
-		            if(s1 >= 0 && s1 <= 1.0)ihit |= 1;   /* hit low x */
-		        }	        
-		        s2=((xc+dx2)-x1)/rx;
-	        	yy=y1+s2*ry;
-		        if(yy < ymin || yy > ymax){
-		            ;
-		        }else{
-		            if(s2 >= 0 && s2 <= 1.0)ihit |= 2;   /* hit hi x */
-		        }	
-		    }        
-		        
-		    if(fabs(ry) > mx){
-		        s3=((yc-dy2)-y1)/ry;
-                xx=x1+s3*rx;	                
-		        if(xx < xmin || xx > xmax){
-		            ;
-		        }else{
-		            if(s3 >= 0 && s3 <= 1.0)ihit |= 4;   /* hit low y */
-		        }	        
-		        s4=((yc+dy2)-y1)/ry;
-                xx=x1+s4*rx;	                
-		        if(xx < xmin || xx > xmax){
-		            ;
-		        }else{
-		           if(s4 >= 0 && s4 <= 1.0)ihit |= 8;    /* hit hi y */
-		        }	        
-		    }
-		    
-		 		    
-		    
-		    
-		    if(ihit == 0){		    
-		        continue;		        
-		    }
-/*		    
-		    sprintf(WarningBuff,"ne %ld ",ne+nff);
-		    WarningBatch(WarningBuff);
-		    
-		    sprintf(WarningBuff,"ihit %d ",ihit);
-		    WarningBatch(WarningBuff);
-		    
-		    sprintf(WarningBuff,"i1 %d ",i1);
-		    WarningBatch(WarningBuff);
-		    
-		    sprintf(WarningBuff,"i2 %d ",i2);
-		    WarningBatch(WarningBuff);
-		    
-		    sprintf(WarningBuff,"s1 %g ",s1);
-		    WarningBatch(WarningBuff);
-		    
-		    sprintf(WarningBuff,"s2 %g ",s2);
-		    WarningBatch(WarningBuff);
-		    
-		    sprintf(WarningBuff,"s3 %g ",s3);
-		    WarningBatch(WarningBuff);
-		    
-		    sprintf(WarningBuff,"s4 %g \n",s4);
-		    WarningBatch(WarningBuff);
-*/
-
-		    sl=sh=-1;
-		    if(i1 == 1 && i2 == 1){  /* both points outside */
-			    switch(ihit){
-			        case 15: /* lo x & hi x & lo y  & hi y*/
-			        case 11: /* lo x & hi x & hi y */
-			        case 7: /* lo x & hi x & lo y */
-			        case 3: /* lo x & hi x */
-			        sl=s1;
-			        sh=s2;
-			        break;
-			        case 5: /* lo x & lo y */
-			        sl=s1;
-			        sh=s3;
-			        break;
-			        case 9: /* lo x & hi y */
-			        sl=s1;
-			        sh=s4;
-			        break;
-			        
-			        case 6: /* hi x & lo y */
-			        sl=s2;
-			        sh=s3;
-			        break;
-			        
-			        case 10: /* hi x & hi y */
-			        sl=s2;
-			        sh=s4;
-			        break;
-
-			        case 14: /* lo y & hi y  & hi x*/
-			        case 13: /* lo y & hi y  & lo x*/
-			        case 12: /* lo y & hi y */
-			        sl=s3;
-			        sh=s4;
-			        break;
-
-
-			    	case 1:
-			    	case 2:
-			    	case 4:
-			    	case 8:
-			    	case 0:
-			    	default:
-			    		goto NextCell; /* line did not hit this cell */
-			    }
-		    }else if(i1 == 1){  /* point 1 outside */
-			    switch(ihit){
-			        case 15: /* lo x & hi x & lo y  & hi y*/
-			        case 11: /* lo x & hi x & hi y */
-			        case 7: /* lo x & hi x & lo y */
-			        case 3: /* lo x & hi x */
-			        sl=s1;
-			        if(s2 < sl)sl=s2;
-			        sh=1;
-			        break;
-			        case 5: /* lo x & lo y */
-			        sl=s1;
-			        if(s3 < sl)sl=s3;
-			        sh=1;
-			        break;
-			        case 9: /* lo x & hi y */
-			        sl=s1;
-			        if(s4 < sl)sl=s4;
-			        sh=1;
-			        break;
-			        
-			        case 6: /* hi x & lo y */
-			        sl=s2;
-			        if(s3 < sl)sl=s3;
-			        sh=1;
-			        break;
-			        case 10: /* hi x & hi y */
-			        sl=s2;
-			        if(s4 < sl)sl=s4;
-			        sh=1;
-			        break;
-
-			        case 14: /* lo y & hi y  & hi x*/
-			        case 13: /* lo y & hi y  & lo x*/
-			        case 12: /* lo y & hi y */
-			        sl=s3;
-			        if(s4 < sl)sl=s4;
-			        sh=1;
-			        break;
-
-
-			    	case 1:
-			        sl=s1;
-			        sh=1;
-			        break;
-			    	case 2:
-			        sl=s2;
-			        sh=1;
-			        break;
-			    	case 4:
-			        sl=s3;
-			        sh=1;
-			        break;
-			    	case 8:
-			        sl=s4;
-			        sh=1;
-			        break;
-			    	case 0:
-			    	default:
-			    		goto NextCell; /* line did not hit this cell */
-			    }
-		    }else{              /* point 2 outside */
-			    switch(ihit){
-			        case 15: /* lo x & hi x & lo y  & hi y*/
-			        case 11: /* lo x & hi x & hi y */
-			        case 7: /* lo x & hi x & lo y */
-			        case 3: /* lo x & hi x */
-			        sh=s1;
-			        if(s2 > sh)sh=s2;
-			        sl=0;
-			        break;
-			        case 5: /* lo x & lo y */
-			        sh=s1;
-			        if(s3 > sh)sh=s3;
-			        sl=0;
-			        break;
-			        case 9: /* lo x & hi y */
-			        sh=s1;
-			        if(s4 > sh)sh=s4;
-			        sl=0;
-			        break;
-			        
-			        case 6: /* hi x & lo y */
-			        sh=s2;
-			        if(s3 > sh)sh=s3;
-			        sl=0;
-			        break;
-			        case 10: /* hi x & hi y */
-			        sh=s2;
-			        if(s4 > sh)sh=s4;
-			        sl=0;
-			        break;
-
-			        case 14: /* lo y & hi y  & hi x*/
-			        case 13: /* lo y & hi y  & lo x*/
-			        case 12: /* lo y & hi y */
-			        sh=s3;
-			        if(s4 > sh)sh=s4;
-			        sl=0;
-			        break;
-
-
-			    	case 1:
-			        sh=s1;
-			        sl=0;
-			        break;
-			    	case 2:
-			        sh=s2;
-			        sl=0;
-			        break;
-			    	case 4:
-			        sh=s3;
-			        sl=0;
-			        break;
-			    	case 8:
-			        sh=s4;
-			        sl=0;
-			        break;
-			    	case 0:
-			    	default:
-			    		goto NextCell; /* line did not hit this cell */
-			    }
-		    }
-BothInside:		    
-			if(sl > sh){
-			    s=sl;
-			    sl=sh;
-			    sh=s;
+			dx2=pio->xmax-pio->xmin;
+			dy2=pio->ymax-pio->ymin;
+			
+			xmin=pio->xmin-dx2*1.0000001;
+			xmax=pio->xmax+dx2*1.0000001;
+			ymin=pio->ymin-dy2*1.0000001;
+			ymax=pio->ymax+dy2*1.0000001;
+			
+			i1=0;
+			i2=0;
+			if(x1 < xmin || x1 > xmax)i1=1;
+			if(x2 < xmin || x2 > xmax)i2=1;
+			if(y1 < ymin || y1 > ymax)i1=1;
+			if(y2 < ymin || y2 > ymax)i2=1;
+			if(i1 == 0 || i2 == 0){
+				goto Inside1;
 			}
 			
-			
-/*			
-		    sprintf(WarningBuff,"sl %g ",sl);
-		    WarningBatch(WarningBuff);
-		    
-		    sprintf(WarningBuff,"sh %g \n",sh);
-		    WarningBatch(WarningBuff);
-
-*/
-		
-			if(sl == sh)continue;
-		
-		    value=pio->value[ne];
-		    
-			if(nd+4 > np){
-				struct sortdata *st;
-			    		    	    
-			   	st=(struct sortdata *)cRealloc((char *)sort,2*np*sizeof(struct sortdata),3761);
-			   	if(!st || (nd > 1000000)){
-		        	sprintf(WarningBuff,"doIntegrateLine : Error Too many Points %ld\n",nd);
-	    			WarningBatch(WarningBuff);
-	    			if(st){
-	    			    cFree((char *)st);
-	    				sort=NULL;
-	    			}
-	    			goto OutOfHere;
-	    		}
-	    		sort=st;
-	    		np=2*np;
+			ihit=0;
+			if(fabs(rx) > mx){
+				s1=((pio->xmin)-x1)/rx;
+				yy=y1+s1*ry;
+				if(yy < ymin || yy > ymax){
+					;
+				}else{
+					if(s1 >= 0 && s1 <= 1.0)ihit |= 1;   /* hit low x */
+				}	        
+				s2=((pio->xmax)-x1)/rx;
+				yy=y1+s2*ry;
+				if(yy < ymin || yy > ymax){
+					;
+				}else{
+					if(s2 >= 0 && s2 <= 1.0)ihit |= 2;   /* hit hi x */
+				}	
+			}        
+				
+			if(fabs(ry) > mx){
+				s3=((pio->ymin)-y1)/ry;
+				xx=x1+s3*rx;	                
+				if(xx < xmin || xx > xmax){
+					;
+				}else{
+					if(s3 >= 0 && s3 <= 1.0)ihit |= 4;   /* hit low y */
+				}	        
+				s4=((pio->ymax)-y1)/ry;
+				xx=x1+s4*rx;	                
+				if(xx < xmin || xx > xmax){
+					;
+				}else{
+				   if(s4 >= 0 && s4 <= 1.0)ihit |= 8;    /* hit hi y */
+				}	        
 			}
-
-
-		    xo=x1+sl*rx;
-		    yo=y1+sl*ry;	
 			
-			dl1=sqrt((xo-x)*(xo-x)+(yo-y)*(yo-y));
-
-		    sort[nd].x=dl1;
-		    sort[nd].y=value;
-		    sort[nd].ne=ne+nff;
-		    sort[nd].sl=sl;
-		    sort[nd].sh=sh;
-
-		    if(dl1 < rxmin)rxmin=dl1;
-		    if(dl1 > rxmax)rxmax=dl1;
-		    if(value < rymin)rymin=value;
-		    if(value > rymax)rymax=value;
-
-		    xo=x1+sh*rx;
-		    yo=y1+sh*ry;	
+			if(ihit == 0){
+			/*
+				sprintf(WarningBuff,"Block Skipped %ld\n",nff);
+				WarningBatch(WarningBuff);
+			*/
+				goto NextBlock;
+			}
+	/*   
+		No Gradients for integrated lines
+		
+	*/
 			
-			dl=sqrt((xo-x)*(xo-x)+(yo-y)*(yo-y));
+	Inside1:
+			for(ne=0;ne<pio->numcell;++ne){
+				double value,xc,yc,dl1;
+				double s;
+				long k;
+				if(pio->daughter[ne] || !pio->active[ne])continue;
+				
+				k=(long)(pio->level[ne]);
+				xc=pio->xcenter[ne];
+				dx2=pio->dx2[k];
+				xmin=xc-dx2*1.0000001;
+				xmax=xc+dx2*1.0000001;
+				yc=pio->ycenter[ne];
+				dy2=pio->dx2[k];
+				ymin=yc-dy2*1.0000001;
+				ymax=yc+dy2*1.0000001;
+				
+				s1=s2=s3=s4=-1;
+				
+				i1=0;
+				i2=0;
+				if(x1 < xmin || x1 > xmax)i1=1;
+				if(x2 < xmin || x2 > xmax)i2=1;
+				if(y1 < ymin || y1 > ymax)i1=1;
+				if(y2 < ymin || y2 > ymax)i2=1;
+				if(i1 == 0 && i2 == 0){
+				  sl=0.0;
+				  sh=1.0;
+				  goto BothInside;
+				}
+				
+				ihit=0;
+				if(fabs(rx) > mx){
+					s1=((xc-dx2)-x1)/rx;
+					yy=y1+s1*ry;
+					if(yy < ymin || yy > ymax){
+						;
+					}else{
+						if(s1 >= 0 && s1 <= 1.0)ihit |= 1;   /* hit low x */
+					}	        
+					s2=((xc+dx2)-x1)/rx;
+					yy=y1+s2*ry;
+					if(yy < ymin || yy > ymax){
+						;
+					}else{
+						if(s2 >= 0 && s2 <= 1.0)ihit |= 2;   /* hit hi x */
+					}	
+				}        
+					
+				if(fabs(ry) > mx){
+					s3=((yc-dy2)-y1)/ry;
+					xx=x1+s3*rx;	                
+					if(xx < xmin || xx > xmax){
+						;
+					}else{
+						if(s3 >= 0 && s3 <= 1.0)ihit |= 4;   /* hit low y */
+					}	        
+					s4=((yc+dy2)-y1)/ry;
+					xx=x1+s4*rx;	                
+					if(xx < xmin || xx > xmax){
+						;
+					}else{
+					   if(s4 >= 0 && s4 <= 1.0)ihit |= 8;    /* hit hi y */
+					}	        
+				}
+				
+						
+				
+				
+				if(ihit == 0){		    
+					continue;		        
+				}
+	/*		    
+				sprintf(WarningBuff,"ne %ld ",ne+nff);
+				WarningBatch(WarningBuff);
+				
+				sprintf(WarningBuff,"ihit %d ",ihit);
+				WarningBatch(WarningBuff);
+				
+				sprintf(WarningBuff,"i1 %d ",i1);
+				WarningBatch(WarningBuff);
+				
+				sprintf(WarningBuff,"i2 %d ",i2);
+				WarningBatch(WarningBuff);
+				
+				sprintf(WarningBuff,"s1 %g ",s1);
+				WarningBatch(WarningBuff);
+				
+				sprintf(WarningBuff,"s2 %g ",s2);
+				WarningBatch(WarningBuff);
+				
+				sprintf(WarningBuff,"s3 %g ",s3);
+				WarningBatch(WarningBuff);
+				
+				sprintf(WarningBuff,"s4 %g \n",s4);
+				WarningBatch(WarningBuff);
+	*/
 
-		    sort[nd].x2=dl;
-		    sort[nd].y2=value;
-		    sort[nd].ne=ne+nff;
-		    sort[nd].sl=sl;
-		    sort[nd].sh=sh;
-		    nd++;
+				sl=sh=-1;
+				if(i1 == 1 && i2 == 1){  /* both points outside */
+					switch(ihit){
+						case 15: /* lo x & hi x & lo y  & hi y*/
+						case 11: /* lo x & hi x & hi y */
+						case 7: /* lo x & hi x & lo y */
+						case 3: /* lo x & hi x */
+						sl=s1;
+						sh=s2;
+						break;
+						case 5: /* lo x & lo y */
+						sl=s1;
+						sh=s3;
+						break;
+						case 9: /* lo x & hi y */
+						sl=s1;
+						sh=s4;
+						break;
+						
+						case 6: /* hi x & lo y */
+						sl=s2;
+						sh=s3;
+						break;
+						
+						case 10: /* hi x & hi y */
+						sl=s2;
+						sh=s4;
+						break;
 
-		    if(dl < rxmin)rxmin=dl;
-		    if(dl > rxmax)rxmax=dl;
-		    if(value < rymin)rymin=value;
-		    if(value > rymax)rymax=value;
+						case 14: /* lo y & hi y  & hi x*/
+						case 13: /* lo y & hi y  & lo x*/
+						case 12: /* lo y & hi y */
+						sl=s3;
+						sh=s4;
+						break;
+
+
+						case 1:
+						case 2:
+						case 4:
+						case 8:
+						case 0:
+						default:
+							goto NextCell; /* line did not hit this cell */
+					}
+				}else if(i1 == 1){  /* point 1 outside */
+					switch(ihit){
+						case 15: /* lo x & hi x & lo y  & hi y*/
+						case 11: /* lo x & hi x & hi y */
+						case 7: /* lo x & hi x & lo y */
+						case 3: /* lo x & hi x */
+						sl=s1;
+						if(s2 < sl)sl=s2;
+						sh=1;
+						break;
+						case 5: /* lo x & lo y */
+						sl=s1;
+						if(s3 < sl)sl=s3;
+						sh=1;
+						break;
+						case 9: /* lo x & hi y */
+						sl=s1;
+						if(s4 < sl)sl=s4;
+						sh=1;
+						break;
+						
+						case 6: /* hi x & lo y */
+						sl=s2;
+						if(s3 < sl)sl=s3;
+						sh=1;
+						break;
+						case 10: /* hi x & hi y */
+						sl=s2;
+						if(s4 < sl)sl=s4;
+						sh=1;
+						break;
+
+						case 14: /* lo y & hi y  & hi x*/
+						case 13: /* lo y & hi y  & lo x*/
+						case 12: /* lo y & hi y */
+						sl=s3;
+						if(s4 < sl)sl=s4;
+						sh=1;
+						break;
+
+
+						case 1:
+						sl=s1;
+						sh=1;
+						break;
+						case 2:
+						sl=s2;
+						sh=1;
+						break;
+						case 4:
+						sl=s3;
+						sh=1;
+						break;
+						case 8:
+						sl=s4;
+						sh=1;
+						break;
+						case 0:
+						default:
+							goto NextCell; /* line did not hit this cell */
+					}
+				}else{              /* point 2 outside */
+					switch(ihit){
+						case 15: /* lo x & hi x & lo y  & hi y*/
+						case 11: /* lo x & hi x & hi y */
+						case 7: /* lo x & hi x & lo y */
+						case 3: /* lo x & hi x */
+						sh=s1;
+						if(s2 > sh)sh=s2;
+						sl=0;
+						break;
+						case 5: /* lo x & lo y */
+						sh=s1;
+						if(s3 > sh)sh=s3;
+						sl=0;
+						break;
+						case 9: /* lo x & hi y */
+						sh=s1;
+						if(s4 > sh)sh=s4;
+						sl=0;
+						break;
+						
+						case 6: /* hi x & lo y */
+						sh=s2;
+						if(s3 > sh)sh=s3;
+						sl=0;
+						break;
+						case 10: /* hi x & hi y */
+						sh=s2;
+						if(s4 > sh)sh=s4;
+						sl=0;
+						break;
+
+						case 14: /* lo y & hi y  & hi x*/
+						case 13: /* lo y & hi y  & lo x*/
+						case 12: /* lo y & hi y */
+						sh=s3;
+						if(s4 > sh)sh=s4;
+						sl=0;
+						break;
+
+
+						case 1:
+						sh=s1;
+						sl=0;
+						break;
+						case 2:
+						sh=s2;
+						sl=0;
+						break;
+						case 4:
+						sh=s3;
+						sl=0;
+						break;
+						case 8:
+						sh=s4;
+						sl=0;
+						break;
+						case 0:
+						default:
+							goto NextCell; /* line did not hit this cell */
+					}
+				}
+				
+				if(i1 == 0){
+					np1=ne+nff;
+				}
+				
+				if(i2 == 0){
+					np2=ne+nff;
+				}
+				
+	BothInside:		    
+				if(sl > sh){
+					s=sl;
+					sl=sh;
+					sh=s;
+				}
+				
+	/*			
+				sprintf(WarningBuff,"sl %g ",sl);
+				WarningBatch(WarningBuff);
+				
+				sprintf(WarningBuff,"sh %g \n",sh);
+				WarningBatch(WarningBuff);
+
+	*/
 			
-				    
-NextCell:
-			;
+				if(sl == sh)continue;
+			
+				value=pio->value[ne];
+				
+				if(nd+4 > np){
+					struct sortdata *st;
+										
+					st=(struct sortdata *)cRealloc((char *)sort,2*np*sizeof(struct sortdata),3761);
+					if(!st || (nd > 1000000)){
+						sprintf(WarningBuff,"doIntegrateLine : Error Too many Points %ld\n",nd);
+						WarningBatch(WarningBuff);
+						if(st){
+							cFree((char *)st);
+							sort=NULL;
+						}
+						goto OutOfHere;
+					}
+					sort=st;
+					np=2*np;
+				}
+
+
+				xo=x1+sl*rx;
+				yo=y1+sl*ry;	
+				
+				dl1=sqrt((xo-x)*(xo-x)+(yo-y)*(yo-y));
+
+				sort[nd].x=dl1;
+				sort[nd].y=value;
+				sort[nd].ne=ne+nff;
+				sort[nd].sl=sl;
+				sort[nd].sh=sh;
+
+				if(dl1 < rxmin)rxmin=dl1;
+				if(dl1 > rxmax)rxmax=dl1;
+				if(value < rymin)rymin=value;
+				if(value > rymax)rymax=value;
+
+				xo=x1+sh*rx;
+				yo=y1+sh*ry;	
+				
+				dl=sqrt((xo-x)*(xo-x)+(yo-y)*(yo-y));
+
+				sort[nd].x2=dl;
+				sort[nd].y2=value;
+				sort[nd].ne=ne+nff;
+				sort[nd].sl=sl;
+				sort[nd].sh=sh;
+				nd++;
+
+				if(dl < rxmin)rxmin=dl;
+				if(dl > rxmax)rxmax=dl;
+				if(value < rymin)rymin=value;
+				if(value > rymax)rymax=value;
+				
+						
+	NextCell:
+				;
+			}
 		}
 NextBlock:	
 			nff += BlockSize;
 		}
+	}
 		
 	
+	MPI_File_close(&mpifile);
+	
+	{
+		int *nf,*nff,len,nps;
+		MPI_Status status;
+		
+		MPI_Reduce ( &np1, &nps, 1, MPI_INT, MPI_MAX, xg.root, MPI_COMM_WORLD );
+		
+		np1=nps;
+
+		MPI_Reduce ( &np2, &nps, 1, MPI_INT, MPI_MAX, xg.root, MPI_COMM_WORLD );
+		
+		np2=nps;
+
+		nf=(int *)cMalloc(xg.size*sizeof(int),8276);
+		if(!nf)goto ErrorOut;
+		nff=(int *)cMalloc(xg.size*sizeof(int),8276);
+		if(!nff)goto ErrorOut;
+		for(n=0;n<xg.size;++n){
+		   nf[n]=0;
+		   if(n == xg.rank)nf[n]=nd;
+		}
+		
+		MPI_Reduce ( nf, nff, xg.size, MPI_INT, MPI_MAX, xg.root, MPI_COMM_WORLD );
+		
+		SendToAll(nff,xg.size*sizeof(int));
+/*
+		if(xg.rank == xg.root){
+			fprintf(stderr,"nff ");
+		   for(n=0;n<xg.size;++n){
+		      fprintf(stderr," %ld ",(long)nff[n]);
+		   }
+		   fprintf(stderr,"\n");
+		}
+*/
+
+		MPI_Barrier(MPI_COMM_WORLD);
+		
+		len=nff[0];
+		for(n=1;n<xg.size;++n){
+		   if(nff[n] > 0){
+		        if(n == xg.rank){
+					MPI_Send(sort, nff[n]*sizeof(struct sortdata), MPI_BYTE, xg.root, 1, MPI_COMM_WORLD);
+					/* fprintf(stderr,"send send send done done -----5 rank %ld nd %ld\n",(long)xg.rank,(long)nff[n]); */
+				}
+		   }
+		   len += nff[n];
+		}
+				
+		len=nff[0];
+		for(n=1;n<xg.size;++n){
+		   if(nff[n] > 0){
+		        if(xg.root == xg.rank){
+					MPI_Recv(sort+len, nff[n]*sizeof(struct sortdata), MPI_BYTE, n, 1, MPI_COMM_WORLD,&status);
+					/* fprintf(stderr,"receive receive receive done done ---- 6 rank %ld nd %ld\n",(long)xg.rank,(long)nff[n]); */
+				}
+				
+				
+		   }
+		   len += nff[n];
+		}
+		
+		MPI_Barrier(MPI_COMM_WORLD);
+		
+		if(xg.root == xg.rank){
+			nd=len;
+		}else{
+			nd=0;
+		}
+		cFree((char *)nf);
+		cFree((char *)nff);
+	}
 	
 	if(!nd)goto OutOfHere;
 	
@@ -1520,10 +1688,11 @@ OutOfHere:
 	if(yD)cFree((char *)yD);
 	if(sort)cFree((char *)sort);
 	
-	BlocksEnd(Files,B_2D_STANDARD);
+	BlksEnd(Files,B_2D_STANDARD);
     
     pio->BlockSize=BlockSizeSave;
     pio->numcell=numcellSave;
+	
 	return ret;
 }
 int intcmp1(const void *xx,const  void *yy)
@@ -1540,14 +1709,15 @@ int intcmp1(const void *xx,const  void *yy)
 }
 static int doPointGetListData(struct FileInfo2 *Files,struct linedata *li)
 {
-	long BlockSize,BlockSizeSave,numcell,numcellSave,nb;
+	MPI_File mpifile;
+	long BlockSize,BlockSizeSave,numcell,numcellSave;
 	struct HeaderBlock *block;
 	struct PIO_BLK *sage;
     struct FilePIOInfo *pio;
 	long CurrentFrame;
 	unsigned long flags;
 	long index;
-	long n;
+	long n,nn;
 	int ret;
 	
 	if(!Files || !li)return 1;
@@ -1593,49 +1763,90 @@ static int doPointGetListData(struct FileInfo2 *Files,struct linedata *li)
 	
 	
 	for(n=0;n<li->PointLineCount;++n){	    
-		li->v[n]=0;
+		li->v[n]= -2e66;
 	}
 	
 /*	
 	pio->pa.flagGradients=TRUE;
 	
  */   
+ 
+		MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
+
     	numcell=pio->numcell;
 		BlockSize=pio->BlockSize;
 
-		for(nb=0;nb<block->nBlocks;++nb){
+		for(nn=0;nn<block->nBlocks;nn += xg.size){
+			int kk;
+			for(kk=0;kk<xg.size;++kk){
 		
-			BlockSize=(long)(block->nBlockSize[nb]);
+				int nb=(nn + kk) % (int)(block->nBlocks);
+				int np=(nn + kk) % xg.size;
 			
-			pio->numcell=BlockSize;
-			
-			if(BlksRead(Files,flags,nb,BlockSize,CurrentFrame))goto ErrorOut;
-			
-			doRangeBlock(Files);
+				if(np == xg.rank){
+					BlockSize=block->nBlockSize[nb];
+					pio->numcell=BlockSize;
+					
+					if(BlksReadMPI(mpifile,Files,flags,nb,block->xBlockSize[nb],CurrentFrame))goto ErrorOut;
+				
+					doRangeBlock(Files);
 
-			if(pio->doGradients){		
-				if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
-				if(!pio->gradx || !pio->grady){
-					pio->doGradients = FALSE;
+					if(pio->doGradients){		
+						if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
+						if(!pio->gradx || !pio->grady){
+							pio->doGradients = FALSE;
+						}
+					}
+					
+					for(n=0;n<li->PointLineCount;++n){
+									
+						if(!pioGetValue(pio,li->x[n],li->y[n],&li->v[n],&index)){
+							continue;
+						}	    
+					}
+				}
+			}
+		}
+		
+		
+		MPI_File_close(&mpifile);
+		
+		{
+			double *data=NULL;
+			long ifound=0;
+			
+			if(xg.root == xg.rank){
+			   data=cMalloc(sizeof(double)*li->PointLineCount,9891);
+			   if(!data)goto ErrorOut;
+			}
+			
+			MPI_Reduce ( li->v, data, li->PointLineCount, MPI_DOUBLE, MPI_MAX, xg.root, MPI_COMM_WORLD);
+			
+			if(xg.root == xg.rank){
+				for(n=0;n<li->PointLineCount;++n)li->v[n]=data[n];
+			}
+			
+			ifound=0;
+			for(n=0;n<li->PointLineCount;++n){	    
+				if(li->v[n] < -1e66){
+					li->v[n]=0;
+				}else{
+					++ifound;
 				}
 			}
 			
-			for(n=0;n<li->PointLineCount;++n){
-			    		    
-			    if(!pioGetValue(pio,li->x[n],li->y[n],&li->v[n],&index)){
-			        continue;
-			    }	    
-			}
+			if(data)cFree((char *)data);
+
 		}
 		
 	ret = 0;
 ErrorOut:
 
-	BlocksEnd(Files,flags);
+	BlksEnd(Files,flags);
     
     pio->BlockSize=BlockSizeSave;
     pio->numcell=numcellSave;
-
+	
 	return ret;
 }
 
@@ -1680,20 +1891,21 @@ static int doRangeBlock(struct FileInfo2 *Files)
 }
 
 
-int doSage2DGetLineDataBlks(struct FileInfo2 *Files,struct linedata *li)
+int doSage2DGetLineDataBlk2(struct FileInfo2 *Files,struct linedata *li)
 {
+	MPI_File mpifile;
 	int ix1,iy1,ix2,iy2;
 	double x1,y1,x2,y2,dl,ds,dx,dy,dp;
 	long ns,n,nd;
-	double *xD,*yD,*zD;
+	double *xD,*yD,*zD,*fD,*fDD;
 	double rxmin,rxmax,rymin,rymax,amax;
-	long nff,BlockSize,BlockSizeSave,numcell,numcellSave,nb;
+	long BlockSize,BlockSizeSave,numcell,numcellSave;
 	long CurrentFrame;
     struct FilePIOInfo *pio;
 	struct HeaderBlock *block;
 	struct PIO_BLK *sage;
 	unsigned long flags;
-	long index;
+	long index,nn;
 	int ret;
 	
 	if(!Files || !li)return 1;
@@ -1710,6 +1922,9 @@ int doSage2DGetLineDataBlks(struct FileInfo2 *Files,struct linedata *li)
     xD=NULL;
     yD=NULL;
     zD=NULL;
+    fD=NULL;
+	fDD=NULL;
+	
 	BlockSizeSave=pio->BlockSize;
     numcellSave=pio->numcell;
 	
@@ -1800,6 +2015,15 @@ int doSage2DGetLineDataBlks(struct FileInfo2 *Files,struct linedata *li)
 	    goto OutOfHere;
 	}
 
+	if(!(fD=(double *)cMalloc((long)sizeof(double)*(ns+2*xg.size),81883))){
+	    WarningBatch("doSage3DGetLineData Out of List Memory\n");
+	    goto ErrorOut;
+	}
+
+	if(!(fDD=(double *)cMalloc((long)sizeof(double)*(ns+2*xg.size),81883))){
+	    WarningBatch("doSage3DGetLineData Out of List Memory\n");
+	    goto ErrorOut;
+	}
 
 	for(n=0;n<ns;++n){
 	    double x,y;
@@ -1810,6 +2034,7 @@ int doSage2DGetLineDataBlks(struct FileInfo2 *Files,struct linedata *li)
 	    xD[n]=x;
 	    yD[n]=y;
 	    zD[n]=0;
+	    fD[n]=0;
 
 	}
 
@@ -1819,56 +2044,86 @@ int doSage2DGetLineDataBlks(struct FileInfo2 *Files,struct linedata *li)
 	rymin=amax;
 	rymax=-amax;
 
-    	numcell=pio->numcell;
-		BlockSize=pio->BlockSize;
-	    nb=0;
-	 	nff=0;
-		for(nb=0;nb<block->nBlocks;++nb){
+	numcell=pio->numcell;
+	BlockSize=pio->BlockSize;
 		
-			BlockSize=(long)(block->nBlockSize[nb]);
-			
-			pio->numcell=BlockSize;
-			
-			if(BlksRead(Files,flags,nb,BlockSize,CurrentFrame))goto ErrorOut;
-						
-			doRangeBlock(Files);
+	MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
+	
+	for(nn=0;nn<block->nBlocks;nn += xg.size){
+        int kk;
+		for(kk=0;kk<xg.size;++kk){
+		    int nb=(nn + kk) % (int)(block->nBlocks);
+			int np=(nn + kk) % xg.size;
+		
+			if(np == xg.rank){
+				BlockSize=block->nBlockSize[nb];
+				pio->numcell=BlockSize;
+					
+				if(BlksReadMPI(mpifile,Files,flags,nb,block->xBlockSize[nb],CurrentFrame))goto ErrorOut;
+							
+				doRangeBlock(Files);
 
-			if(pio->doGradients){		
-				if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
-				if(!pio->gradx || !pio->grady){
-					pio->doGradients = FALSE;
+				if(pio->doGradients){		
+					if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
+					if(!pio->gradx || !pio->grady){
+						pio->doGradients = FALSE;
+					}
 				}
+
+				for(n=0;n<ns;++n){
+					double value,x,y;
+					if(fD[n] > 0)continue;
+					x=xD[n];
+					y=yD[n];
+
+					
+					if(!pioGetValue(pio,x,y,&value,&index)){
+						continue;
+					}
+
+					dx=x-x1;
+					dy=y-y1;
+					dp=sqrt(dx*dx+dy*dy);
+
+					xD[n]=dp;
+					yD[n]=value;
+					if(dp < rxmin)rxmin=dp;
+					if(dp > rxmax)rxmax=dp;
+					if(value < rymin)rymin=value;
+					if(value > rymax)rymax=value;
+					fD[n]=1.0;
+				}	
 			}
-
-			for(n=0;n<ns;++n){
-			    double value,x,y;
-				if(zD[n] > 0)continue;
-			    x=xD[n];
-			    y=yD[n];
-
-				
-			    if(!pioGetValue(pio,x,y,&value,&index)){
-			        continue;
-			    }
-
-			    dx=x-x1;
-			    dy=y-y1;
-			    dp=sqrt(dx*dx+dy*dy);
-
-			    xD[n]=dp;
-			    yD[n]=value;
-			    if(dp < rxmin)rxmin=dp;
-			    if(dp > rxmax)rxmax=dp;
-			    if(value < rymin)rymin=value;
-			    if(value > rymax)rymax=value;
-			    zD[n]=1.0;
-			}	
-			nff += BlockSize;
 		}
-		
+	}
+
+	MPI_File_close(&mpifile);
+
+	MPI_Barrier(MPI_COMM_WORLD);
+	
+	
+	for(n=0;n<ns;++n){
+	    if(fD[n] < 1.0){
+	       xD[n]=-1e66;
+	       yD[n]=-1e66;
+	    }
+	}
+	
+	MPI_Reduce ( fD, fDD, ns, MPI_DOUBLE, MPI_MAX, xg.root, MPI_COMM_WORLD );
+	
+	for(n=0;n<ns;++n)fD[n]=fDD[n];
+	
+	MPI_Reduce ( xD, fDD, ns, MPI_DOUBLE, MPI_MAX, xg.root, MPI_COMM_WORLD );
+	
+	for(n=0;n<ns;++n)xD[n]=fDD[n];
+
+	MPI_Reduce ( yD, fDD, ns, MPI_DOUBLE, MPI_MAX, xg.root, MPI_COMM_WORLD );
+	
+	for(n=0;n<ns;++n)yD[n]=fDD[n];
+	
 	nd=0;
 	for(n=0;n<ns;++n){
-	    if(zD[n] > 0){
+	    if(fD[n] > 0){
 	       xD[nd]=xD[n];
 	       yD[nd]=yD[n];
 	       ++nd;
@@ -1894,7 +2149,11 @@ OutOfHere:
 	
 	if(zD)cFree((char *)zD);
 	
-	BlocksEnd(Files,flags);
+	if(fDD)cFree((char *)fDD);
+		
+	if(fD)cFree((char *)fD);
+
+	BlksEnd(Files,flags);
         
     pio->BlockSize=BlockSizeSave;
     pio->numcell=numcellSave;
@@ -1959,12 +2218,13 @@ static int pioGetValue(struct FilePIOInfo *pio,double x,double y,double *v,long 
 }
 static int doPointGetData(struct FileInfo2 *Files,struct linedata *li)
 {
+	MPI_File mpifile;
 	double dp;
 	long ns,n,nd,nf,NumberOfRings,NumberOfPoints,nr,nt;
 	double r,theta,dr,dtheta;
 	double *xD,*yD;
 	double rxmin,rxmax,rymin,rymax,amax;
-	long nff,BlockSize,numcell,nb;
+	long BlockSize,numcell,nn;
 	double valuet;
 	double x,y;
 	double xs,ys;
@@ -2073,10 +2333,17 @@ static int doPointGetData(struct FileInfo2 *Files,struct linedata *li)
 	
 	BlockSize=pio->BlockSize;
 		
-	if(BlksStart(Files,flags))goto ErrorOut;
 		    	  	
+	if(doSage2DCheckBlks(Files,nFirst))goto ErrorOut;
+	
+	sage=&pio->sageBlk;
+	if(!sage)goto ErrorOut;
+	block=&sage->block;
+	
     setPioScales(pio);	
 
+	if(BlksStart(Files,flags))goto ErrorOut;
+	
 	xs=x;
 	ys=y;
 	nd=0;
@@ -2091,61 +2358,79 @@ static int doPointGetData(struct FileInfo2 *Files,struct linedata *li)
 		if(!sage)goto ErrorOut;
 		block=&sage->block;
 
-    	nf=0;
-    	valuet=0;	    	    
+		MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
+		
     	numcell=pio->numcell;
 		BlockSize=pio->BlockSize;
     	
-	    nb=0;
-	 	nff=0;
-		for(nb=0;nb<block->nBlocks;++nb){
-	
-			BlockSize=(long)(block->nBlockSize[nb]);
+    	nf=0;
+    	valuet=0;	    	    
+		for(nn=0;nn<block->nBlocks;nn += xg.size){
+			int kk;
+			for(kk=0;kk<xg.size;++kk){
+				int nb=(nn + kk) % (int)(block->nBlocks);
+				int np=(nn + kk) % xg.size;
+				if(np == xg.rank){
+
+					BlockSize=block->nBlockSize[nb];
+					
+					pio->numcell=BlockSize;
+					
+					if(BlksReadMPI(mpifile,Files,flags,nb,block->xBlockSize[nb],CurrentFrame))goto ErrorOut;
 			
-			pio->numcell=BlockSize;
-			
-			if(BlksRead(Files,flags,nb,BlockSize,CurrentFrame))goto ErrorOut;
-			
-			doRangeBlock(Files);
-			
-			if(pio->doGradients){		
-				if(doBlockGradients(Files,nff,BlockSize,CurrentFrame))goto ErrorOut;
-				if(!pio->gradx || !pio->grady){
-					pio->doGradients = FALSE;
+					doRangeBlock(Files);
+					
+					if(pio->doGradients){		
+						if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
+						if(!pio->gradx || !pio->grady){
+							pio->doGradients = FALSE;
+						}
+					}
+					
+					x=xs;
+					y=ys;
+					r=dr;
+					for(nr=0;nr<NumberOfRings;++nr){
+						theta=0;
+						for(nt=0;nt<NumberOfPoints;++nt){
+							if(pioGetValue(pio,x,y,&value,&index)){
+								valuet += value;
+								++nf;
+							}
+							
+							x=xs+r*cos(theta);
+							y=ys+r*sin(theta);
+							theta += dtheta;
+							
+						}
+						r += dr;	    	
+					}
+					if(nf >= NumberOfRings*NumberOfPoints)goto breakOut;
 				}
 			}
-			
-	    	x=xs;
-	    	y=ys;
-	    	r=dr;
-	    	for(nr=0;nr<NumberOfRings;++nr){
-	    	    theta=0;
-	    	    for(nt=0;nt<NumberOfPoints;++nt){
-			    	if(pioGetValue(pio,x,y,&value,&index)){
-			    		valuet += value;
-			    		++nf;
-			    	}
-			    	
-			    	x=xs+r*cos(theta);
-			    	y=ys+r*sin(theta);
-			    	theta += dtheta;
-			    	
-		    	}
-			   	r += dr;	    	
-		    }
-    		if(nf >= NumberOfRings*NumberOfPoints)break;
-			nff += BlockSize;
 		}
-/*
-		sprintf(WarningBuff,"nff = %ld ",nff);
-		WarningBatch(WarningBuff);
+breakOut:		
 		
-		sprintf(WarningBuff,"nb = %ld\n",nb);
-		WarningBatch(WarningBuff);
-*/
 		pio->numcell=numcell;
     	    
-	    if(nf <= 0)continue;
+		MPI_File_close(&mpifile);
+
+		{
+			double valuetRoot=0;
+			int nfRoot=0;
+			
+			MPI_Reduce(&nf, &nfRoot, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+			MPI_Reduce(&valuet, &valuetRoot, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+			nf=nfRoot;
+			valuet=valuetRoot;
+		}
+		
+		if(xg.rank != xg.root)continue;
+		
+	    if(nf <= 0){
+		   nf=0;
+		   continue;
+		}
 	    
 	    value=valuet/(double)nf;
 	    	    
@@ -2160,9 +2445,6 @@ static int doPointGetData(struct FileInfo2 *Files,struct linedata *li)
 	    if(value < rymin)rymin=value;
 	    if(value > rymax)rymax=value;
 	    nd++;
-	    
-	    
-	    
 	}
 
 	if(!nd)goto OutOfHere;
@@ -2186,24 +2468,50 @@ OutOfHere:
     if(xD)cFree((char *)xD);
     if(yD)cFree((char *)yD);
     
-	BlocksEnd(Files,flags);
+	BlksEnd(Files,flags);
             
 	return ret;
 }
+
+static void addem2 ( unsigned char *, unsigned char *, int *, MPI_Datatype * );
+
+static void addem2(unsigned char *in, unsigned char *out, int *len, MPI_Datatype *dtype)
+{
+	long count;
+	int i;
+		
+	count=0;
+	for ( i=0; i<*len; i++ ){
+	    
+	    if(in[i] != 0){
+		   out[i] = in[i];
+			++count;
+		}
+		
+	}
+	
+	/* fprintf(stderr,"addem2 rank %ld len %ld count %ld in %p out %p\n",(long)xg.rank,(long)*len,count,in,out); */
+}
+
 static int pioDraw2(struct FileInfo2 *Files,double *data,unsigned char *buff,long CurrentFrame,struct screenData *ss)
 {
+	MPI_File mpifile;
     struct FilePIOInfo *pio;
 	struct HeaderBlock *block;
 	struct PIO_BLK *sage;
     static double  small2=1e-8;
 	struct dRange rr;
-	long BlockSize,numcell,nb;
+	long BlockSize,numcell;
 	unsigned long flags;
 	int ret;
 	double *d;
+	long nn,n;
 	long length;
 	
-	
+	unsigned char *sout2;
+	unsigned char *sout3;
+	MPI_Op op;
+
 	if(!Files || !ss || !buff || !data)return 1;
 
 	pio = &Files->pioData;
@@ -2214,6 +2522,10 @@ static int pioDraw2(struct FileInfo2 *Files,double *data,unsigned char *buff,lon
 	pio->CurrentFrame=CurrentFrame;
 	
 	BlockSize=pio->BlockSize;
+	
+	sout2=NULL;
+	sout3=NULL;
+	
 	ret=1;
 	
 	setPioScales(pio);
@@ -2227,6 +2539,7 @@ static int pioDraw2(struct FileInfo2 *Files,double *data,unsigned char *buff,lon
 	if(rr.dxlim <= 0.0)rr.dxlim=small2;
 	rr.dylim=small2*(rr.ymax-rr.ymin);
 	if(rr.dylim <= 0.0)rr.dylim=small2;
+
 
 	length=pio->range.ixmax*pio->range.iymax;
 	d=data;
@@ -2249,7 +2562,12 @@ static int pioDraw2(struct FileInfo2 *Files,double *data,unsigned char *buff,lon
 	
     pio->pd.dmin=pio->cmin;
     pio->pd.dmax=pio->cmax;
+	
     
+	if(!pio->streamline2d.streamOn && !pio->pa.DrawZones && !pio->vector.DrawVectors){
+		return 0;
+	}
+	
     flags = B_2D_STANDARD;
 	if(pio->vector.DrawVectors)flags |= (B_XVEL | B_YVEL);
 	
@@ -2259,6 +2577,7 @@ static int pioDraw2(struct FileInfo2 *Files,double *data,unsigned char *buff,lon
 		flags |= B_GRADIENTS_2D;
 	}
 
+	
 	if(BlksStart(Files,flags))goto ErrorOut;
 		    	  			
 	if(pio->vector.DrawVectors){
@@ -2267,56 +2586,94 @@ static int pioDraw2(struct FileInfo2 *Files,double *data,unsigned char *buff,lon
 	
     numcell=pio->numcell;
     
-    nb=0;
-	for(nb=0;nb<block->nBlocks;++nb){
+ 	if(xg.rank == xg.root){
+		sout2=(unsigned char *)cMalloc(sizeof(double)*length,1122);
+		sout3=(unsigned char *)cMalloc(sizeof(double)*length,1122);
+		for(n=0;n<length;++n){
+			sout3[n]=buff[n];
+			sout2[n]=0;
+		}
+	}
+	
+	for(n=0;n<length;++n){
+		buff[n]=0;
+	}
 		
-			BlockSize=(long)(block->nBlockSize[nb]);
-		
-			pio->numcell=BlockSize;
-			
-			if(BlksRead(Files,flags,nb,BlockSize,CurrentFrame))goto ErrorOut;
-								
-		if(pio->doGradients){		
-			if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
-			if(!pio->gradx || !pio->grady){
-				pio->doGradients = FALSE;
+	MPI_Op_create( (MPI_User_function *)addem2, 1, &op );
+	
+	
+	if(pio->pa.DrawZones || pio->vector.DrawVectors){
+
+		MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
+
+		for(nn=0;nn<block->nBlocks;nn += xg.size){
+			int kk;
+			for(kk=0;kk<xg.size;++kk){
+				int nb=(nn + kk) % (int)(block->nBlocks);
+				int np=(nn + kk) % xg.size;
+				
+				if(np == xg.rank){
+
+					BlockSize=block->nBlockSize[nb];
+					pio->numcell=BlockSize;
+						
+					if(BlksReadMPI(mpifile,Files,flags,nb,block->xBlockSize[nb],CurrentFrame))goto ErrorOut;
+											
+					if(pio->doGradients){		
+						if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
+						if(!pio->gradx || !pio->grady){
+							pio->doGradients = FALSE;
+						}
+					}
+					
+					if(pio->pd.AreaFill){
+						pioDrawVoid(Files,(unsigned char *)buff);
+					}
+					
+					if(pio->pa.DrawZones){
+						pioDrawZones(pio,ss,&rr);
+					}
+				
+					if(pio->vector.DrawVectors){
+						pioDrawVectors(Files,ss,&rr);
+					}
+				}
 			}
 		}
-		
-		if(pio->pd.AreaFill){
-		    pioDrawVoid(Files,(unsigned char *)buff);
-		}
-		
-		if(pio->pa.DrawZones){
-			pioDrawZones(pio,ss,&rr);
-		}
-	
-		if(pio->vector.DrawVectors){
-			pioDrawVectors(Files,ss,&rr);
-		}
-		
-	};
-	
+		MPI_File_close(&mpifile);
+	}
 	pio->numcell=numcell;
    
 		
 	if(pio->streamline2d.streamOn){
 		pioDrawStream2d(Files,ss,&rr);
 	}
-		
-	if(pio->LaserPlotCount){
-	   pioDrawLasers2d(Files,ss,&rr);
-	}
 	
-	if(pio->TracerPlotCount){
-	   pioDrawTracers2d(Files,ss,&rr);
+
+	MPI_Reduce (buff, sout2, length, MPI_BYTE, op, xg.root, MPI_COMM_WORLD );	
+		
+	MPI_Barrier(MPI_COMM_WORLD);
+	if(xg.rank == xg.root){
+		MPI_Datatype dtype=MPI_BYTE;
+		int len=length;
+		
+		addem2(sout2, sout3, &len, &dtype);
+		
+		for(n=0;n<length;++n)buff[n]=sout3[n];
 	}
+	MPI_Op_free( &op );
+	
+	
+	ret=0;
 	
 ErrorOut:
 
-	BlocksEnd(Files,flags);
-        
-	return 0;
+	BlksEnd(Files,flags);
+	
+ 	if(sout2)cFree((char *)sout2);
+	if(sout3)cFree((char *)sout3);
+       
+	return ret;
 }
 static int getPlotImage2(struct FileInfo2 *Files,double *data,unsigned char *buff,long CurrentFrame)
 {
@@ -2403,9 +2760,9 @@ static int getPlotImage2(struct FileInfo2 *Files,double *data,unsigned char *buf
 			
 
 		}else{   /* have more reflected data than unreflected data */
-			buff2=(unsigned char*)cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
+			buff2=cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
 			if(!buff2)goto ErrorOut;
-			data2=(double *)cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
+			data2=cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
 			if(!data2)goto ErrorOut;
 			ss.buffer=buff2;			
 			pio->range.xminData=0;
@@ -2529,18 +2886,20 @@ static int pioDrawVectors(struct FileInfo2 *Files,struct screenData *ss,struct d
 	int ix,iy;
 	long n;
 	int ret;
+	int nc;
 	
 	if(!Files || !ss || !r)return 1;
 	pio = &Files->pioData;
 	
 	ret = 1;
 	
+	   
 	if(pio->vector.vmax > 0){
 		vmax=pio->vector.vmax;
 	}else{
 	    vmax=pio->vmaxVectors;
 	}
-
+	   
 	if(vmax <= 0)goto ErrorOut;
 	
 	dx=pio->range.xmaxData-pio->range.xminData;
@@ -2564,6 +2923,7 @@ static int pioDrawVectors(struct FileInfo2 *Files,struct screenData *ss,struct d
 	
    	vmax2=vmax/3.;
 		
+	nc=255;
 	if(pio->vector.vspace == 0){
 	    for(n=0;n<pio->numcell;++n){
 	        if(pio->daughter[n])continue;
@@ -2584,7 +2944,7 @@ static int pioDrawVectors(struct FileInfo2 *Files,struct screenData *ss,struct d
 		        RealLoc(pio,&x1,&y1,&ix,&iy);
 		        MoveB(ix,iy);
 		        RealLoc(pio,&x2,&y2,&ix,&iy);
-		        LineB(ix,iy,255,ss);
+		        LineB(ix,iy,nc,ss);
 		    }else{
 		        continue;
 		    }
@@ -2609,7 +2969,7 @@ static int pioDrawVectors(struct FileInfo2 *Files,struct screenData *ss,struct d
 			        RealLoc(pio,&x1,&y1,&ix,&iy);
 			        MoveB(ix,iy);
 			        RealLoc(pio,&x2,&y2,&ix,&iy);
-			        LineB(ix,iy,255,ss);
+			        LineB(ix,iy,nc,ss);
 			    }
 		    }
 	        
@@ -2623,7 +2983,7 @@ static int pioDrawVectors(struct FileInfo2 *Files,struct screenData *ss,struct d
 			        RealLoc(pio,&x1,&y1,&ix,&iy);
 			        MoveB(ix,iy);
 			        RealLoc(pio,&x2,&y2,&ix,&iy);
-			        LineB(ix,iy,255,ss);
+			        LineB(ix,iy,nc,ss);
 			    }
 		    }
 	        
@@ -2713,7 +3073,7 @@ static int pioDrawVectors(struct FileInfo2 *Files,struct screenData *ss,struct d
 				        RealLoc(pio,&x1,&y1,&ix,&iy);
 				        MoveB(ix,iy);
 				        RealLoc(pio,&x2,&y2,&ix,&iy);
-				        LineB(ix,iy,255,ss);
+				        LineB(ix,iy,nc,ss);
 				    }else{
 				        continue;
 				    }
@@ -2738,7 +3098,7 @@ static int pioDrawVectors(struct FileInfo2 *Files,struct screenData *ss,struct d
 					        RealLoc(pio,&x1,&y1,&ix,&iy);
 					        MoveB(ix,iy);
 					        RealLoc(pio,&x2,&y2,&ix,&iy);
-					        LineB(ix,iy,255,ss);
+					        LineB(ix,iy,nc,ss);
 					    }
 				    }
 			        
@@ -2752,7 +3112,7 @@ static int pioDrawVectors(struct FileInfo2 *Files,struct screenData *ss,struct d
 					        RealLoc(pio,&x1,&y1,&ix,&iy);
 					        MoveB(ix,iy);
 					        RealLoc(pio,&x2,&y2,&ix,&iy);
-					        LineB(ix,iy,255,ss);
+					        LineB(ix,iy,nc,ss);
 					    }
 				    }			          
 			    }
@@ -2769,13 +3129,14 @@ static int CheckVectorRange(struct FileInfo2 *Files)
 	struct FilePIOInfo *pio;
 	struct HeaderBlock *block;
 	struct PIO_BLK *sage;
-	double vmax,vlength,vx,vy;
+	MPI_File mpifile;
+	double vmax,vmaxg,vlength,vx,vy;
 	double xc,yc,dx2,dy2;
 	long BlockSize,numcell;
 	unsigned long flags;
-	long n,nb;
+	long n,nn;
 	int ret;
-	int k;
+	int k,kk;
 	
 	if(!Files)return 1;
 	pio = &Files->pioData;
@@ -2786,39 +3147,55 @@ static int CheckVectorRange(struct FileInfo2 *Files)
 	
 	ret = 1;
 	
-	      
     numcell=pio->numcell;
     
     flags = (B_X | B_Y | B_DAUGHTER  | B_LEVEL | B_XVEL | B_YVEL);
     
-	vmax=0;	    
-	for(nb=0;nb<block->nBlocks;++nb){
+	MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
 	
-		BlockSize=(long)(block->nBlockSize[nb]);
-		
-		pio->numcell=BlockSize;
+	vmax=0;	    	
+	vmaxg=0;	    
+	for(nn=0;nn<block->nBlocks;nn += xg.size){
+	
+		for(kk=0;kk<xg.size;++kk){
+		    int nb=(nn + kk) % (int)(block->nBlocks);
+			int np=(nn + kk) % xg.size;
+			
+			if(np == xg.rank){
+				BlockSize=block->nBlockSize[nb];
+				pio->numcell=BlockSize;
 
-		if(BlksRead(Files,flags,nb,BlockSize,pio->CurrentFrame))goto ErrorOut;
-									    	    
-        for(n=0;n<BlockSize;++n){
-            if(pio->daughter[n])continue;
-		    k=(int)(pio->level[n]);
-		    xc=pio->xcenter[n];
-		    dx2=pio->dx2[k];
-		    if(xc+dx2 < pio->range.xminData)continue;
-		    if(xc-dx2 > pio->range.xmaxData)continue;
-		    yc=pio->ycenter[n];
-		    dy2=pio->dy2[k];
-		    if(yc+dy2 < pio->range.yminData)continue;
-		    if(yc-dy2 > pio->range.ymaxData)continue;
-	        vx=pio->vectorx[n];
-	        vy=pio->vectory[n];
-	        vlength = sqrt(vx*vx+vy*vy);
-	        if(vlength > vmax)vmax=vlength;
-        }
+				if(BlksReadMPI(mpifile,Files,flags,nb,block->xBlockSize[nb],pio->CurrentFrame))goto ErrorOut;
+				for(n=0;n<BlockSize;++n){
+					if(pio->daughter[n])continue;
+					k=(int)(pio->level[n]);
+					xc=pio->xcenter[n];
+					dx2=pio->dx2[k];
+					if(xc+dx2 < pio->range.xminData)continue;
+					if(xc-dx2 > pio->range.xmaxData)continue;
+					yc=pio->ycenter[n];
+					dy2=pio->dy2[k];
+					if(yc+dy2 < pio->range.yminData)continue;
+					if(yc-dy2 > pio->range.ymaxData)continue;
+					vx=pio->vectorx[n];
+					vy=pio->vectory[n];
+					vlength = sqrt(vx*vx+vy*vy);
+					if(vlength > vmax)vmax=vlength;
+				}
+			}
+		}
 	    	    	    
 	}
-	    pio->vmaxVectors=vmax;
+	
+	MPI_Reduce ( &vmax, &vmaxg, 1, MPI_DOUBLE, MPI_MAX, xg.root, MPI_COMM_WORLD );
+	
+	MPI_Barrier(MPI_COMM_WORLD);
+	
+	SendToAll(&vmaxg,sizeof(vmaxg));
+	
+	pio->vmaxVectors=vmaxg;
+
+	MPI_File_close(&mpifile);
 	    
 	ret=0;
 ErrorOut:
@@ -2827,17 +3204,21 @@ ErrorOut:
 	
 static int pioDraw(struct FileInfo2 *Files,unsigned char *buff,long CurrentFrame,struct screenData *ss)
 {
+	MPI_File mpifile;
     struct FilePIOInfo *pio;
 	struct HeaderBlock *block;
 	struct PIO_BLK *sage;
     static double  small2=1e-8;
 	struct dRange rr;
-	long BlockSize,numcell,nb;
+	long BlockSize,numcell,nn;
 	unsigned long flags;
 	double *d;
 	long length;
-	int ret;
+	int ret,n;
 	
+	unsigned char *sout2;
+	unsigned char *sout3;
+	MPI_Op op;
 	
 	if(!Files || !ss || !buff)return 1;
 	pio = &Files->pioData;
@@ -2848,6 +3229,10 @@ static int pioDraw(struct FileInfo2 *Files,unsigned char *buff,long CurrentFrame
 	pio->CurrentFrame=CurrentFrame;
 	
 	BlockSize=pio->BlockSize;
+	
+	sout2=NULL;
+	sout3=NULL;
+	
 	ret=1;
 	
 	setPioScales(pio);
@@ -2880,7 +3265,10 @@ static int pioDraw(struct FileInfo2 *Files,unsigned char *buff,long CurrentFrame
     pio->pd.dmin=pio->cmin;
     pio->pd.dmax=pio->cmax;
     
-    
+ 	if(!pio->streamline2d.streamOn && !pio->pa.DrawZones && !pio->vector.DrawVectors){
+		return 0;
+	}
+   
     flags = B_2D_STANDARD;
 	if(pio->vector.DrawVectors)flags |= (B_XVEL | B_YVEL);
 	
@@ -2898,33 +3286,63 @@ static int pioDraw(struct FileInfo2 *Files,unsigned char *buff,long CurrentFrame
 	
     numcell=pio->numcell;
     
-	for(nb=0;nb<block->nBlocks;++nb){
+    numcell=pio->numcell;
+	
 		
-			BlockSize=(long)(block->nBlockSize[nb]);
-		
-			pio->numcell=BlockSize;
-			
-			if(BlksRead(Files,flags,nb,BlockSize,CurrentFrame))goto ErrorOut;
-										
-		if(pio->doGradients){		
-			if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
-			if(!pio->gradx || !pio->grady){
-				pio->doGradients = FALSE;
+	if(xg.rank == xg.root){
+		sout2=(unsigned char *)cMalloc(sizeof(double)*length,1122);
+		sout3=(unsigned char *)cMalloc(sizeof(double)*length,1122);
+		for(n=0;n<length;++n){
+			sout3[n]=buff[n];
+			sout2[n]=0;
+		}
+	}
+	
+	for(n=0;n<length;++n){
+		buff[n]=0;
+	}
+	
+	MPI_Op_create( (MPI_User_function *)addem2, 1, &op );
+	
+	if(pio->pa.DrawZones || pio->vector.DrawVectors){
+	
+		MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
+
+		for(nn=0;nn<block->nBlocks;nn += xg.size){
+			int kk;
+			for(kk=0;kk<xg.size;++kk){
+				int nb=(nn + kk) % (int)(block->nBlocks);
+				int np=(nn + kk) % xg.size;
+				
+				if(np == xg.rank){
+									
+					BlockSize=block->nBlockSize[nb];
+					pio->numcell=BlockSize;
+					
+					if(BlksReadMPI(mpifile,Files,flags,nb,block->xBlockSize[nb],CurrentFrame))goto ErrorOut;
+											
+					if(pio->doGradients){		
+						if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
+						if(!pio->gradx || !pio->grady){
+							pio->doGradients = FALSE;
+						}
+					}
+					
+					if(pio->pd.AreaFill){
+						pioDrawVoid(Files,(unsigned char *)buff);
+					}
+					
+					if(pio->pa.DrawZones){
+						pioDrawZones(pio,ss,&rr);
+					}
+				
+					if(pio->vector.DrawVectors){
+						pioDrawVectors(Files,ss,&rr);
+					}
+				}
 			}
 		}
-		
-		if(pio->pd.AreaFill){
-		    pioDrawVoid(Files,(unsigned char *)buff);
-		}
-		
-		if(pio->pa.DrawZones){
-			pioDrawZones(pio,ss,&rr);
-		}
 	
-		if(pio->vector.DrawVectors){
-			pioDrawVectors(Files,ss,&rr);
-		}
-		
 	}
 	
 	pio->numcell=numcell;
@@ -2934,18 +3352,24 @@ static int pioDraw(struct FileInfo2 *Files,unsigned char *buff,long CurrentFrame
 		pioDrawStream2d(Files,ss,&rr);
 	}
 	
-	
-	if(pio->LaserPlotCount){
-	   pioDrawLasers2d(Files,ss,&rr);
+	MPI_Reduce (buff, sout2, length, MPI_BYTE, op, xg.root, MPI_COMM_WORLD );	
+		
+	MPI_Barrier(MPI_COMM_WORLD);
+	if(xg.rank == xg.root){
+		MPI_Datatype dtype=MPI_BYTE;
+		int len=length;
+		
+		addem2(sout2, sout3, &len, &dtype);
+		
+		for(n=0;n<length;++n)buff[n]=sout3[n];
 	}
 	
-	if(pio->TracerPlotCount){
-	   pioDrawTracers2d(Files,ss,&rr);
-	}
+	MPI_Op_free( &op );
+	
 	
 ErrorOut:
 
-	BlocksEnd(Files,flags);
+	BlksEnd(Files,flags);
     
 	return 0;
 }
@@ -3155,7 +3579,7 @@ static int getPlotImage(struct FileInfo2 *Files,unsigned char *buff,long Current
 		}
 	}else{
 			
-		buff2=(unsigned char *)cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
+		buff2=cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
 		if(!buff2)goto ErrorOut;
 		
 		dx=pio->range.xmaxData-pio->range.xminData;
@@ -3223,7 +3647,7 @@ ErrorOut:
 	if(buff2)cFree((char *)buff2);
 	return 0;
 }
-int doSage2DGetAreaDataBlk(struct FileInfo2 *Files,struct areadata *ai)
+int doSage2DGetAreaDataBlk2(struct FileInfo2 *Files,struct areadata *ai)
 {
 	struct PlotRangeData saveRange;
     struct FilePIOInfo *pio;
@@ -3237,14 +3661,17 @@ int doSage2DGetAreaDataBlk(struct FileInfo2 *Files,struct areadata *ai)
 
 	ret=1;
 	
+	
+
+	
 	saveRange=pio->range;
 	
 	CurrentFrame=ai->CurrentFrame;
 	
-	FilesSetFrame(CurrentFrame,Files);
+	/* FilesSetFrame(CurrentFrame,Files); */
 	
 	if(ai->type != GENERAL_PLANE_DATA && ai->type != AREADATA_AREA_DATA){
-	    sprintf(WarningBuff,"doSage2DGetAreaDataBlk - Only Returns AREADATA_AREA_DATA or GENERAL_PLANE_DATA\n");
+	    sprintf(WarningBuff,"doSage2DGetAreaDataBlk2 - Only Returns AREADATA_AREA_DATA or GENERAL_PLANE_DATA\n");
 	    WarningBatch(WarningBuff);
 	    return 1;
 	}
@@ -3262,19 +3689,21 @@ int doSage2DGetAreaDataBlk(struct FileInfo2 *Files,struct areadata *ai)
 	if(ai->xsize <= 0 || ai->ysize <= 0)return 1;
 	
 	if(ai->zsize > 1){
-	    sprintf(WarningBuff,"doSage2DGetAreaDataBlk - Error cannot return Volume Data Sets\n");
+	    sprintf(WarningBuff,"doSage2DGetAreaDataBlk2 - Error cannot return Volume Data Sets\n");
 	    WarningBatch(WarningBuff);
 	    return 1;	
 	}
 	
-	data=(double *)cMalloc(ai->xsize*ai->ysize*sizeof(double),72635);
+	data=(double *)cMalloc(ai->xsize*ai->ysize*sizeof(double),72633);
 	if(!data)return 1;
 	zerol((char *)data,ai->xsize*ai->ysize*sizeof(double));
 	
 	ai->data=data;
 	 	
 	if(ai->type == GENERAL_PLANE_DATA){
-	    return doSage2DGetGeneratData(ai,Files);
+		int ret2=doSage2DGetGeneratData(ai,Files);
+	   /* fprintf(stderr,"doSage2DGetAreaDataBlk2 2b rank %d\n",xg.rank); */
+	    return ret2;
 	}
 	
 	
@@ -3292,11 +3721,13 @@ int doSage2DGetAreaDataBlk(struct FileInfo2 *Files,struct areadata *ai)
 	pio->range.yminData=ai->yminArea;
 	pio->range.ymaxData=ai->ymaxArea;
 	
-    if(getPlotData(Files,data,CurrentFrame)){
-	    sprintf(WarningBuff,"doSage2DGetAreaDataBlk - getPlotData Error\n");
+	setFloat(data,ai->xsize*ai->ysize);
+     if(getPlotData(Files,data,CurrentFrame)){
+	    sprintf(WarningBuff,"doSage2DGetAreaDataBlk2 - getPlotData Error\n");
 	    WarningBatch(WarningBuff);
         goto ErrorOut;
     }	    
+	
 	
 	ret=0;
 	
@@ -3307,27 +3738,44 @@ ErrorOut:
 	return 0;
 }
 
+static void addem ( double *, double *, int *, MPI_Datatype * );
+
+static void addem(double *invec, double *inoutvec, int *len, MPI_Datatype *dtype)
+{
+	int i;
+	
+	for ( i=0; i<*len; i++ ){
+	    if(invec[i] != FLOAT_NOT_SET)inoutvec[i] = invec[i];
+	}
+}
+
 
 static int getPlotData(struct FileInfo2 *Files,double *sout,long CurrentFrame)
 {
+	MPI_File mpifile;
+	MPI_Op op;
 	struct HeaderBlock *block;
     struct FilePIOInfo *pio;
 	struct PIO_BLK *sage;
 	
     double xmin,xmax,ymin,ymax,dmin,dmax;
     long ixmin,ixmax,iymin,iymax;
+    double dming,dmaxg;
     double didx,djdy;
     double dxdi,dydj;
 	long BlockSize;
 	unsigned long flags;
-	int ret;
-    long n,nf,nb;		
+	int ret,length;
+	double *sout2;
+    long nn,n;		
 		
 	if(!Files || !sout || (CurrentFrame < 0))return 1;
 	pio = &Files->pioData;
 	sage=&pio->sageBlk;
 	if(!sage)return 1;
 	block=&sage->block;
+	
+	MPI_Op_create( (MPI_User_function *)addem, 1, &op );
 	
 	ret=1;
 	
@@ -3338,19 +3786,28 @@ static int getPlotData(struct FileInfo2 *Files,double *sout,long CurrentFrame)
 		flags |= B_GRADIENTS_2D;
 	}
 	
-	
 	if(doSage2DCheckBlks(Files,CurrentFrame))goto ErrorOut;
 	
 	sage=&pio->sageBlk;
 	if(!sage)goto ErrorOut;
 	block=&sage->block;
 	
+	/*	printf("getPlotData 2 rank %d\n",xg.rank); */
+	/* MPI_Barrier(MPI_COMM_WORLD); */
 	
 	if(BlksStart(Files,flags))goto ErrorOut;
 
-		
     setPioScales(pio);
-
+	
+	length=pio->range.ixmax*pio->range.iymax;
+		
+	sout2=NULL;
+	
+	if(xg.rank == xg.root){
+	    sout2=(double *)cMalloc(sizeof(double)*length,1122);
+		setFloat(sout2,length);
+	}
+	
     xmin=pio->range.xminData;
     xmax=pio->range.xmaxData;
     ymin=pio->range.yminData;
@@ -3365,90 +3822,124 @@ static int getPlotData(struct FileInfo2 *Files,double *sout,long CurrentFrame)
     djdy=((double)(iymax-iymin))/(ymax-ymin);
     dydj=1.0/djdy;
 
+	MPI_File_open(MPI_COMM_WORLD,Files->mpiPath,MPI_MODE_RDONLY,MPI_INFO_NULL,&mpifile);
+	
+	dming  =1e60;
+	dmaxg= -1e60;
+	
 	dmin  =1e60;
 	dmax= -1e60;
-		
-	nf=0;
-	for(nb=0;nb<block->nBlocks;++nb){
+					
+	for(nn=0;nn<block->nBlocks;nn += xg.size){
         double xc,yc,dx2,dy2;
         double ymn,ymx,xmn,xmx;
         double svalue,value,xs,ys;
         long i,j,ihi,ilo,jhi,jlo;
-        int k;
+        int k,kk;
+		for(kk=0;kk<xg.size;++kk){
+		    int nb=(nn + kk) % (int)(block->nBlocks);
+			int np=(nn + kk) % xg.size;
 		
-		BlockSize=(long)(block->nBlockSize[nb]);
-		
-		pio->numcell=BlockSize;
-		
-		if(BlksRead(Files,flags,nb,BlockSize,CurrentFrame))goto ErrorOut;
+			if(np == xg.rank){
+
+				BlockSize=block->nBlockSize[nb];
+				pio->numcell=BlockSize;
 				
-		if(pio->doGradients){		
-			if(doBlockGradients(Files,nf,BlockSize,CurrentFrame))goto ErrorOut;
-			if(!pio->gradx || !pio->grady){
-				pio->doGradients = FALSE;
+				if(BlksReadMPI(mpifile,Files,flags,nb,block->xBlockSize[nb],CurrentFrame))goto ErrorOut;
+						
+				if(pio->doGradients){		
+					if(doBlockGradients(Files,nb,BlockSize,CurrentFrame))goto ErrorOut;
+					if(!pio->gradx || !pio->grady){
+						pio->doGradients = FALSE;
+					}
+				}
+
+				for(n=0;n<BlockSize;++n){
+				
+					value=pio->value[n];
+					if(!pio->daughter[n] && (pio->active[n] > 0.0)){
+						if(dmin > value)dmin=value;
+						if(dmax < value)dmax=value;
+					}
+					
+					if(pio->daughter[n])continue;
+					k=(int)(pio->level[n]);
+					
+					yc=pio->ycenter[n];
+					dy2=pio->dy2[k]*1.000001;
+
+					ymn=max(ymin,yc-dy2);
+					ymx=min(ymax,yc+dy2);
+					if(ymx < ymn)continue;
+
+					xc=pio->xcenter[n];
+					dx2=pio->dx2[k]*1.000001;
+					
+					xmn=max(xmin,xc-dx2);
+					xmx=min(xmax,xc+dx2);
+					if(xmx < xmn)continue;
+					
+					ilo=max(ixmin,(long)((xmn-xmin)*didx)+ixmin);
+					ihi=min(ixmax-1,(long)((xmx-xmin)*didx)+ixmin);
+
+					jlo=max(iymin,  (long)((ymn-ymin)*djdy)+iymin);
+					jhi=min(iymax-1,(long)((ymx-ymin)*djdy)+iymin);
+					
+					
+					for(j=jlo;j<=jhi;++j){
+						ys=ymin+(double)((double)(j-iymin)+.5)*dydj;
+						if(ys < ymn || ys > ymx)continue;
+						for(i=ilo;i<=ihi;++i){
+							xs=xmin+(double)((double)(i-ixmin)+.5)*dxdi;
+							if(xs < xmn || xs > xmx)continue;
+							if(pio->doGradients){
+							   svalue=value+(xs-xc)*pio->gradx[n]+(ys-yc)*pio->grady[n];
+							}else{
+							   svalue=value;
+							}
+							sout[i+(pio->range.iymax-1-j)*pio->range.ixmax]=svalue;
+						}
+					}
+				}
 			}
 		}
-
-		for(n=0;n<BlockSize;++n){
-		
-			value=pio->value[n];
-			if(!pio->daughter[n] && (pio->active[n] > 0.0)){
-				if(dmin > value)dmin=value;
-			    if(dmax < value)dmax=value;
-			}
-			
-	        if(pio->daughter[n])continue;
-	        k=(int)(pio->level[n]);
-	        
-	        yc=pio->ycenter[n];
-	        dy2=pio->dy2[k]*1.000001;
-
-			ymn=max(ymin,yc-dy2);
-			ymx=min(ymax,yc+dy2);
-			if(ymx < ymn)continue;
-
-	        xc=pio->xcenter[n];
-	        dx2=pio->dx2[k]*1.000001;
-	        
-			xmn=max(xmin,xc-dx2);
-			xmx=min(xmax,xc+dx2);
-			if(xmx < xmn)continue;
-			
-			ilo=max(ixmin,(long)((xmn-xmin)*didx)+ixmin);
-			ihi=min(ixmax-1,(long)((xmx-xmin)*didx)+ixmin);
-
-			jlo=max(iymin,  (long)((ymn-ymin)*djdy)+iymin);
-			jhi=min(iymax-1,(long)((ymx-ymin)*djdy)+iymin);
-			
-			
-			for(j=jlo;j<=jhi;++j){
-			    ys=ymin+(double)((double)(j-iymin)+.5)*dydj;
-			    if(ys < ymn || ys > ymx)continue;
-			    for(i=ilo;i<=ihi;++i){
-			        xs=xmin+(double)((double)(i-ixmin)+.5)*dxdi;
-			        if(xs < xmn || xs > xmx)continue;
-			        if(pio->doGradients){
-			           svalue=value+(xs-xc)*pio->gradx[n]+(ys-yc)*pio->grady[n];
-			        }else{
-			           svalue=value;
-			        }
-			        sout[i+(pio->range.iymax-1-j)*pio->range.ixmax]=svalue;
-			    }
-			}
-		}
-		nf += BlockSize;
 	}
+	
+	MPI_Reduce ( &dmin, &dming, 1, MPI_DOUBLE, MPI_MIN, xg.root, MPI_COMM_WORLD );
+	MPI_Reduce ( &dmax, &dmaxg, 1, MPI_DOUBLE, MPI_MAX, xg.root, MPI_COMM_WORLD );
+	
+	SendToAll(&dming,sizeof(dming));
+	SendToAll(&dmaxg,sizeof(dmaxg));
+	
+	MPI_Reduce ( sout, sout2, length, MPI_DOUBLE, op, xg.root, MPI_COMM_WORLD );
+	MPI_Barrier(MPI_COMM_WORLD);
+	
     /*
     pio->pd.dmin=pio->cmin;
     pio->pd.dmax=pio->cmax;
     */
-    pio->cmin=pio->pd.dmin=dmin;
-    pio->cmax=pio->pd.dmax=dmax;
-	pioSetLimits(Files,CurrentFrame);    
+	
+    pio->cmin=pio->pd.dmin=dming;
+    pio->cmax=pio->pd.dmax=dmaxg;
+	
+	if(xg.rank == xg.root){
+	    if(sout2){
+			for(n=0;n<length;++n)sout[n]=sout2[n];
+			cFree((char *)sout2);
+		}
+	}
+	
+	pioSetLimits(Files,CurrentFrame);  
+	  
+		/* printf("getPlotData 4 rank %d\n",xg.rank); */
+	
+	
 	ret=0;
 
 ErrorOut:
-	BlocksEnd(Files,flags);
+	MPI_Op_free( &op );
+	MPI_File_close(&mpifile);
+	BlksEnd(Files,flags);
     return ret;
 	        
 }
@@ -3528,6 +4019,7 @@ ErrorOut:
 }
 static int doSage2DCheckBlks(struct FileInfo2 *Files,long CurrentFrame)
 {
+	struct HeaderBlock *block;
 	struct FilePIOInfo *pio;
 	struct PIO_BLK *sage;
     int ret;
@@ -3538,15 +4030,28 @@ static int doSage2DCheckBlks(struct FileInfo2 *Files,long CurrentFrame)
 	
 	ret=1;
 	
-	if(CurrentFrame >= Files->ImageCount)CurrentFrame=Files->ImageCount-1;
-	if(CurrentFrame < 0)CurrentFrame=0;
+	if(xg.rank == xg.root){
+		if(CurrentFrame >= Files->ImageCount)CurrentFrame=Files->ImageCount-1;
+		if(CurrentFrame < 0)CurrentFrame=0;
+		
+		sage = &Files->PIOBlkList[CurrentFrame];
 	
-	sage = &Files->PIOBlkList[CurrentFrame];
+		pio->sageBlk=*sage;
+		
+		GetCurrentFilePath(Files,CurrentFrame,Files->mpiPath,sizeof(Files->mpiPath));
+
+	}else{
+		if(pio->sageBlk.names)cFree((char *)pio->sageBlk.names);
+		if(pio->sageBlk.block.nBlockSize)cFree((char *)pio->sageBlk.block.nBlockSize);
+		if(pio->sageBlk.block.xBlockSize)cFree((char *)pio->sageBlk.block.xBlockSize);
+		if(pio->sageBlk.block.xBlockAdress)cFree((char *)pio->sageBlk.block.xBlockAdress);
+	}
 	
-	Files->limits.time=sage->time;
-	Files->pioTime=sage->time;
+	SendToAll(&pio->sageBlk,sizeof(pio->sageBlk));
 	
-	pio->sageBlk=*sage;
+	sage=&pio->sageBlk;
+	
+	SendToAll(Files->mpiPath, sizeof(Files->mpiPath));
 	
 	pio->dxset=sage->dxset;
 	pio->dyset=sage->dyset;
@@ -3579,15 +4084,51 @@ static int doSage2DCheckBlks(struct FileInfo2 *Files,long CurrentFrame)
 	    pio->dy2[k]=.5*pio->dyset/pow(2,(double)(k-1));
 	}
 		
+	Files->limits.time=sage->time;
+	Files->pioTime=sage->time;
+	
+    mstrncpy(Files->pioName,pio->pioName,255);
+    Files->pioIndex=pio->pioIndex;
+	
+	
+	block=&sage->block;
+	if(xg.rank != xg.root){
+		sage->names=cMalloc(block->itemsNum*sizeof(struct ItemNames),94823);
+		block->nBlockSize=(double *)cMalloc(block->nBlocks*sizeof(double),9482);
+		block->xBlockSize=(double *)cMalloc(block->nBlocks*sizeof(double),9482);
+		block->xBlockAdress=(double *)cMalloc(block->nBlocks*sizeof(double),9582);
+		if(!block->xBlockSize || !block->xBlockAdress || !block->nBlockSize || !sage->names)goto ErrorOut;
+		
+		if(pio->streamline2d.zPlane.count){
+			if(pio->streamline2d.zPlane.x)cFree((char *)pio->streamline2d.zPlane.x);
+			if(pio->streamline2d.zPlane.y)cFree((char *)pio->streamline2d.zPlane.y);
+			
+			pio->streamline2d.zPlane.x=(double *)cMalloc(pio->streamline2d.zPlane.count*sizeof(double),9482);
+			pio->streamline2d.zPlane.y=(double *)cMalloc(pio->streamline2d.zPlane.count*sizeof(double),9482);
+		}
+	}
+
+	SendToAll(sage->names, block->itemsNum*sizeof(struct ItemNames));
+	SendToAll(block->nBlockSize, block->nBlocks*sizeof(double));
+	SendToAll(block->xBlockSize, block->nBlocks*sizeof(double));
+	SendToAll(block->xBlockAdress, block->nBlocks*sizeof(double));
+	
+	if(pio->streamline2d.zPlane.count){
+	    SendToAll(pio->streamline2d.zPlane.x, pio->streamline2d.zPlane.count*sizeof(double));
+	    SendToAll(pio->streamline2d.zPlane.y, pio->streamline2d.zPlane.count*sizeof(double));
+	}
 	
     ret=0;
     
+ErrorOut:
 	return ret;
 }
 
-int doSage2DGetDataBlks(struct FileInfo2 *Files,long CurrentFrame,struct SetFrameData *sd)
+int Sage2DGetDataBlk2(struct FileInfo2 *Files,long CurrentFrame,struct SetFrameData *sd)
 {
 	struct FilePIOInfo *pio;
+	struct HeaderBlock *block;
+	struct PIO_BLK *sage;
 	struct LIMITS *limits;
 	long length;
     double *sout;
@@ -3604,6 +4145,10 @@ int doSage2DGetDataBlks(struct FileInfo2 *Files,long CurrentFrame,struct SetFram
 	
 	if(doSage2DCheckBlks(Files, CurrentFrame))goto ErrorOut;
 	
+	sage=&pio->sageBlk;
+	if(!sage)goto ErrorOut;
+	block=&sage->block;
+	
  	if(sd->type == FRAME_DATA_FLOAT_RASTER){
  	    return FloatAndRaster(Files,CurrentFrame,sd);
  	}
@@ -3612,7 +4157,7 @@ int doSage2DGetDataBlks(struct FileInfo2 *Files,long CurrentFrame,struct SetFram
 	    if(sd->type == FRAME_DATA_RGB){
 	           ;
 	    }else if(sd->type != FRAME_DATA_RASTER){
-		    sprintf(WarningBuff,"doSage2DGetDataBlks - Only Returns FRAME_DATA_FLOAT and FRAME_DATA_RASTER\n");
+		    sprintf(WarningBuff,"Sage2DGetDataBlk2 - Only Returns FRAME_DATA_FLOAT and FRAME_DATA_RASTER\n");
 		    WarningBatch(WarningBuff);
 		    goto ErrorOut;
 	    }
@@ -3679,6 +4224,8 @@ static int pioSetLimits(struct FileInfo2 *Files,long nf)
 	double xmin,xmax,ymin,ymax,xdelta,ydelta;
 	long xzones,yzones;
 	struct LIMITS *limits;
+	
+	if(xg.rank != xg.root)return 0;
 
 	if(!Files)return 1;
 	pio = &Files->pioData;
@@ -3769,3 +4316,4 @@ static int RealLoc(struct FilePIOInfo *pio,double *x,double *y,int *ix,int *iy)
 
 	return 0;
 }
+

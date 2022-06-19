@@ -667,9 +667,9 @@ static int CVrmlDraw(CObject *oo,struct Matrix *WorldToScreen,
 	if(!scene)return 0;
 
 	if(flag == 1){
-	    if((scene->material[s->Material].opacity != 1.0))return 0;
+	    if(scene->material[s->Material].opacity != 1.0)return 0;
 	}else if(flag == 2){
-	    if((scene->material[s->Material].opacity == 1.0))return 0;
+	    if(scene->material[s->Material].opacity == 1.0)return 0;
 	}
 
 
@@ -778,11 +778,11 @@ static int drawIndexedFaceSet(struct vrmlIndexedFaceSet *s,struct tState *tS)
 
     parts=0;
     if(tS->mb){
-		if((tS->mb->value == PER_PART || tS->mb->value == PER_FACE)){
+		if(tS->mb->value == PER_PART || tS->mb->value == PER_FACE){
 		    parts=1;
-		}else if((tS->mb->value == PER_FACE_INDEXED || tS->mb->value == PER_PART_INDEXED)){
+		}else if(tS->mb->value == PER_FACE_INDEXED || tS->mb->value == PER_PART_INDEXED){
 		    parts=2;
-		}else if((tS->mb->value == PER_VERTEX_INDEXED)){
+		}else if(tS->mb->value == PER_VERTEX_INDEXED){
 		    parts=3;
 		}
     }
@@ -826,13 +826,13 @@ static int drawIndexedFaceSet(struct vrmlIndexedFaceSet *s,struct tState *tS)
 
     ntype=0;
     if(tS->nb){
-		if((tS->nb->value == PER_PART || tS->nb->value == PER_FACE)){
+		if(tS->nb->value == PER_PART || tS->nb->value == PER_FACE){
 		    ntype=1;
-		}else if((tS->nb->value == PER_FACE_INDEXED || tS->nb->value == PER_PART_INDEXED)){
+		}else if(tS->nb->value == PER_FACE_INDEXED || tS->nb->value == PER_PART_INDEXED){
 		    ntype=2;
-		}else if((tS->nb->value == PER_VERTEX)){
+		}else if(tS->nb->value == PER_VERTEX){
 		    ntype=3;
-		}else if((tS->nb->value == PER_VERTEX_INDEXED)){
+		}else if(tS->nb->value == PER_VERTEX_INDEXED){
 		    ntype=0;
 		}
     }
@@ -2191,10 +2191,10 @@ static int CVrmlMost(CObject *o,long *MostNodes,long *MostNormals,
 }
 static int CVrmlCount(CObject *o,long *nodes,long *cells)
 {
-	CVrmlPtr2 t=(CVrmlPtr2)o;
+	//CVrmlPtr2 t=(CVrmlPtr2)o;
 
 	if(!o || !nodes || !cells)return 1;
-	t=t;
+	//t=t;
 	*nodes += 4;
 	*cells += 1;
 	return 0;

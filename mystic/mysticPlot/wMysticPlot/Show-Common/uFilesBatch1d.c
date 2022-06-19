@@ -2127,8 +2127,8 @@ static int FloatAndRaster(struct FileInfo2 *Files,long CurrentFrame,struct SetFr
     
     zerol((char *)sd->data2,length*sizeof(double));
        
-	setFloat(sd->data,length);
-    if(getPlotData(Files,sd->data,CurrentFrame)){
+	setFloat((double *)sd->data,length);
+    if(getPlotData(Files,(double *)sd->data,CurrentFrame)){
 	    sprintf(WarningBuff,"doSage1DGetData - getPlotData Error\n");
 	    WarningBatch(WarningBuff);
 		goto ErrorOut;

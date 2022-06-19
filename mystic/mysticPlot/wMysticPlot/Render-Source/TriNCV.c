@@ -41,7 +41,7 @@ static int TriNCIntersect(Object *obj, Ray *ray, Isect *hit);
 
 static int TriNCNormal(Object *obj, Isect *hit, Point P, Point N);
 
-static int TriNCShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color col,Ray *ray);
+static int TriNCShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color7 col,Ray *ray);
 
 static ObjectProcs TriNCProcs = {
 	TriNCPrint,
@@ -50,7 +50,7 @@ static ObjectProcs TriNCProcs = {
 	TriNCShade,
 } ;
 
-static int TriNCShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color col,Ray *ray)
+static int TriNCShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color7 col,Ray *ray)
 {
 	TriNCData2 *qp;
 	struct tState *tS;
@@ -66,9 +66,9 @@ static int TriNCShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isec
 	Flt		diff ;
 	Flt 	spec ;
 	Flt 	costheta,costheta2 ;
-	Color	surfcolor;
+	Color7	surfcolor;
 	
-	hit=hit;
+	//hit=hit;
 
 	tray.Q=ray->Q;
 	tray.Qsize=ray->Qsize;
@@ -77,8 +77,8 @@ static int TriNCShade(Object *obj,int level, Flt weight, Vec P,Vec N,Vec I, Isec
 	col[0] = col[1] = col[2] = 0.0 ;
 	specular[0]=specular[1]=specular[2]=0;
 		
-	level=level;
-	weight=weight;
+	//level=level;
+	//weight=weight;
 	
 	qp = (TriNCData2 *) obj -> o_data ;
 	if(!qp)return 0;
@@ -466,7 +466,7 @@ static int TriNCNormal(Object *obj, Isect *hit, Point P, Point N)
 	
 	qp = (TriNCData2 *) obj -> o_data ;
 	
-	P=P;
+	//P=P;
 	
 	s1=hit->f1;
 	s2=hit->f2;

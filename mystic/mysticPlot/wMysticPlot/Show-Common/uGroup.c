@@ -39,16 +39,16 @@ static DObjPtr uGroupDoInformation(DObjPtr o);
 
 static struct DObject *uGroupDoubleClick(struct DObject *o,rPoint *r)
 {
-	if(!o || !r)return NULL;
+	if(!o || !r)return (struct DObject *)NULL;
 
 	if(r->x < o->box.x || r->y < o->box.y){
-		return NULL;
+		return (struct DObject *)NULL;
 	}
 	
 	if(r->x > o->box.x+o->box.xsize || r->y > o->box.y+o->box.ysize){
-		return NULL;
+		return (struct DObject *)NULL;
 	}			
-	return uGroupDoInformation(o);
+	return (struct DObject *)uGroupDoInformation(o);
 }
 
 static struct DObject *uGroupWrite(struct DObject *o,FILE8 *inOut,struct DOList *l)
@@ -78,7 +78,7 @@ static struct DObject *uGroupWrite(struct DObject *o,FILE8 *inOut,struct DOList 
 	long tag;
 	int n,nn;
 	
-	if(!inOut || !l)return NULL;
+	if(!inOut || !l)return (struct DObject *)NULL;
 	
 	if(!bp){
 		/* read and create */
@@ -107,17 +107,17 @@ static struct DObject *uGroupWrite(struct DObject *o,FILE8 *inOut,struct DOList 
 		return (struct DObject *)bp;			
 		
 	}else{
-		if(bp->nGroups <= 0)return NULL;
+		if(bp->nGroups <= 0)return (struct DObject *)NULL;
 	    if(bp->itemList)cFree((char *)bp->itemList);
-	    bp->itemList=cMalloc(bp->nGroups*sizeof(float),8327);
-	    if(!bp->itemList)return NULL;
+	    bp->itemList=(float *)cMalloc(bp->nGroups*sizeof(float),8327);
+	    if(!bp->itemList)return (struct DObject *)NULL;
 	    
 	    nn=0;
 	    for(n=0;n<bp->nGroups;++n){
 	        if(!bp->Groups[n] || !bp->Groups[n]->ReadWrite)continue;
 	    	bp->itemList[nn++]=(float)bp->Groups[n]->type;
 	    }
-	    if(nn <= 0)return NULL;
+	    if(nn <= 0)return (struct DObject *)NULL;
 	    b = *bp;
 	    Local[0].space=nn;
 		if(putUniversalTable((int)Global.tableTag,&Global,inOut))goto ErrorOut;				
@@ -129,7 +129,7 @@ static struct DObject *uGroupWrite(struct DObject *o,FILE8 *inOut,struct DOList 
 	
 	return (struct DObject *)&b;
 ErrorOut:
-	return NULL;
+	return (struct DObject *)NULL;
 }
 
 static int uGroupFrameCount(struct DObject *o,long *FrameCount)

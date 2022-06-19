@@ -96,13 +96,13 @@ int SageSetBlockSize(struct FilePIOInfo *pio,long dataLength)
     	pio->bt3=NULL; 	
     	if(pio->bt4)cFree((char *)pio->bt4);
     	pio->bt4=NULL; 	
-		pio->bt1=(void *)cMalloc(sizeof(double)*dataLength,7018);
+		pio->bt1=(double *)cMalloc(sizeof(double)*dataLength,7018);
 		if(!pio->bt1){ret=4;goto ErrorOut;};
-		pio->bt2=(void *)cMalloc(sizeof(double)*dataLength,7019);
+		pio->bt2=(double *)cMalloc(sizeof(double)*dataLength,7019);
 		if(!pio->bt2){ret=4;goto ErrorOut;};
-		pio->bt3=(void *)cMalloc(sizeof(double)*dataLength,7018);
+		pio->bt3=(double *)cMalloc(sizeof(double)*dataLength,7018);
 		if(!pio->bt3){ret=4;goto ErrorOut;};
-		pio->bt4=(void *)cMalloc(sizeof(double)*dataLength,7019);
+		pio->bt4=(double *)cMalloc(sizeof(double)*dataLength,7019);
 		if(!pio->bt4){ret=4;goto ErrorOut;};
 		pio->BlockSizeTemp=dataLength;
     }

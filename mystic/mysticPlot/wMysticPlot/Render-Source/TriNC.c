@@ -222,7 +222,7 @@ static int TriNCNormal(Object *obj, Isect *hit, Point P, Point N)
 	
 	qp = (TriNCData *) obj -> o_data ;
 	
-	P=P;
+	//P=P;
 	
 	s1=hit->f1;
 	s2=hit->f2;

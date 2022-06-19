@@ -194,13 +194,13 @@ struct FileList *FileDialog(char *name,char *message,int Operation,struct FileLi
 
 	uDialogReturn *uR;
  	
-	if(!message)return NULL;
+	if(!message)return (struct FileList *)NULL;
 	
-	uR=NULL;
+	uR=(uDialogReturn *)NULL;
 
-	Files=NULL;
+	Files=(struct FileList *)NULL;
 	
-	info=info;
+	//info=info;
 	
 	Singles=0;
 	
@@ -316,7 +316,7 @@ ErrorOut:
 	if(ret){
 	    if(Files){
 			FileListFree(Files);
-	        Files=NULL;
+	        Files=(struct FileList *)NULL;
 	    }
 	}else{
         uRect portRect;
@@ -351,7 +351,7 @@ ErrorOut:
 	
 	if(Singles){
 	    doSingles(Files);
-	    Files=NULL;
+	    Files=(struct FileList *)NULL;
 	}
 
 	return Files;
@@ -373,7 +373,7 @@ int doSingles(struct FileList *FilesIn)
 	    File.count=1;
 	    File.directory=strsave(FilesIn->directory,986);
 	    if(!File.directory)break;
-	    File.name=cMalloc(sizeof(char **),983);
+	    File.name=(char **)cMalloc(sizeof(char **),983);
 	    if(!File.name)break;
 	    File.name[0]=strsave(FilesIn->name[n],986);
 	    if(!File.name[0])break;	    

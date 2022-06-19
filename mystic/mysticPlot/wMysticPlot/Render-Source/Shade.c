@@ -10,22 +10,22 @@
 
 int colorit(long count,double *level,Flt value,int *ic);
 long doBumps(void *v1,void *v2,void *v3);
-int Trace(int level, Flt weight, Ray *ray, Color color);
+int Trace(int level, Flt weight, Ray *ray, Color7 color);
 int TransmissionDirection(Surface *m1,Surface *m2,Vec I,Vec N,Vec T);
 int SpecularDirection(Vec I,Vec N,Vec R);
 
  
- int Shade(Ray *ray,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color col)
+ int Shade(Ray *ray,int level, Flt weight, Vec P,Vec N,Vec I, Isect *hit,Color7 col)
 {
 	Ray 	tray ;
-	Color 	tcol ;
+	Color7 	tcol ;
 	Vec 	L, H ;
 	Flt 	t ;
 	Flt	diff ;
 	Flt 	spec ;
 	Flt 	costheta,costheta2 ;
 	Surface	* surf ;
-	Color	surf_color,surfcolor;
+	Color7	surf_color,surfcolor;
 	double value;
 	int l,ic;
 	extern struct Material KdTreeMaterial;

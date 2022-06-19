@@ -1014,7 +1014,7 @@ static int doBlockGradientsGet(struct FileInfo2 *Files,long start,long BlockSize
 	
 	ret=1;
 	
-	start=start;
+	// start=start;
 	
 	BlockSizeStart=BlockSize;
 	
@@ -3050,9 +3050,9 @@ static int getPlotImage2(struct FileInfo2 *Files,double *data,unsigned char *buf
 			
 
 		}else{   /* have more reflected data than unreflected data */
-			buff2=cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
+			buff2=(unsigned char *)cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
 			if(!buff2)goto ErrorOut;
-			data2=cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
+			data2=(double *)cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
 			if(!data2)goto ErrorOut;
 			ss.buffer=buff2;			
 			pio->range.xminData=0;
@@ -3801,7 +3801,7 @@ static int getPlotImage(struct FileInfo2 *Files,unsigned char *buff,long Current
 		}
 	}else{
 			
-		buff2=cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
+		buff2=(unsigned char *)cMalloc(pio->range.ixmax*pio->range.iymax*sizeof(double),1847);
 		if(!buff2)goto ErrorOut;
 		
 		dx=pio->range.xmaxData-pio->range.xminData;

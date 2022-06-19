@@ -773,7 +773,7 @@ static int uImageReplaceImage(uImagePtr b,long xsizei,long ysizei,unsigned char 
 			    cFree((char *)b->dataPtr);
 			    b->dataPtr=NULL;
 			}
-			if((b->dataPtr=cMalloc(length,8076)) == NULL){
+			if((b->dataPtr=(unsigned char *)cMalloc(length,8076)) == NULL){
 			    sprintf(WarningBuff,"CImageReplaceImage Out Of Memory Requested (%ld)\n",length);
 			    WarningBatch(WarningBuff);
 			    return 1;
@@ -828,7 +828,7 @@ static int uImageMessage(DObjPtr o,long MessageType,void *MessageData)
 	
 	if(!b || !MessageData)return 1;
 	
-	m=MessageData;
+	m=(struct Message1000 *)MessageData;
 	
 	switch(MessageType){
 	case MessageType_GET_FILE_OWNER:
@@ -956,7 +956,7 @@ uImagePtr uImageImage(long xs,long ys,rRect *r,struct uAttributes *Attribute,str
 	b->xsize=xs;
 	b->ysize=ys;
 	b->length=b->xsize*b->ysize*3;
-	if((b->dataPtr=cMalloc(b->length,8037)) == NULL){
+	if((b->dataPtr=(unsigned char *)cMalloc(b->length,8037)) == NULL){
 	    sprintf(WarningBuff,"uImageImage Out Of Memory Requested (%ld)\n",b->length);
 	    WarningBatch(WarningBuff);
 	   goto ErrorOut;
@@ -991,7 +991,7 @@ uImagePtr uImageImage2(uImagePtr Pastin,DOListPtr l)
 	b->Files=Pastin->Files;
 	b->CurrentFrame=Pastin->CurrentFrame;
 	length=b->xsize*b->ysize;
-	if((b->dataPtr=cMalloc(length,8039)) == NULL){
+	if((b->dataPtr=(unsigned char *)cMalloc(length,8039)) == NULL){
 	    sprintf(WarningBuff,"uImageImage2 Out Of Memory Requested (%ld)\n",length);
 	    WarningBatch(WarningBuff);
 	    goto ErrorOut;

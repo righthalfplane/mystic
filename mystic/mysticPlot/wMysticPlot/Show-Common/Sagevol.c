@@ -1271,7 +1271,7 @@ int writeTRUEthread(vIconPtr myIcon)
 	long n;
 
 	if(!myIcon)return 1;
-	Files=myIcon->FileInfo;
+	Files=(FilePtr)myIcon->FileInfo;
 	if(!Files)return 1;
 	
 

@@ -274,10 +274,10 @@ static DObjPtr uRoundRectDoInformation(DObjPtr o)
 	              uDialogSetDouble,(double)b->ovalHeight,
 	              	              
                 uDialogSetItem,16L,
-                uDialogSetLogical,(!b->Attributes.hideLines == 1),
+                uDialogSetLogical,((!b->Attributes.hideLines) == 1),
 	              
                 uDialogSetItem,17L,
-                uDialogSetLogical,(!b->Attributes.doAreadFill == 1),
+                uDialogSetLogical,((!b->Attributes.doAreadFill) == 1),
 	              
 	              
 	              uDialogSetDone,uDialogSetDone

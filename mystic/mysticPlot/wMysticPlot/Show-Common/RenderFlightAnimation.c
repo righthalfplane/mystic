@@ -745,7 +745,7 @@ int bspline(int n, int tp, struct P *control, struct P *output, int num_output)
     double ds,s,t;
     double /*dc, */cs,dcl;
 	int nn,ns;
-	tp=tp;
+	//tp=tp;
 	
 	if(!control || !output || (num_output < 2) || (n < 2))return 1;
 	
@@ -997,9 +997,9 @@ static int CFlightPathDrawLines(CObject *o,struct Matrix *WorldToScreen,
 	if(itIs < 0)itIs=0;
 	
 	if(flag == 1){
-	    if((scene->material[c->Material].opacity != 1.0))return 0;
+	    if(scene->material[c->Material].opacity != 1.0)return 0;
 	}else if(flag == 2){
-	    if((scene->material[c->Material].opacity == 1.0))return 0;
+	    if(scene->material[c->Material].opacity == 1.0)return 0;
 	}
     
 	if(c->Hide)return 0;
@@ -1136,9 +1136,9 @@ static int CFlightPathDraw(CObject *o,struct Matrix *WorldToScreen,
 	if(!m)return 0;
 
 	if(flag == 1){
-	    if((m->opacity != 1.0))return 0;
+	    if(m->opacity != 1.0)return 0;
 	}else if(flag == 2){
-	    if((m->opacity == 1.0))return 0;
+	    if(m->opacity == 1.0)return 0;
 	}
 
 	VecCopy(scene->Eyel,Eyel);

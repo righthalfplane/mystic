@@ -80,7 +80,7 @@ void uDrawsPopUp(IconPtr myIcon,IconPtr myIconDialog,int iflag)
 
 	uPointerGlobal(&uwhere,myIconDialog);
 
-	iflag=iflag;
+	//iflag=iflag;
 	
 	Result=0;
 	

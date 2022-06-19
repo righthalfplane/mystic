@@ -22,14 +22,14 @@ static DObjPtr uBoxDoInformation(DObjPtr o);
 
 static struct DObject *uBoxDoubleClick(struct DObject *o,rPoint *r)
 {
-	if(!o || !r)return NULL;
+	if(!o || !r)return (struct DObject *)NULL;
 
 	if(r->x < o->box.x || r->y < o->box.y){
-		return NULL;
+		return (struct DObject *)NULL;
 	}
 	
 	if(r->x > o->box.x+o->box.xsize || r->y > o->box.y+o->box.ysize){
-		return NULL;
+		return (struct DObject *)NULL;
 	}			
 	return uBoxDoInformation(o);
 }
@@ -79,7 +79,7 @@ static struct DObject *uBoxWrite(struct DObject *o,FILE8 *inOut,struct DOList *l
 	long length;
 	long tag;
 	
-	if(!inOut || !l)return NULL;
+	if(!inOut || !l)return (struct DObject *)NULL;
 	
 	if(!bp){
 		/* read and create */
@@ -104,7 +104,7 @@ static struct DObject *uBoxWrite(struct DObject *o,FILE8 *inOut,struct DOList *l
 	
 	return (struct DObject *)&b;
 ErrorOut:
-	return NULL;
+	return (struct DObject *)NULL;
 }
 
 uBoxPtr uBoxBox(rRect *r,struct uAttributes *Attribute,struct DOList *l)
@@ -259,10 +259,10 @@ static DObjPtr uBoxDoInformation(DObjPtr o)
 	              uDialogSetDouble,(double)b->box.xsize,
 	              	              
                 uDialogSetItem,12L,
-                uDialogSetLogical,(!b->Attributes.hideLines == 1),
+                uDialogSetLogical,((!b->Attributes.hideLines) == 1),
 	              
                 uDialogSetItem,13L,
-                uDialogSetLogical,(!b->Attributes.doAreadFill == 1),
+                uDialogSetLogical,((!b->Attributes.doAreadFill) == 1),
 	              
 	              uDialogSetDone,uDialogSetDone
 	    ))goto ErrorOut;

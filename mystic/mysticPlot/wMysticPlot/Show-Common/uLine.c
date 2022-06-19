@@ -35,14 +35,14 @@ static DObjPtr uLineDoInformation(DObjPtr o);
 
 static struct DObject *uLineDoubleClick(struct DObject *o,rPoint *r)
 {
-	if(!o || !r)return NULL;
+	if(!o || !r)return (struct DObject *)NULL;
 
 	if(r->x < o->box.x || r->y < o->box.y){
-		return NULL;
+		return (struct DObject *)NULL;
 	}
 	
 	if(r->x > o->box.x+o->box.xsize || r->y > o->box.y+o->box.ysize){
-		return NULL;
+		return (struct DObject *)NULL;
 	}			
 	return uLineDoInformation(o);
 }
@@ -98,7 +98,7 @@ static struct DObject *uLineWrite(struct DObject *o,FILE8 *inOut,struct DOList *
 	long length;
 	long tag;
 	
-	if(!inOut || !l)return NULL;
+	if(!inOut || !l)return (struct DObject *)NULL;
 	
 	if(!bp){
 		/* read and create */
@@ -123,7 +123,7 @@ static struct DObject *uLineWrite(struct DObject *o,FILE8 *inOut,struct DOList *
 	
 	return (struct DObject *)&b;
 ErrorOut:
-	return NULL;
+	return (struct DObject *)NULL;
 }
 static DObjPtr uLineDoInformation(DObjPtr o)
 {
@@ -161,9 +161,9 @@ static DObjPtr uLineDoInformation(DObjPtr o)
 	
 	ret = 1;
 	
-	uR=NULL;
+	uR=(uDialogReturn *)NULL;
 	
-	pBox=NULL;
+	pBox=(uLinePtr)NULL;
 	
 	uList=uDialogOpen("Line Information",&Rect1,ItemCount);
 	
@@ -481,7 +481,7 @@ static struct DObject *uLineStretch(uPoint pt,struct DObject *o,DOListPtr l)
 	uRect r1;
 	uRect r2;
 	
-	if(!b || !l)return NULL;
+	if(!b || !l)return (struct DObject *)NULL;
 	
 	box.x=b->p1.x;
 	box.y=b->p1.y;
@@ -500,7 +500,7 @@ static struct DObject *uLineStretch(uPoint pt,struct DObject *o,DOListPtr l)
     	p1=localToScreen(&b->p2,l);
     	p2=localToScreen(&b->p1,l);
     }else{
-    	return NULL;
+    	return (struct DObject *)NULL;
     }
        
 
@@ -513,13 +513,13 @@ static struct DObject *uLineStretch(uPoint pt,struct DObject *o,DOListPtr l)
 
 	if(b->Duplicate){
 	    b=(uLinePtr)(*b->Duplicate)(o,0,&xOff,&yOff);
-	    if(!b)return NULL;
+	    if(!b)return (struct DObject *)NULL;
 	    b->p1= screenToLocal(&p1,l);
 	    b->p2= screenToLocal(&p2,l);
 	    return (DObjPtr)b;
 	}
     
-	return NULL;
+	return (struct DObject *)NULL;
 }
 static char *uLineCopy(DObjPtr o,long *Length)
 {

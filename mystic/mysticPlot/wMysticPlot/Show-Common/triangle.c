@@ -213,7 +213,7 @@ static int TriNormal(Object * obj, Isect * hit,  Point P, Point N)
 	
 	qp = (TriData *) obj -> o_data ;
 	
-	P=P;
+	//P=P;
 	
 	
 	VecCopy(qp->vn,N);

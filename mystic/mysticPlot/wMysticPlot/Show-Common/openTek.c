@@ -327,7 +327,7 @@ int OpenTek(struct FileList *FilesIn)
 
 IconPtr NewTekWindow(IconPtr myIcon)
 {
-	myIcon=myIcon;
+	//myIcon=myIcon;
 	return OpenTekFiles(NULL);
 }
 
@@ -1091,7 +1091,7 @@ int doWriteTEK(IconPtr myIcon,struct ImageSaveList *Images,int flag)
   	
 	Out=NULL;
 	
-	flag=flag;
+	//flag=flag;
 	
 	ret=1;
 		
@@ -1361,7 +1361,7 @@ ErrorOut:
 }
 static int tdothumb(controlPtr control,IconPtr myIcon)
 {
-	control=control;
+	//control=control;
 	return tMoveDy(myIcon);
 }
 static int tdoPageUp(controlPtr control,short part,IconPtr myIcon)
@@ -1370,7 +1370,7 @@ static int tdoPageUp(controlPtr control,short part,IconPtr myIcon)
 		
 		if(!myIcon || !control)return 0;
 		
-		part=part;
+		//part=part;
 		dy=0;
 		if(control == myIcon->VControl){
 		    dy= myIcon->uviewRect.ysize;
@@ -1389,7 +1389,7 @@ static int tdoPageDown(controlPtr control,short part,IconPtr myIcon)
 
 		if(!myIcon || !control)return 0;
 		
-		part=part;
+		//part=part;
 		dy=0;
 		if(control == myIcon->VControl){
 		    dy= myIcon->uviewRect.ysize;
@@ -1406,7 +1406,7 @@ static int tgoUp(controlPtr control,short part,IconPtr myIcon)
 		int old;
 	
 		if(!myIcon || !control)return 0;
-		part=part;
+		//part=part;
 		old=(int)uGetControlValue(control);
 		uSetControlValue(control,old-8);
 		if(uGetControlValue(control) == old)return 0;
@@ -1418,7 +1418,7 @@ static int tgoDown(controlPtr control,short part,IconPtr myIcon)
 		int old;
 		
 		if(!myIcon || !control)return 0;
-		part=part;
+		//part=part;
 		old=(int)uGetControlValue(control);
 		uSetControlValue(control,old+8);
 		if(uGetControlValue(control) == old)return 0;
@@ -2131,12 +2131,12 @@ static void tDumpItP(IconPtr myIcon,uRect *PageViewi,int scale)
 #else
 static void tPrint(IconPtr myIcon)
 {
-	myIcon=myIcon;
+	//myIcon=myIcon;
 }
 static void tDumpItP(IconPtr myIcon,uRect *PageViewi,int scale)
 {
-	myIcon=myIcon;
-	PageViewi=PageViewi;
-	scale=scale;
+	//myIcon=myIcon;
+	//PageViewi=PageViewi;
+	//scale=scale;
 }
 #endif

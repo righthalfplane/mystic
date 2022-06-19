@@ -2481,6 +2481,19 @@ int doSelect(IconPtr myIcon)
 	        sprintf(WarningBuff,"Material Selected %ld\n",(long)Current->Material);
 	        WarningBatch(WarningBuff);
 */	        
+			if(Current->type == G_BLOCK){
+			   // sprintf(buff,"Material %ld type %ld block %ld",Current->Material,(long)Current->type,(long)G_BLOCK);
+	    	   // WarningBatchFast(buff);
+	    	    CBlockPtr bp=(CBlockPtr)Current;
+	    	    struct Block *b;
+	    	    b = &(scene->block[bp->BlockNumber]);
+	    	    if(b->stress){
+			    	sprintf(buff,"BlockNumber %ld ncell %ld stress %g",
+			          (long)bp->BlockNumber,ncell-Current->FirstCell,b->stress[ncell-Current->FirstCell]);
+	    	    	WarningBatchFast(buff);
+	    	    }
+	    	
+	    	}
 	        
 	        setSceneMaterial(myIcon,Current->Material);
 	        
@@ -4259,11 +4272,14 @@ static int doObjects(IconPtr myIcon)
       /*246 */      {"0",     {310,145,55,20},uDialogText,uDialogGetLong},
       /*247 */      {"show normals", {457,234,115,20},uDialogCheck,uDialogGetLong},  
       
-      /*248 */      {"Mult", {360,170,75,20},uDialogString,uDialogNone},
-      /*249 */      {"0", {430,170,105,20},uDialogText,uDialogGetDouble},
+      /*248 */      {"Mult", {250,145,75,20},uDialogString,uDialogNone},
+      /*249 */      {"0",    {310,145,55,20},uDialogText,uDialogGetDouble},
       
-	  /*250 */      {"passes", {250,115,75,20},uDialogString,uDialogNone},
-      /*251 */      {"0",     {310,115,55,20},uDialogText,uDialogGetLong},
+      /*250 */      {"Stress", {250,115,75,20},uDialogString,uDialogNone},
+      /*251 */      {"0",      {310,115,55,20},uDialogText,uDialogGetDouble},
+      
+	  /*252 */      {"passes", {250,115,75,20},uDialogString,uDialogNone},
+      /*253 */      {"0",      {310,115,55,20},uDialogText,uDialogGetLong},
         
         };
         
@@ -4936,7 +4952,7 @@ StardardGet:
 
 	    r->streamSteps=uR[246].lreturn;
 	    
-	    r->streamPasses=uR[251].lreturn;
+	    r->streamPasses=uR[253].lreturn;
 	    
 	    r->ItWas = -1;
 	    
@@ -5060,6 +5076,8 @@ StardardGet:
 	    
 	    r->vscale=uR[249].dreturn;
 	    
+	    r->nstress=uR[251].dreturn;
+	    
 	    r->ItWas = -1;
 	    
 	}
@@ -5106,7 +5124,7 @@ static int SetObjectData(struct uDialogStruct *uList,long no)
 	reti = 1;
 
 
-   for(n=14;n<=251;++n){   
+   for(n=14;n<=253;++n){   
 		ret=uDialogSet(uList,0L,
 				uDialogSetItem,(long)n,
 				uDialogSetHidden,(int)TRUE,
@@ -5755,10 +5773,10 @@ StandardFill:
 				uDialogSetHidden,(int)(0),
 				uDialogSetDouble,(double)r->streamSteps,
 				
-				uDialogSetItem,250L,
+				uDialogSetItem,252L,
 				uDialogSetHidden,(int)(0),
 				
-				uDialogSetItem,251L,
+				uDialogSetItem,253L,
 				uDialogSetHidden,(int)(0),
 				uDialogSetDouble,(double)r->streamPasses,
 				
@@ -6077,7 +6095,7 @@ StandardFill:
 	}else if(o->type == G_SHOW){
 	    CShowPtr s=(CShowPtr)o;
 
-	   for(n=248;n<=249;++n){
+	   for(n=248;n<=251;++n){
 	   
 			ret=uDialogSet(uList,0L,
 					uDialogSetItem,(long)n,
@@ -6094,12 +6112,14 @@ StandardFill:
 				uDialogSetItem,249L,
 				uDialogSetDouble,(double)s->vscale,
 
+				uDialogSetItem,251L,
+				uDialogSetDouble,(double)s->nstress,
 				
 														
 				uDialogSetDone,uDialogSetDone
 	    );		
 		if(ret) goto ErrorOut;
-	
+		
 	
 	}
 	
@@ -7191,7 +7211,7 @@ static void tMoveControls(IconPtr myIcon)
 }
 static int tdothumb(controlPtr control,IconPtr myIcon)
 {
-	control=control;
+	//control=control;
 	return tMoveDy(myIcon);
 }
 static int tdoPageUp(controlPtr control,short part,IconPtr myIcon)
@@ -7200,7 +7220,7 @@ static int tdoPageUp(controlPtr control,short part,IconPtr myIcon)
 		
 		if(!myIcon || !control)return 0;
 		
-		part=part;
+		//part=part;
 		dy=0;
 		if(control == myIcon->VControl){
 		    dy= myIcon->uviewRect.ysize;
@@ -7219,7 +7239,7 @@ static int tdoPageDown(controlPtr control,short part,IconPtr myIcon)
 
 		if(!myIcon || !control)return 0;
 		
-		part=part;
+		//part=part;
 		dy=0;
 		if(control == myIcon->VControl){
 		    dy= myIcon->uviewRect.ysize;
@@ -7236,7 +7256,7 @@ static int tgoUp(controlPtr control,short part,IconPtr myIcon)
 		int old;
 	
 		if(!myIcon || !control)return 0;
-		part=part;
+		//part=part;
 		old=(int)uGetControlValue(control);
 		uSetControlValue(control,old-8);
 		if(uGetControlValue(control) == old)return 0;
@@ -7248,7 +7268,7 @@ static int tgoDown(controlPtr control,short part,IconPtr myIcon)
 		int old;
 		
 		if(!myIcon || !control)return 0;
-		part=part;
+		//part=part;
 		old=(int)uGetControlValue(control);
 		uSetControlValue(control,old+8);
 		if(uGetControlValue(control) == old)return 0;

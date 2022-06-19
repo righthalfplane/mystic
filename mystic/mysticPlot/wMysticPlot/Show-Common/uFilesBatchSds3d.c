@@ -1677,7 +1677,7 @@ static int doSDS3DGetData(struct FileInfo2 *Files,long CurrentFrame,struct SetFr
     length=sd->xsize*sd->ysize*sd->zsize;
     sd->length=length;
     sd->data=cMalloc(length*sizeof(double),9206);
-    dp=sd->data;
+    dp=(double *)sd->data;
     if(!dp){
     	sprintf(WarningBuff,"doSDS3DGetData - Out of Memory\n");
     	WarningBatch(WarningBuff);
@@ -1813,7 +1813,7 @@ static int SliceFloatAndRaster(struct FileInfo2 *Files,long CurrentFrame,struct 
 	
     sd->limits = *limits;
     
-	FrameDataToRaster(sd,sd->data2);
+	FrameDataToRaster(sd,(unsigned char *)sd->data2);
     
 	ret = 0;
 	
@@ -2538,7 +2538,7 @@ static int sds3dSetLimits(struct FileInfo2 *Files,long nf)
 	if(!Files)return 1;
 	pio = &Files->pioData;
 
-	nf=nf;
+	//nf=nf;
 
 	limits=&Files->limits;
 	limits->iGot = FALSE;
@@ -2593,7 +2593,7 @@ static int sds3dSetLimitsSDS3D(struct FileInfo2 *Files,long nf)
 	if(!Files)return 1;
 	pio = &Files->pioData;
 
-	nf=nf;
+	//nf=nf;
 	
 	limits=&Files->limits;
 	limits->iGot = FALSE;

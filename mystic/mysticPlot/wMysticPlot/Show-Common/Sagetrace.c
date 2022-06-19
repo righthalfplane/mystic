@@ -367,7 +367,7 @@ int TraceLines(mThread *Threads)
 	       logscale = 0;
 	       aa=(254.0-2.0)/(dmax-dmin);
 	       bb=2.0-dmin;
-	       if((Threads->smin == 0)){
+	       if(Threads->smin == 0){
 	           sprintf(WarningBuff,"dmin or dmax less than zero log scale turnned off\n");
 				if(scene->debug > 1)WarningBatch(WarningBuff);
 	       }
@@ -3113,7 +3113,7 @@ int SageTraceLines4b(mThread *Threads)
 		       ray.logscale = 0;
 		       ray.a=(254.0-2.0)/(ray.dmax-ray.dmin);
 		       ray.b=2.0-ray.a*ray.dmin;
-		       if((Threads->smin == 0)){
+		       if(Threads->smin == 0){
 		           sprintf(WarningBuff,"dmin or dmax less than zero log scale turnned off\n");
 					if(scene->debug > 1)WarningBatch(WarningBuff);
 		       }
@@ -3771,7 +3771,7 @@ int SageTraceLines4a(mThread *Threads)
 		       ray.logscale = 0;
 		       ray.a=(254.0-2.0)/(ray.dmax-ray.dmin);
 		       ray.b=2.0-ray.a*ray.dmin;
-		       if((Threads->smin == 0)){
+		       if(Threads->smin == 0){
 		           sprintf(WarningBuff,"dmin or dmax less than zero log scale turnned off\n");
 					if(scene->debug > 1)WarningBatch(WarningBuff);
 		       }
@@ -4945,7 +4945,7 @@ int SageTraceLines1(mThread *Threads)
 		       ray.logscale = 0;
 		       ray.a=(254.0-2.0)/(ray.dmax-ray.dmin);
 		       ray.b=2.0-ray.a*ray.dmin;
-		       if((Threads->smin == 0)){
+		       if(Threads->smin == 0){
 		           sprintf(WarningBuff,"dmin or dmax less than zero log scale turnned off\n");
 					if(scene->debug > 1)WarningBatch(WarningBuff);
 		       }
@@ -6087,7 +6087,7 @@ int SageTraceLines0(mThread *Threads)
 		       ray.logscale = 0;
 		       ray.a=(254.0-2.0)/(ray.dmax-ray.dmin);
 		       ray.b=2.0-ray.a*ray.dmin;
-		       if((Threads->smin == 0)){
+		       if(Threads->smin == 0){
 		           sprintf(WarningBuff,"dmin or dmax less than zero log scale turnned off\n");
 					if(scene->debug > 1)WarningBatch(WarningBuff);
 		       }
@@ -6604,7 +6604,7 @@ int SageTraceLines2(mThread *Threads)
 		       ray.logscale = 0;
 		       ray.a=(254.0-2.0)/(ray.dmax-ray.dmin);
 		       ray.b=2.0-ray.a*ray.dmin;
-		       if((Threads->smin == 0)){
+		       if(Threads->smin == 0){
 		           sprintf(WarningBuff,"dmin or dmax less than zero log scale turnned off\n");
 					if(scene->debug > 1)WarningBatch(WarningBuff);
 		       }
@@ -7204,7 +7204,7 @@ int SageTraceLines5(mThread *Threads)
 	       ray.logscale = 0;
 	       ray.a=(254.0-2.0)/(ray.dmax-ray.dmin);
 	       ray.b=2.0-ray.a*ray.dmin;
-	       if((Threads->smin == 0)){
+	       if(Threads->smin == 0){
 	           sprintf(WarningBuff,"dmin or dmax less than zero log scale turnned off\n");
 				if(scene->debug > 1)WarningBatch(WarningBuff);
 	       }

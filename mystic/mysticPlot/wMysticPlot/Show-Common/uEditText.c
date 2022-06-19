@@ -365,7 +365,7 @@ int uEditClick(uPoint *where,int extend,uEditPtr Edit)
     }
     
 	
-	extend=extend;
+	//extend=extend;
 	
 	uEditSetCursor(Edit);
 	

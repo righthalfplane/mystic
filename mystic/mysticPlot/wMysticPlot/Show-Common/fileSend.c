@@ -156,7 +156,7 @@ IconPtr NewFileSendWindow(IconPtr myIconi)
 	uR=NULL;
 	uList=NULL;
 	myIcon=NULL;	
-	myIconi=myIconi;
+	//myIconi=myIconi;
  	
 	if((n=(struct uNetFile *)cMalloc(sizeof(struct uNetFile),8183)) == NULL){
 		WarningBatch("NewFileSendWindow Out of Memory\n");

@@ -381,7 +381,7 @@ int slRK4Stop(int iter, double *yOld,double *y,  double *sideHit,int *sideIndex)
 	double sMin,num,den,s,vecSeg[3],vecSide[3];
 
 
-	iter=iter;
+	//iter=iter;
 	
 	for(j=0;j<3;j++) {
 		vecSeg[j] = y[j]-yOld[j];
@@ -459,7 +459,7 @@ double slFunction(double s,double *x,int j)
 	int i;
 	double vel;
 
-	s=s;
+	//s=s;
 	
 	vel = 0.0;
 	for(i=0;i<3;i++) {

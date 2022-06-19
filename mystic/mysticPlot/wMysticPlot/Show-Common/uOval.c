@@ -259,10 +259,10 @@ static DObjPtr uOvalDoInformation(DObjPtr o)
 	              	              
 	              	              
                 uDialogSetItem,12L,
-                uDialogSetLogical,(!b->Attributes.hideLines == 1),
+                uDialogSetLogical,((!b->Attributes.hideLines) == 1),
 	              
                 uDialogSetItem,13L,
-                uDialogSetLogical,(!b->Attributes.doAreadFill == 1),
+                uDialogSetLogical,((!b->Attributes.doAreadFill) == 1),
 	              
 	              
 	              uDialogSetDone,uDialogSetDone

@@ -232,9 +232,9 @@ static int CPio3dStreamLinesDraw2(CObject *o,struct Matrix *WorldToScreen,
 	scene=c->scene;
 
 	if(flag == 1){
-	    if((scene->material[c->Material].opacity != 1.0))return 0;
+	    if(scene->material[c->Material].opacity != 1.0)return 0;
 	}else if(flag == 2){
-	    if((scene->material[c->Material].opacity == 1.0))return 0;
+	    if(scene->material[c->Material].opacity == 1.0)return 0;
 	}
 
 	VecCopy(scene->Eyel,Eyel);
@@ -600,9 +600,9 @@ static int CPio3dStreamLinesDraw(CObject *o,struct Matrix *WorldToScreen,
 	scene=c->scene;
 
 	if(flag == 1){
-	    if((scene->material[c->Material].opacity != 1.0))return 0;
+	    if(scene->material[c->Material].opacity != 1.0)return 0;
 	}else if(flag == 2){
-	    if((scene->material[c->Material].opacity == 1.0))return 0;
+	    if(scene->material[c->Material].opacity == 1.0)return 0;
 	}
 
 	VecCopy(scene->Eyel,Eyel);
@@ -867,9 +867,9 @@ static int CPio3dStreamLinesDrawLines(CObject *o,struct Matrix *WorldToScreen,
 	scene=c->scene;
 
 	if(flag == 1){
-	    if((scene->material[c->Material].opacity != 1.0))return 0;
+	    if(scene->material[c->Material].opacity != 1.0)return 0;
 	}else if(flag == 2){
-	    if((scene->material[c->Material].opacity == 1.0))return 0;
+	    if(scene->material[c->Material].opacity == 1.0)return 0;
 	}
 
 
@@ -1323,10 +1323,10 @@ static CObjectPtr CPio3dStreamDuplicate(CObject *b)
 		if(!sdsNew->xyzReturned)goto ErrorOut;
 		zerol((char *)sdsNew->xyzReturned,s->streamsReturned*sizeof(struct dataStruct));
 		for(k=0;k<s->streamsReturned;++k){
-		    sdsNew->xyzReturned[k].x=cMalloc(s->xyzReturned[k].count*sizeof(double),8721);
-		    sdsNew->xyzReturned[k].y=cMalloc(s->xyzReturned[k].count*sizeof(double),8721);
-		    sdsNew->xyzReturned[k].z=cMalloc(s->xyzReturned[k].count*sizeof(double),8721);
-		    sdsNew->xyzReturned[k].v=cMalloc(s->xyzReturned[k].count*sizeof(double),8721);
+		    sdsNew->xyzReturned[k].x=(double *)cMalloc(s->xyzReturned[k].count*sizeof(double),8721);
+		    sdsNew->xyzReturned[k].y=(double *)cMalloc(s->xyzReturned[k].count*sizeof(double),8721);
+		    sdsNew->xyzReturned[k].z=(double *)cMalloc(s->xyzReturned[k].count*sizeof(double),8721);
+		    sdsNew->xyzReturned[k].v=(double *)cMalloc(s->xyzReturned[k].count*sizeof(double),8721);
 		    if(!sdsNew->xyzReturned[k].x || !sdsNew->xyzReturned[k].y || !sdsNew->xyzReturned[k].z || !sdsNew->xyzReturned[k].v)goto ErrorOut;
 		    sdsNew->xyzReturned[k].count=s->xyzReturned[k].count;
 		    for(n=0;n<s->xyzReturned[k].count;++n){

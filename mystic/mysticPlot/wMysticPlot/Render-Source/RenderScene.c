@@ -3908,9 +3908,9 @@ int doNoShadowVRML(long *ndata,long *matdata,float *normal,long normmax,
 
 	warn=0;
 
-	vdata=vdata;
+	//vdata=vdata;
 
-	normmax=normmax;
+	//normmax=normmax;
 
 	ambient[0]=ambient[1]=ambient[2]=0;
 	specular[0]=specular[1]=specular[2]=0;
@@ -5344,7 +5344,7 @@ int StartBumps(struct Bump *b,long time)
 	
 	if(!b)return 1;
 	
-	time=time;
+	//time=time;
 	nx=b->xCount;
 	ny=b->yCount;
 	nn=nx*ny;
@@ -5403,7 +5403,7 @@ int StartStripes(struct Stripes *s,long time)
 
 	if(!s)return 1;
 	
-	time=time;
+	//time=time;
 	nx=s->xCount;
 	ny=s->yCount;
 	nn=nx*ny;

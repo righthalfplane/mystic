@@ -358,7 +358,7 @@ int FilesOpenEdit(struct FileInfo2 *Files)
 	    File.count=1;
 	    File.directory=strsave(Files->directory,1986);
 	    if(!File.directory)break;
-	    File.name=cMalloc(sizeof(char **),1983);
+	    File.name=(char **)cMalloc(sizeof(char **),1983);
 	    if(!File.name)break;
 	    File.name[0]=strsave(Files->FilesNames[n],1986);
 	    if(!File.name[0])break;	    
@@ -2747,7 +2747,7 @@ static int doClose(IconPtr myIcon)
 
 static int cdothumb(controlPtr control,IconPtr myIcon)
 {
-    control=control;
+    //control=control;
 	if(myIcon){
 	    CVideoMoveDy(myIcon);
 	}
@@ -2757,7 +2757,7 @@ static int cgoDown(controlPtr control,short part,IconPtr myIcon)
 {
 	long oldv;
 
-	part=part;
+	//part=part;
 	oldv=uGetControlValue(control);
 	uSetControlValue(control,oldv+1);
 	if(oldv != uGetControlValue(control) && myIcon){
@@ -2769,7 +2769,7 @@ static int cgoUp(controlPtr control,short part,IconPtr myIcon)
 {
 	long oldv;
 
-	part=part;
+	//part=part;
 	oldv=uGetControlValue(control);
 	uSetControlValue(control,oldv-1);
 	if(oldv != uGetControlValue(control) && myIcon){
@@ -2792,7 +2792,7 @@ static int cdoPageDown(controlPtr control,short part,IconPtr myIcon)
 	    dy=8;
 	}
 
-	part=part;
+	//part=part;
 	oldv=uGetControlValue(control);
 	uSetControlValue(control,oldv+dy);
 	if(oldv != uGetControlValue(control) && myIcon){
@@ -2814,7 +2814,7 @@ static int cdoPageUp(controlPtr control,short part,IconPtr myIcon)
 	}else{
 	    dy=8;
 	}
-	part=part;
+	//part=part;
 	oldv=uGetControlValue(control);
 	uSetControlValue(control,oldv-dy);
 	if(oldv != uGetControlValue(control) && myIcon){

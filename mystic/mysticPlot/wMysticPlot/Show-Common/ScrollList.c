@@ -52,7 +52,7 @@ int ScrollListSetDouble(double *DataFloat,long Count,struct ScrollList *ListD)
 	    ListD->Flags=NULL;
 	}
 	
-	ListD->Flags=cMalloc(sizeof(char)*Count,9825);
+	ListD->Flags=(char *)cMalloc(sizeof(char)*Count,9825);
 	
 	if(!ListD->Flags)return 1;
 	
@@ -793,13 +793,13 @@ struct ScrollList *ScrollListNew(int top,int left,int LineHeight,int LineWidth,
  	uRect myRect;
  	uRect r;
  	
- 	ListData=NULL;
+ 	ListData=(struct ScrollList *)NULL;
  	
 	if(!myIcon)goto Error;
  		
 	ListData=(struct ScrollList *)cMalloc(sizeof(struct ScrollList),8160);
 
-	if(ListData == NULL)return NULL;
+	if(ListData == (struct ScrollList *)NULL)return (struct ScrollList *)NULL;
 	
 	zerol((char *)ListData,(long)sizeof(struct ScrollList));
 	
@@ -865,7 +865,7 @@ struct ScrollList *ScrollListNew(int top,int left,int LineHeight,int LineWidth,
 	return ListData;
 Error:
 	if(ListData)cFree((char *)ListData);
-	return NULL;
+	return (struct ScrollList *)NULL;
 }
 static controlPtr ListControl;
 static struct ScrollList *List;
@@ -1253,7 +1253,7 @@ int ScrollListdothumb(controlPtr control,short part,struct ScrollList *sData)
 {
 		long newp;
 
-		part=part;
+		//part=part;
 		if(!sData)return 1;
 
 		/* old=sData->LastControlLocation; */
@@ -1273,7 +1273,7 @@ int ScrollListdoPageUp(controlPtr control,short part,struct ScrollList *sData)
 {
 		long newp,current;
 		
-		part=part;
+		//part=part;
 		if(!sData)return 1;
 
 		newp=uGetControlValue(control);
@@ -1293,7 +1293,7 @@ int ScrollListdoPageDown(controlPtr control,short part,struct ScrollList *sData)
 {
 		long newp,current;
 
-		part=part;
+		//part=part;
 		if(!sData)return 1;
 
 		newp=uGetControlValue(control);
@@ -1314,7 +1314,7 @@ int ScrollListgoUp(controlPtr control,short part,struct ScrollList *sData)
 	
 		long old,current;
 	
-		part=part;
+		//part=part;
 		if(!sData)return 1;
 
 		old=uGetControlValue(control);
@@ -1334,7 +1334,7 @@ int ScrollListgoDown(controlPtr control,short part,struct ScrollList *sData)
 {			
 		long old,current;
 
-		part=part;
+		//part=part;
 		if(!sData)return 1;
 
 		old=uGetControlValue(control);

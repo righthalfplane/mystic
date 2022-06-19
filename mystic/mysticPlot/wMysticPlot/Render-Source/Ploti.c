@@ -1040,10 +1040,10 @@ int read_slice(double *datai,int nlayer,int imax,int jmax)
 {
  	int3_st *save;
 
-	datai=datai;
-	nlayer=nlayer;
-	imax=imax;
-	jmax=jmax;
+	//datai=datai;
+	//nlayer=nlayer;
+	//imax=imax;
+	//jmax=jmax;
 	save=slice[0];
 	slice[0]=slice[1];
 	slice[1]=save;

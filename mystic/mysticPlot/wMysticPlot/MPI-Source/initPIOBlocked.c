@@ -126,7 +126,7 @@ struct PIO_BLK *sageHeaderBLK(char *path)
 	int ret;
 	int k;
 	
-	if(!path)return NULL;
+	if(!path)return (struct PIO_BLK *)NULL;
 	
 	ret=1;
 	
@@ -165,7 +165,7 @@ struct PIO_BLK *sageHeaderBLK(char *path)
 	
 	if(getDoubleArray8((double *)block,100L,in))goto ErrorOut;
 	
-	sage->names=cMalloc((unsigned long)(block->itemsNum*sizeof(struct ItemNames)),94823);
+	sage->names=(struct ItemNames *)cMalloc((unsigned long)(block->itemsNum*sizeof(struct ItemNames)),94823);
 	if(!sage->names)goto ErrorOut;
 
 	for(k=0;k<(int)block->itemsNum;++k){

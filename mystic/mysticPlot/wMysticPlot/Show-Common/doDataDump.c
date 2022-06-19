@@ -1331,12 +1331,12 @@ static int DumpGetMessage(IconPtr myIcon,long MessageType,void *MessageData)
 		}
 		goto OK;
 	case MessageType_GET_LINE_DATA:
-	    li=MessageData;
+	    li=(struct linedata *)MessageData;
 	    if(!li)goto ErrorOut;
 	    ret=doDumpGetLineData(myIcon->Files,li);
 	    goto ErrorOut;
 	case MessageType_GET_CELL_DATA:
-	    sd=MessageData;
+	    sd=(struct SetFrameData  *)MessageData;
 	    ret = doDumpGetCellData(myIcon,sd->CurrentFrame,sd);
 	    goto ErrorOut;	    	    
 	case MessageType_GET_AREA_DATA:
