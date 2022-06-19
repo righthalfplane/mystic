@@ -1,0 +1,234 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ABOUT_DIALOG DIALOGEX 0, 0, 241, 155
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About wShow"
+FONT 8, "Courier", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,184,134,50,14
+    LTEXT           "by D.E. Ranta",IDC_STATIC,81,19,90,8
+    LTEXT           "Copyright ©1998-2022.",IDC_STATIC,52,114,131,8
+    GROUPBOX        "wMysticPlot 008",IDC_STATIC,6,7,228,125
+    LTEXT           "KDTree Routines Adapted From RayTrace 3.0",IDC_STATIC,31,60,165,8
+    LTEXT           "Author: Samuel R. Buss, sbuss@ucsd.edu",IDC_STATIC,37,71,153,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    "ABOUT_DIALOG", DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 234
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 148
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+RASMENU ACCELERATORS
+BEGIN
+    "A",            RAS_POP_ALL,            VIRTKEY, CONTROL, NOINVERT
+    "I",            RAS_WINDOW_INFO,        VIRTKEY, CONTROL, NOINVERT
+    "O",            RAS_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
+    "R",            RAS_PALETTE_RESTORE,    VIRTKEY, CONTROL, NOINVERT
+    "X",            ID_EXIT,                VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+RASTORMENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&About...",                   RAS_FILE_ABOUT
+        MENUITEM SEPARATOR
+        MENUITEM "&New...",                     RAS_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            RAS_FILE_OPEN
+        MENUITEM "&Close",                      RAS_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "Page Setup...",               PRINT_SETUP
+        MENUITEM "Print...\tCtrl+P",            PRINT_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "&Save Images...",             RAS_FILE_SAVE
+        MENUITEM "Sa&ve as Avi...",             RAS_FILE_SAVE_AVI
+        MENUITEM "Save as &Bmp...",             SAVE_BMP
+        MENUITEM "Save as &Jpeg...",            SAVE_JPG
+        MENUITEM SEPARATOR
+        MENUITEM "&Exit\tCtrl+X",               RAS_FILE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Clear",                      RAS_EDIT_CLEAR
+        MENUITEM "Co&py",                       RAS_EDIT_COPY
+        MENUITEM "&Frame Image",                RAS_EDIT_FRAME
+        MENUITEM "&Window Options...\tCtrl-I",  RAS_FILE_WINDOW
+        MENUITEM "Contours...",                 RAS_FILE_CONTOURS, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Pop One",                    RAS_EDIT_POPONE
+        MENUITEM "P&op All\tCtrl-A",            RAS_EDIT_POPALL
+        MENUITEM "&Zoom In",                    RAS_EDIT_ZOOMIN
+        MENUITEM "Zoo&m Out",                   RAS_EDIT_ZOOMOUT
+    END
+    POPUP "&Animation"
+    BEGIN
+        MENUITEM "&Forward",                    RAS_ANIMATION_FORWARD
+        MENUITEM "&Backward",                   RAS_ANIMATION_BACKWARD
+        MENUITEM "&Step Forward",               RAS_ANIMATION_STEPFORWARD
+        MENUITEM "S&tep Backward",              RAS_ANIMATION_STEPBACKWARD
+        MENUITEM "St&op",                       RAS_ANIMATION_STOP
+        MENUITEM SEPARATOR
+        MENUITEM "S&ynchronize",                RAS_ANIMATION_SYNCHRONIZE
+        MENUITEM "O&ptions...",                 RAS_ANIMATION_OPTIONS
+    END
+    POPUP "&Palette"
+    BEGIN
+        MENUITEM "&Load Palette",               RAS_PALETTE_LOAD
+        MENUITEM "&Restore Palette\tCtrl+R",    RAS_PALETTE_RESTORE
+        MENUITEM "&Show Palette",               RAS_PALETTE_SHOW
+        MENUITEM "S&ynchronize Palettes",       RAS_PALETTE_SYNCHRONIZE
+        MENUITEM SEPARATOR
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Value Finder",               RAS_TOOLS_VALUE, CHECKED
+        MENUITEM "&Fiddle Colors",              RAS_TOOLS_FIDDLE
+        MENUITEM "&Rotate Object",              RAS_TOOLS_ROTATE
+        MENUITEM "&Zoom",                       RAS_TOOLS_ZOOM
+        MENUITEM SEPARATOR
+        MENUITEM "&Scales...",                  RAS_TOOLS_OPTIONS
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 17,0,0,0
+ PRODUCTVERSION 17,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "windows version of show"
+            VALUE "CompanyName", "Leidos"
+            VALUE "FileDescription", "wMysticPlot 008 - universal version"
+            VALUE "FileVersion", "wMysticPlot 008"
+            VALUE "InternalName", "wMysticPlot 008"
+            VALUE "LegalCopyright", "Copyright © 1998-2022"
+            VALUE "OriginalFilename", "wMysticPlot.exe"
+            VALUE "ProductName", "wMysticPlot 008"
+            VALUE "ProductVersion", "17.0e2f"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+ABOUT_DIALOG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

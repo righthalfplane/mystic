@@ -1,0 +1,641 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1E610517-CC73-4C30-822B-BDF535A45F91}</ProjectGuid>
+    <RootNamespace>wMysticPlot</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/wd4005 /wd4996 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../Source;../MPI-Source;../Show-Common;../jpeg-6b;../hdf-4.2.5;../Render-Source;../zlib-1.2.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>vfw32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/wd4005 /wd4996 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../jpeg-6b;../Source;../MPI-Source;../Render-Source;../Show-Common;../hdf-4.2.5;../zlib-1.2.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>vfw32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/wd4005 /wd4996 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../Source;../MPI-Source;../Show-Common;../jpeg-6b;../hdf-4.2.5;../Render-Source;../zlib-1.2.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>vfw32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/wd4005 /wd4996 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../jpeg-6b;../Source;../MPI-Source;../Render-Source;../Show-Common;../hdf-4.2.5;../zlib-1.2.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>vfw32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\Source\wMysticPlot.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\MPI-Source\Blks.c" />
+    <ClCompile Include="..\MPI-Source\initPIOBlocked.c" />
+    <ClCompile Include="..\MPI-Source\uFilesBatch2dBlk.c" />
+    <ClCompile Include="..\MPI-Source\uFilesBatch2dBlk01.c" />
+    <ClCompile Include="..\MPI-Source\uFilesBatch3dBlk.c" />
+    <ClCompile Include="..\MPI-Source\uFilesBatch3dBlk01.c" />
+    <ClCompile Include="..\Render-Source\Blocks.c" />
+    <ClCompile Include="..\Render-Source\Bound.c" />
+    <ClCompile Include="..\Render-Source\DoTracingExport.c" />
+    <ClCompile Include="..\Render-Source\DoubleRecurse.c" />
+    <ClCompile Include="..\Render-Source\Intersect.c" />
+    <ClCompile Include="..\Render-Source\KdTree.c" />
+    <ClCompile Include="..\Render-Source\KdTreeTrace.c" />
+    <ClCompile Include="..\Render-Source\Object3d.c" />
+    <ClCompile Include="..\Render-Source\Object3d2.c" />
+    <ClCompile Include="..\Render-Source\Ploti.c" />
+    <ClCompile Include="..\Render-Source\Poly.c" />
+    <ClCompile Include="..\Render-Source\Pqueue.c" />
+    <ClCompile Include="..\Render-Source\Render.c" />
+    <ClCompile Include="..\Render-Source\RenderScene.c" />
+    <ClCompile Include="..\Render-Source\RenderTrace.c" />
+    <ClCompile Include="..\Render-Source\renderUtilities.c" />
+    <ClCompile Include="..\Render-Source\Shade.c" />
+    <ClCompile Include="..\Render-Source\Sphere.c" />
+    <ClCompile Include="..\Render-Source\Streamlines3d.c" />
+    <ClCompile Include="..\Render-Source\TriC1N1.c" />
+    <ClCompile Include="..\Render-Source\TriN.c" />
+    <ClCompile Include="..\Render-Source\TriN2.c" />
+    <ClCompile Include="..\Render-Source\TriNC.c" />
+    <ClCompile Include="..\Render-Source\TriNCV.c" />
+    <ClCompile Include="..\Show-Common\BatchDraw.c" />
+    <ClCompile Include="..\Show-Common\BatchExpression.c" />
+    <ClCompile Include="..\Show-Common\BatchFile.c" />
+    <ClCompile Include="..\Show-Common\CExpress.c" />
+    <ClCompile Include="..\Show-Common\Change.c" />
+    <ClCompile Include="..\Show-Common\CommonUtlib.c" />
+    <ClCompile Include="..\Show-Common\Do24to8.c" />
+    <ClCompile Include="..\Show-Common\doDataDump.c" />
+    <ClCompile Include="..\Show-Common\doGetPalette.c" />
+    <ClCompile Include="..\Show-Common\doSage3DGet.c" />
+    <ClCompile Include="..\Show-Common\doSaveImages.c" />
+    <ClCompile Include="..\Show-Common\doSavePlots.c" />
+    <ClCompile Include="..\Show-Common\doSetImageInfo.c" />
+    <ClCompile Include="..\Show-Common\EditList.c" />
+    <ClCompile Include="..\Show-Common\FFT.c" />
+    <ClCompile Include="..\Show-Common\fileDialog.c" />
+    <ClCompile Include="..\Show-Common\FileManager.c" />
+    <ClCompile Include="..\Show-Common\fileSend.c" />
+    <ClCompile Include="..\Show-Common\Find.c" />
+    <ClCompile Include="..\Show-Common\getPalette.c" />
+    <ClCompile Include="..\Show-Common\Image.c" />
+    <ClCompile Include="..\Show-Common\imagestuff.c" />
+    <ClCompile Include="..\Show-Common\initPIO.c" />
+    <ClCompile Include="..\Show-Common\Keyframes.c" />
+    <ClCompile Include="..\Show-Common\LoadJPG.c" />
+    <ClCompile Include="..\Show-Common\macUtilities.c" />
+    <ClCompile Include="..\Show-Common\NewEdit.c" />
+    <ClCompile Include="..\Show-Common\openTek.c" />
+    <ClCompile Include="..\Show-Common\Raster2D.c" />
+    <ClCompile Include="..\Show-Common\Raster2D2.c" />
+    <ClCompile Include="..\Show-Common\RenderFlightAnimation.c" />
+    <ClCompile Include="..\Show-Common\SagePIO2D.c" />
+    <ClCompile Include="..\Show-Common\SagePIO2DDialogs.c" />
+    <ClCompile Include="..\Show-Common\SagePIO3D.c" />
+    <ClCompile Include="..\Show-Common\sageRewrite.c" />
+    <ClCompile Include="..\Show-Common\Sagetrace.c" />
+    <ClCompile Include="..\Show-Common\SageTraceBangMeter.c" />
+    <ClCompile Include="..\Show-Common\Sagevol.c" />
+    <ClCompile Include="..\Show-Common\SaveAllImages.c" />
+    <ClCompile Include="..\Show-Common\savescreen.c" />
+    <ClCompile Include="..\Show-Common\ScrollList.c" />
+    <ClCompile Include="..\Show-Common\SendFileList.c" />
+    <ClCompile Include="..\Show-Common\SetPalMenu.c" />
+    <ClCompile Include="..\Show-Common\Streamline.c" />
+    <ClCompile Include="..\Show-Common\swapbytes.c" />
+    <ClCompile Include="..\Show-Common\Table.c" />
+    <ClCompile Include="..\Show-Common\Teos2sds.c" />
+    <ClCompile Include="..\Show-Common\TextFileConvert.c" />
+    <ClCompile Include="..\Show-Common\Tools.c" />
+    <ClCompile Include="..\Show-Common\TraceFindLines.c" />
+    <ClCompile Include="..\Show-Common\triangle.c" />
+    <ClCompile Include="..\Show-Common\uAlpha.c" />
+    <ClCompile Include="..\Show-Common\uBox.c" />
+    <ClCompile Include="..\Show-Common\uDraw.c" />
+    <ClCompile Include="..\Show-Common\uDrawcPopUp.c" />
+    <ClCompile Include="..\Show-Common\uDrawlPopUp.c" />
+    <ClCompile Include="..\Show-Common\uDrawObjects.c" />
+    <ClCompile Include="..\Show-Common\uDrawsPopUp.c" />
+    <ClCompile Include="..\Show-Common\uDrawspPopUp.c" />
+    <ClCompile Include="..\Show-Common\uDrawswPopUp.c" />
+    <ClCompile Include="..\Show-Common\uEditText.c" />
+    <ClCompile Include="..\Show-Common\uFiles.c" />
+    <ClCompile Include="..\Show-Common\uFilesBatch1d.c" />
+    <ClCompile Include="..\Show-Common\uFilesBatch24.c" />
+    <ClCompile Include="..\Show-Common\uFilesBatch2d.c" />
+    <ClCompile Include="..\Show-Common\uFilesBatch2d01.c" />
+    <ClCompile Include="..\Show-Common\uFilesBatch3d.c" />
+    <ClCompile Include="..\Show-Common\uFilesBatch3d01.c" />
+    <ClCompile Include="..\Show-Common\uFilesBatchSds2d.c" />
+    <ClCompile Include="..\Show-Common\uFilesBatchSds3d.c" />
+    <ClCompile Include="..\Show-Common\uFilesUtilities.c" />
+    <ClCompile Include="..\Show-Common\uGridPlot.c" />
+    <ClCompile Include="..\Show-Common\uGroup.c" />
+    <ClCompile Include="..\Show-Common\uLine.c" />
+    <ClCompile Include="..\Show-Common\uNetWork.c" />
+    <ClCompile Include="..\Show-Common\Universal.c" />
+    <ClCompile Include="..\Show-Common\uOval.c" />
+    <ClCompile Include="..\Show-Common\uRoundRect.c" />
+    <ClCompile Include="..\Show-Common\uTek.c" />
+    <ClCompile Include="..\Show-Common\uTrue.c" />
+    <ClCompile Include="..\Show-Common\Volumetric.c" />
+    <ClCompile Include="..\Show-Common\Vrml.c" />
+    <ClCompile Include="..\Show-Common\Vrml1.c" />
+    <ClCompile Include="..\Show-Common\Vrml2.c" />
+    <ClCompile Include="..\Source\cMalloc.c" />
+    <ClCompile Include="..\Source\Control.c" />
+    <ClCompile Include="..\Source\doOpen.c" />
+    <ClCompile Include="..\Source\drawPalette.c" />
+    <ClCompile Include="..\Source\File8.c" />
+    <ClCompile Include="..\Source\Getpalette.c" />
+    <ClCompile Include="..\Source\GWorldX.c" />
+    <ClCompile Include="..\Source\Net.c" />
+    <ClCompile Include="..\Source\Net2.c" />
+    <ClCompile Include="..\Source\Net3.c" />
+    <ClCompile Include="..\Source\Paux.c" />
+    <ClCompile Include="..\Source\Scanfile.c" />
+    <ClCompile Include="..\Source\Spread.c" />
+    <ClCompile Include="..\Source\StatusWindow.c" />
+    <ClCompile Include="..\Source\SysFontList.c" />
+    <ClCompile Include="..\Source\System.c" />
+    <ClCompile Include="..\Source\uDialog.c" />
+    <ClCompile Include="..\Source\uLibX.c" />
+    <ClCompile Include="..\Source\uMABX.c" />
+    <ClCompile Include="..\Source\wMysticPlot.c" />
+    <ClCompile Include="..\Source\Xappl2.c" />
+    <ClCompile Include="..\Source\xMenu.c" />
+    <ClCompile Include="..\Source\xStrings.c" />
+    <ClCompile Include="..\Source\xUtility.c" />
+    <ClCompile Include="..\zlib-1.2.1\adler32.c" />
+    <ClCompile Include="..\zlib-1.2.1\contrib\blast\blast.c" />
+    <ClCompile Include="..\zlib-1.2.1\compress.c" />
+    <ClCompile Include="..\zlib-1.2.1\crc32.c" />
+    <ClCompile Include="..\zlib-1.2.1\deflate.c" />
+    <ClCompile Include="..\zlib-1.2.1\example.c" />
+    <ClCompile Include="..\zlib-1.2.1\contrib\masmx86\gvmat32c.c" />
+    <ClCompile Include="..\zlib-1.2.1\gzio.c" />
+    <ClCompile Include="..\zlib-1.2.1\infback.c" />
+    <ClCompile Include="..\zlib-1.2.1\contrib\infback9\infback9.c" />
+    <ClCompile Include="..\zlib-1.2.1\inffast.c" />
+    <ClCompile Include="..\zlib-1.2.1\inflate.c" />
+    <ClCompile Include="..\zlib-1.2.1\contrib\infback9\inftree9.c" />
+    <ClCompile Include="..\zlib-1.2.1\inftrees.c" />
+    <ClCompile Include="..\zlib-1.2.1\contrib\minizip\ioapi.c" />
+    <ClCompile Include="..\zlib-1.2.1\contrib\minizip\iowin32.c" />
+    <ClCompile Include="..\zlib-1.2.1\contrib\puff\puff.c" />
+    <ClCompile Include="..\zlib-1.2.1\trees.c" />
+    <ClCompile Include="..\zlib-1.2.1\uncompr.c" />
+    <ClCompile Include="..\zlib-1.2.1\contrib\minizip\unzip.c" />
+    <ClCompile Include="..\zlib-1.2.1\contrib\minizip\zip.c" />
+    <ClCompile Include="..\zlib-1.2.1\zutil.c" />
+    <ClCompile Include="..\hdf-4.2.5\atom.c" />
+    <ClCompile Include="..\hdf-4.2.5\bitvect.c" />
+    <ClCompile Include="..\hdf-4.2.5\cdeflate.c" />
+    <ClCompile Include="..\hdf-4.2.5\cnbit.c" />
+    <ClCompile Include="..\hdf-4.2.5\cnone.c" />
+    <ClCompile Include="..\hdf-4.2.5\crle.c" />
+    <ClCompile Include="..\hdf-4.2.5\cskphuff.c" />
+    <ClCompile Include="..\hdf-4.2.5\cszip.c" />
+    <ClCompile Include="..\hdf-4.2.5\df24.c" />
+    <ClCompile Include="..\hdf-4.2.5\df24f.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfan.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfanf.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfcomp.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfconv.c" />
+    <ClCompile Include="..\hdf-4.2.5\dff.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfgr.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfgroup.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfimcomp.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfjpeg.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfkconv.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfkcray.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfkfuji.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfknat.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfkswap.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfkvms.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfp.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfpf.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfr8.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfr8f.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfrle.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfsd.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfsdf.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfstubs.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfufp2i.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfufp2if.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfunjpeg.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfutil.c" />
+    <ClCompile Include="..\hdf-4.2.5\dfutilf.c" />
+    <ClCompile Include="..\hdf-4.2.5\dir_mac.c" />
+    <ClCompile Include="..\hdf-4.2.5\dynarray.c" />
+    <ClCompile Include="..\hdf-4.2.5\glist.c" />
+    <ClCompile Include="..\hdf-4.2.5\hbitio.c" />
+    <ClCompile Include="..\hdf-4.2.5\hblocks.c" />
+    <ClCompile Include="..\hdf-4.2.5\hbuffer.c" />
+    <ClCompile Include="..\hdf-4.2.5\hchunks.c" />
+    <ClCompile Include="..\hdf-4.2.5\hcomp.c" />
+    <ClCompile Include="..\hdf-4.2.5\hcompri.c" />
+    <ClCompile Include="..\hdf-4.2.5\hdfalloc.c" />
+    <ClCompile Include="..\hdf-4.2.5\herr.c" />
+    <ClCompile Include="..\hdf-4.2.5\fort_ps\herrpf.c" />
+    <ClCompile Include="..\hdf-4.2.5\hextelt.c" />
+    <ClCompile Include="..\hdf-4.2.5\hfile.c" />
+    <ClCompile Include="..\hdf-4.2.5\hfiledd.c" />
+    <ClCompile Include="..\hdf-4.2.5\hfilef.c" />
+    <ClCompile Include="..\hdf-4.2.5\hkit.c" />
+    <ClCompile Include="..\hdf-4.2.5\linklist.c" />
+    <ClCompile Include="..\hdf-4.2.5\mcache.c" />
+    <ClCompile Include="..\hdf-4.2.5\mfan.c" />
+    <ClCompile Include="..\hdf-4.2.5\mfgr.c" />
+    <ClCompile Include="..\hdf-4.2.5\fort_ps\mfgrpf.c" />
+    <ClCompile Include="..\hdf-4.2.5\mstdio.c" />
+    <ClCompile Include="..\hdf-4.2.5\tbbt.c" />
+    <ClCompile Include="..\hdf-4.2.5\vattr.c" />
+    <ClCompile Include="..\hdf-4.2.5\vconv.c" />
+    <ClCompile Include="..\hdf-4.2.5\vg.c" />
+    <ClCompile Include="..\hdf-4.2.5\vgp.c" />
+    <ClCompile Include="..\hdf-4.2.5\fort_ps\vgpf.c" />
+    <ClCompile Include="..\hdf-4.2.5\vhi.c" />
+    <ClCompile Include="..\hdf-4.2.5\vio.c" />
+    <ClCompile Include="..\hdf-4.2.5\vparse.c" />
+    <ClCompile Include="..\hdf-4.2.5\vrw.c" />
+    <ClCompile Include="..\hdf-4.2.5\vsfld.c" />
+    <ClCompile Include="..\jpeg-6b\cdjpeg.c" />
+    <ClCompile Include="..\jpeg-6b\jcapimin.c" />
+    <ClCompile Include="..\jpeg-6b\jcapistd.c" />
+    <ClCompile Include="..\jpeg-6b\jccoefct.c" />
+    <ClCompile Include="..\jpeg-6b\jccolor.c" />
+    <ClCompile Include="..\jpeg-6b\jcdctmgr.c" />
+    <ClCompile Include="..\jpeg-6b\jchuff.c" />
+    <ClCompile Include="..\jpeg-6b\jcinit.c" />
+    <ClCompile Include="..\jpeg-6b\jcmainct.c" />
+    <ClCompile Include="..\jpeg-6b\jcmarker.c" />
+    <ClCompile Include="..\jpeg-6b\jcmaster.c" />
+    <ClCompile Include="..\jpeg-6b\jcomapi.c" />
+    <ClCompile Include="..\jpeg-6b\jcparam.c" />
+    <ClCompile Include="..\jpeg-6b\jcphuff.c" />
+    <ClCompile Include="..\jpeg-6b\jcprepct.c" />
+    <ClCompile Include="..\jpeg-6b\jcsample.c" />
+    <ClCompile Include="..\jpeg-6b\jctrans.c" />
+    <ClCompile Include="..\jpeg-6b\jdapimin.c" />
+    <ClCompile Include="..\jpeg-6b\jdapistd.c" />
+    <ClCompile Include="..\jpeg-6b\jdatadst.c" />
+    <ClCompile Include="..\jpeg-6b\jdatasrc.c" />
+    <ClCompile Include="..\jpeg-6b\jdcoefct.c" />
+    <ClCompile Include="..\jpeg-6b\jdcolor.c" />
+    <ClCompile Include="..\jpeg-6b\jddctmgr.c" />
+    <ClCompile Include="..\jpeg-6b\jdhuff.c" />
+    <ClCompile Include="..\jpeg-6b\jdinput.c" />
+    <ClCompile Include="..\jpeg-6b\jdmainct.c" />
+    <ClCompile Include="..\jpeg-6b\jdmarker.c" />
+    <ClCompile Include="..\jpeg-6b\jdmaster.c" />
+    <ClCompile Include="..\jpeg-6b\jdmerge.c" />
+    <ClCompile Include="..\jpeg-6b\jdphuff.c" />
+    <ClCompile Include="..\jpeg-6b\jdpostct.c" />
+    <ClCompile Include="..\jpeg-6b\jdsample.c" />
+    <ClCompile Include="..\jpeg-6b\jdtrans.c" />
+    <ClCompile Include="..\jpeg-6b\jerror.c" />
+    <ClCompile Include="..\jpeg-6b\jfdctflt.c" />
+    <ClCompile Include="..\jpeg-6b\jfdctfst.c" />
+    <ClCompile Include="..\jpeg-6b\jfdctint.c" />
+    <ClCompile Include="..\jpeg-6b\jidctflt.c" />
+    <ClCompile Include="..\jpeg-6b\jidctfst.c" />
+    <ClCompile Include="..\jpeg-6b\jidctint.c" />
+    <ClCompile Include="..\jpeg-6b\jidctred.c" />
+    <ClCompile Include="..\jpeg-6b\jmemansi.c" />
+    <ClCompile Include="..\jpeg-6b\jmemmgr.c" />
+    <ClCompile Include="..\jpeg-6b\jquant1.c" />
+    <ClCompile Include="..\jpeg-6b\jquant2.c" />
+    <ClCompile Include="..\jpeg-6b\jutils.c" />
+    <ClCompile Include="..\jpeg-6b\rdbmp.c" />
+    <ClCompile Include="..\jpeg-6b\rdcolmap.c" />
+    <ClCompile Include="..\jpeg-6b\rdgif.c" />
+    <ClCompile Include="..\jpeg-6b\rdppm.c" />
+    <ClCompile Include="..\jpeg-6b\rdrle.c" />
+    <ClCompile Include="..\jpeg-6b\rdswitch.c" />
+    <ClCompile Include="..\jpeg-6b\rdtarga.c" />
+    <ClCompile Include="..\jpeg-6b\transupp.c" />
+    <ClCompile Include="..\jpeg-6b\wrbmp.c" />
+    <ClCompile Include="..\jpeg-6b\wrgif.c" />
+    <ClCompile Include="..\jpeg-6b\wrppm.c" />
+    <ClCompile Include="..\jpeg-6b\wrrle.c" />
+    <ClCompile Include="..\jpeg-6b\wrtarga.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\MPI-Source\initPIOBlocked.h" />
+    <ClInclude Include="..\Render-Source\Blocks.h" />
+    <ClInclude Include="..\Render-Source\Defs.h" />
+    <ClInclude Include="..\Render-Source\DoubleRecurse.h" />
+    <ClInclude Include="..\Render-Source\KdTree.h" />
+    <ClInclude Include="..\Render-Source\Object3d.h" />
+    <ClInclude Include="..\Render-Source\Render.h" />
+    <ClInclude Include="..\Render-Source\TracerDef.h" />
+    <ClInclude Include="..\Show-Common\Areadata.h" />
+    <ClInclude Include="..\Show-Common\BatchFile.h" />
+    <ClInclude Include="..\Show-Common\CExpress.h" />
+    <ClInclude Include="..\Show-Common\doSage3DGet.h" />
+    <ClInclude Include="..\Show-Common\EditList.h" />
+    <ClInclude Include="..\Show-Common\File8.h" />
+    <ClInclude Include="..\Show-Common\fileDialog.h" />
+    <ClInclude Include="..\Show-Common\FileManager.h" />
+    <ClInclude Include="..\Show-Common\fileSend.h" />
+    <ClInclude Include="..\Show-Common\image.h" />
+    <ClInclude Include="..\Show-Common\Installed.h" />
+    <ClInclude Include="..\Show-Common\Limits2.h" />
+    <ClInclude Include="..\Show-Common\Linedata.h" />
+    <ClInclude Include="..\Show-Common\Message.h" />
+    <ClInclude Include="..\Show-Common\mThread.h" />
+    <ClInclude Include="..\Show-Common\NewEdit.h" />
+    <ClInclude Include="..\Show-Common\paletteDraw.h" />
+    <ClInclude Include="..\Show-Common\Raster2D.h" />
+    <ClInclude Include="..\Show-Common\SagePIO2D.h" />
+    <ClInclude Include="..\Show-Common\Sagevol.h" />
+    <ClInclude Include="..\Show-Common\SaveAllImages.h" />
+    <ClInclude Include="..\Show-Common\Scanfile.h" />
+    <ClInclude Include="..\Show-Common\ScrollList.h" />
+    <ClInclude Include="..\Show-Common\SetFrameData.h" />
+    <ClInclude Include="..\Show-Common\Streamline.h" />
+    <ClInclude Include="..\Show-Common\Table.h" />
+    <ClInclude Include="..\Show-Common\Tools.h" />
+    <ClInclude Include="..\Show-Common\uAttributes.h" />
+    <ClInclude Include="..\Show-Common\uDraw.h" />
+    <ClInclude Include="..\Show-Common\uEditText.h" />
+    <ClInclude Include="..\Show-Common\uFiles.h" />
+    <ClInclude Include="..\Show-Common\uFilesBatch2d.h" />
+    <ClInclude Include="..\Show-Common\uFilesBatch3d.h" />
+    <ClInclude Include="..\Show-Common\uGraph.h" />
+    <ClInclude Include="..\Show-Common\uLib.h" />
+    <ClInclude Include="..\Show-Common\uNetWork.h" />
+    <ClInclude Include="..\Show-Common\Universal.h" />
+    <ClInclude Include="..\Show-Common\VoiceCommand.h" />
+    <ClInclude Include="..\Show-Common\Vrml.h" />
+    <ClInclude Include="..\Source\Control.h" />
+    <ClInclude Include="..\Source\Extern.h" />
+    <ClInclude Include="..\Source\GWorld.h" />
+    <ClInclude Include="..\Source\HdfFiles.h" />
+    <ClInclude Include="..\Source\JCONFIG.H" />
+    <ClInclude Include="..\Source\JERROR.H" />
+    <ClInclude Include="..\Source\JMORECFG.H" />
+    <ClInclude Include="..\Source\JPEGLIB.H" />
+    <ClInclude Include="..\Source\Net.h" />
+    <ClInclude Include="..\Source\Paux.h" />
+    <ClInclude Include="..\Source\resource.h" />
+    <ClInclude Include="..\Source\Spread.h" />
+    <ClInclude Include="..\Source\StatusWindow.h" />
+    <ClInclude Include="..\Source\SysFontList.h" />
+    <ClInclude Include="..\Source\uDialog.h" />
+    <ClInclude Include="..\Source\uDialogX.h" />
+    <ClInclude Include="..\Source\ulibTypes.h" />
+    <ClInclude Include="..\Source\Xappl.h" />
+    <ClInclude Include="..\Source\xMenu.h" />
+    <ClInclude Include="..\Source\xStrings.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\blast\blast.h" />
+    <ClInclude Include="..\zlib-1.2.1\crc32.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\minizip\crypt.h" />
+    <ClInclude Include="..\zlib-1.2.1\deflate.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\infback9\infback9.h" />
+    <ClInclude Include="..\zlib-1.2.1\inffast.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\infback9\inffix9.h" />
+    <ClInclude Include="..\zlib-1.2.1\inffixed.h" />
+    <ClInclude Include="..\zlib-1.2.1\inflate.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\infback9\inflate9.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\infback9\inftree9.h" />
+    <ClInclude Include="..\zlib-1.2.1\inftrees.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\minizip\ioapi.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\minizip\iowin32.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\puff\puff.h" />
+    <ClInclude Include="..\zlib-1.2.1\trees.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\minizip\unzip.h" />
+    <ClInclude Include="..\zlib-1.2.1\zconf.h" />
+    <ClInclude Include="..\zlib-1.2.1\zconf.in.h" />
+    <ClInclude Include="..\zlib-1.2.1\contrib\minizip\zip.h" />
+    <ClInclude Include="..\zlib-1.2.1\zlib.h" />
+    <ClInclude Include="..\zlib-1.2.1\zutil.h" />
+    <ClInclude Include="..\hdf-4.2.5\atom.h" />
+    <ClInclude Include="..\hdf-4.2.5\bitvect.h" />
+    <ClInclude Include="..\hdf-4.2.5\cdeflate.h" />
+    <ClInclude Include="..\hdf-4.2.5\cnbit.h" />
+    <ClInclude Include="..\hdf-4.2.5\cnone.h" />
+    <ClInclude Include="..\hdf-4.2.5\crle.h" />
+    <ClInclude Include="..\hdf-4.2.5\cskphuff.h" />
+    <ClInclude Include="..\hdf-4.2.5\cszip.h" />
+    <ClInclude Include="..\hdf-4.2.5\df.h" />
+    <ClInclude Include="..\hdf-4.2.5\dfan.h" />
+    <ClInclude Include="..\hdf-4.2.5\dfconvrt.h" />
+    <ClInclude Include="..\hdf-4.2.5\dfgr.h" />
+    <ClInclude Include="..\hdf-4.2.5\dfi.h" />
+    <ClInclude Include="..\hdf-4.2.5\dfivms.h" />
+    <ClInclude Include="..\hdf-4.2.5\dfrig.h" />
+    <ClInclude Include="..\hdf-4.2.5\dfsd.h" />
+    <ClInclude Include="..\hdf-4.2.5\dfstubs.h" />
+    <ClInclude Include="..\hdf-4.2.5\dfufp2i.h" />
+    <ClInclude Include="..\hdf-4.2.5\dir_mac.h" />
+    <ClInclude Include="..\hdf-4.2.5\dynarray.h" />
+    <ClInclude Include="..\hdf-4.2.5\glist.h" />
+    <ClInclude Include="..\hdf-4.2.5\h4config.h" />
+    <ClInclude Include="..\hdf-4.2.5\hbitio.h" />
+    <ClInclude Include="..\hdf-4.2.5\hchunks.h" />
+    <ClInclude Include="..\hdf-4.2.5\hcomp.h" />
+    <ClInclude Include="..\hdf-4.2.5\hcompi.h" />
+    <ClInclude Include="..\hdf-4.2.5\hconv.h" />
+    <ClInclude Include="..\hdf-4.2.5\hdf.h" />
+    <ClInclude Include="..\hdf-4.2.5\hdfi.h" />
+    <ClInclude Include="..\hdf-4.2.5\herr.h" />
+    <ClInclude Include="..\hdf-4.2.5\hfile.h" />
+    <ClInclude Include="..\hdf-4.2.5\hkit.h" />
+    <ClInclude Include="..\hdf-4.2.5\hlimits.h" />
+    <ClInclude Include="..\hdf-4.2.5\hntdefs.h" />
+    <ClInclude Include="..\hdf-4.2.5\hproto.h" />
+    <ClInclude Include="..\hdf-4.2.5\hproto_fortran.h" />
+    <ClInclude Include="..\hdf-4.2.5\fort_ps\hprotop.h" />
+    <ClInclude Include="..\hdf-4.2.5\hqueue.h" />
+    <ClInclude Include="..\hdf-4.2.5\htags.h" />
+    <ClInclude Include="..\hdf-4.2.5\linklist.h" />
+    <ClInclude Include="..\hdf-4.2.5\maldebug.h" />
+    <ClInclude Include="..\hdf-4.2.5\mcache.h" />
+    <ClInclude Include="..\hdf-4.2.5\mfan.h" />
+    <ClInclude Include="..\hdf-4.2.5\mfgr.h" />
+    <ClInclude Include="..\hdf-4.2.5\mstdio.h" />
+    <ClInclude Include="..\hdf-4.2.5\patchlevel.h" />
+    <ClInclude Include="..\hdf-4.2.5\sys_dir_mac.h" />
+    <ClInclude Include="..\hdf-4.2.5\tbbt.h" />
+    <ClInclude Include="..\hdf-4.2.5\trace.h" />
+    <ClInclude Include="..\hdf-4.2.5\vattr.h" />
+    <ClInclude Include="..\hdf-4.2.5\vg.h" />
+    <ClInclude Include="..\hdf-4.2.5\vgint.h" />
+    <ClInclude Include="..\jpeg-6b\cderror.h" />
+    <ClInclude Include="..\jpeg-6b\cdjpeg.h" />
+    <ClInclude Include="..\jpeg-6b\jchuff.h" />
+    <ClInclude Include="..\jpeg-6b\jconfig.h" />
+    <ClInclude Include="..\jpeg-6b\jdct.h" />
+    <ClInclude Include="..\jpeg-6b\jdhuff.h" />
+    <ClInclude Include="..\jpeg-6b\jerror.h" />
+    <ClInclude Include="..\jpeg-6b\jinclude.h" />
+    <ClInclude Include="..\jpeg-6b\jmemsys.h" />
+    <ClInclude Include="..\jpeg-6b\jmorecfg.h" />
+    <ClInclude Include="..\jpeg-6b\jpegint.h" />
+    <ClInclude Include="..\jpeg-6b\jpeglib.h" />
+    <ClInclude Include="..\jpeg-6b\jversion.h" />
+    <ClInclude Include="..\jpeg-6b\transupp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\zlib-1.2.1\contrib\masmx86\gvmat32.asm" />
+    <None Include="..\zlib-1.2.1\old\os2\zlib.def" />
+    <None Include="..\zlib-1.2.1\win32\zlib.def" />
+    <None Include="..\zlib-1.2.1\as400\zlib.inc" />
+    <None Include="..\hdf-4.2.5\dffunc.inc" />
+    <None Include="..\hdf-4.2.5\hdf.inc" />
+    <None Include="..\hdf-4.2.5\src.inc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,421 @@
+#define EXTERN22 extern
+#include "Xappl.h"
+#include "CExpress.h"
+#include "NewEdit.h"
+#include "uFiles.h"
+#include "uDialog.h"
+#include "Message.h"
+#include "Linedata.h"
+int Change(IconPtr myIcon);
+
+
+
+static int doScale2Action(struct uDialogStruct *uList);
+
+static int doFindStringForward(struct uDialogStruct *uList);
+static int doFindStringBackward(struct uDialogStruct *uList);
+ static int doChangeString(struct uDialogStruct *uList,int flag);
+
+
+
+int Change(IconPtr myIcon)
+{
+	static uDialogGroup Items[] =
+	
+        {
+      /*  0 */      {"Find Next", {15,134,116,33},uDialogButton,uDialogNone},
+      /*  1 */      {"Close", {283,179,82,33},uDialogButton,uDialogNone},
+      /*  2 */      {"Reverse", {14,179,117,33},uDialogButton,uDialogNone},
+      /*  3 */      {"Change,Then Find", {140,134,135,34},uDialogButton,uDialogNone},
+      /*  4 */      {"Change", {140,179,135,33},uDialogButton,uDialogNone},
+      /*  5 */      {"", {20,36,340,23},uDialogText,uDialogNone},
+      /*  6 */      {"", {20,100,340,23},uDialogText,uDialogNone},
+      /*  7 */      {"Search String :", {80,7,127,21},uDialogString,uDialogNone},
+      /*  8 */      {"Replacement String :", {69,70,169,19},uDialogString,uDialogNone},
+      /*  9 */      {"Direction", {69,70,169,19},uDialogFloatAux,uDialogFloatAux},
+        };
+	
+    long ItemCount = sizeof(Items)/sizeof(uDialogGroup);
+    
+ 	static uRect  Rect1   = {117,45,380,226};
+ 	
+ 	uDialogList *uList;
+ 	
+	char string[256];
+	
+    int ret;
+	
+    if(!myIcon)return 1;
+    
+
+	string[0]=0;
+	if(FindFound(myIcon,string,1))return 0;
+   
+	ret=1;
+	
+	uList=uDialogOpen("Change String",&Rect1,ItemCount);
+	
+	if(!uList)goto ErrorOut;
+    
+	if(uDialogSetList(uList,Items,ItemCount))goto ErrorOut;
+    
+	if(uDialogSet(uList,0L,
+	              uDialogSetMyIcon,myIcon,
+	              uDialogSetAction,doScale2Action,
+	              uDialogSetModeLess,TRUE,	              
+	              uDialogSetItem,5L,
+	              uDialogSetText,string,
+	              uDialogWindowType,xChangeType,
+	              uDialogSetDone,uDialogSetDone
+	))goto ErrorOut;
+    
+	if(uDialog(uList))goto ErrorOut;    
+    
+	ret=0;
+ ErrorOut:
+ 
+     if(ret && uList){
+         uDialogClose(uList);
+     }else if(uList){
+         if(uList->myIcon)uList->myIcon->isOpen=TRUE;
+     }
+
+ 	return ret;
+}
+static int doScale2Action(struct uDialogStruct *uList)
+{
+	
+	if(!uList)return 1;
+	
+	uSetCursor(uList->myIcon,-uWATCH_CURSOR);
+	if(uList->actionItem == 0){
+	   doFindStringForward(uList);
+	}else if(uList->actionItem == 1){
+	   uDialogClose(uList);
+	   return 1;
+	}else if(uList->actionItem == 2){
+	   doFindStringBackward(uList);
+	}else if(uList->actionItem == 3){
+	   doChangeString(uList,0);
+	}else if(uList->actionItem == 4){
+	   if(doChangeString(uList,1))goto OutOfHere;
+	}
+OutOfHere:
+	/* if(uList)uDialogUpdate(uList); */
+	uSetCursor(uList->myIcon,-uARROW_CURSOR);
+	return 0;
+}
+ static int doChangeString(struct uDialogStruct *uList,int flag)
+ {
+ 	IconPtr myIcon;
+	IconPtr myIconSearch;
+	char string[256];
+	long saveRow;
+	long saveColumn;
+	CEditPtr t;
+	uDialogReturn *uR;
+	int lastDirection;
+
+	if(!uList)return 1;
+	myIcon=uList->myIcon;
+	if(!myIcon)return 1;
+
+	uR=NULL;
+	myIconSearch=FindWindowInList(uList->myIconItem);
+
+	if(!myIconSearch){
+	    Warning("Window To Search Not Found");
+	    return 1;
+	}
+
+	t=(CEditPtr)myIconSearch->DWindow;
+	if(!t || !t->e){
+	    Warning("NULL Window Pointer");
+	    return 1;
+	}
+
+
+	uR=uDialogGetReturn(uList);
+
+    if(!uR){
+	    Warning("Error Getting Search String Specified");
+	    return 1;
+    }
+
+	string[0]=0;
+	mstrncpy(string,uR[6].sreturn,255);
+	
+	lastDirection=(int)uR[9].dreturn;
+	
+    if(uR)uDialogFreeReturn(uR);
+	
+	
+	if((t->fRowHigh == t->lRowHigh) &&
+           (t->fColumnHigh == t->lColumnHigh)){
+	    return 0;
+	}
+
+	saveRow=t->CursorRow;
+	
+	saveColumn=t->CursorColumn;
+
+    CVideodoCut(myIconSearch);
+
+	CVideoInsertAtCursorLong(myIconSearch,string);
+
+	if(flag == 1){
+	    if(saveRow != t->CursorRow){
+	        EditDrawIt(myIconSearch);
+	        CVideoCursorInView(myIconSearch);
+	    }else{
+	        CVideoDrawRow(myIconSearch,t->CursorRow);
+	    }
+	}else{
+		if(lastDirection == 0){
+		    doFindStringForward(uList);
+		}else{
+		    t->CursorColumn=saveColumn;
+		    doFindStringBackward(uList);
+		}
+	}
+	
+	InvalRectMyWindow(myIconSearch);
+	
+	return 0;
+}
+static int doFindStringBackward(struct uDialogStruct *uList)
+{
+ 	IconPtr myIcon;
+	IconPtr myIconSearch;
+	char string[256],test[515];
+	char *Data;
+	long rFirst,cFirst,n,k,nc,m;
+	CEditPtr t;
+	int IgnoreCase;
+	int c,ct,nt,jt;
+	int stringmax;
+	uDialogReturn *uR;
+
+	if(!uList)return 1;
+	myIcon=uList->myIcon;
+	if(!myIcon)return 1;
+
+	uR=NULL;
+	myIconSearch=FindWindowInList(uList->myIconItem);
+
+	if(!myIconSearch){
+	    Warning("Window To Search Not Found");
+	    return 1;
+	}
+
+	t=(CEditPtr)myIconSearch->DWindow;
+	if(!t || !t->e){
+	    Warning("NULL Window Pointer");
+	    return 1;
+	}
+
+
+	uR=uDialogGetReturn(uList);
+
+    if(!uR){
+	    Warning("Error Getting Search String Specified");
+	    return 1;
+    }
+
+	string[0]=0;
+	mstrncpy(string,uR[5].sreturn,255);
+	
+    if(uR)uDialogFreeReturn(uR);
+    
+    
+	uDialogSet(uList,9L,
+	              uDialogSetFloatAux,1.0,
+	              uDialogSetDone,uDialogSetDone
+	);
+    
+
+	if(!string[0]){
+	    Warning("No Search String Specified");
+	    return 1;
+	}
+
+	stringmax=(int)strlen(string);
+
+	IgnoreCase=TRUE;
+
+	if(IgnoreCase){
+	    for(n=0;n<stringmax;++n){
+	        c=string[n];
+	        if(c >= 'a' && c <= 'z'){
+	            c='A'+(c-'a');
+	        }	        
+	        string[n]=c;
+	    }
+	}
+
+
+	rFirst=t->CursorRow;
+	cFirst=CVideocColumn(myIconSearch,t->CursorColumn,rFirst);
+	for(n=rFirst;n >= 0;--n){
+	    Data=EditListLine(t->e,n);
+	    if(!Data)continue;
+	    nc=(long)strlen(Data);
+	    if(nc < stringmax)continue;
+	    for(m=0;m <nc;++m){
+	        c = Data[m];
+	        if(IgnoreCase && c >= 'a' && c <= 'z'){
+	            ct='A'+(c-'a');	        
+	        }else{
+	            ct=c;
+	        }
+	        if(m > 512)break;
+	        test[m]=ct;
+	        test[m+1]=0;
+	    }
+	    if(n == rFirst){
+			k=cFirst-1;
+	    }else{
+			k=nc-1;
+	    }
+	    nt=0;
+	    for(m=k;m >= 0;--m){
+			++nt;
+	        if(nt < stringmax)continue;
+	        for(jt=0;jt<stringmax;++jt)if(test[m+jt] != string[jt])goto NoMatch;
+			rFirst=n;
+			cFirst=m;
+			goto FoundIt;
+NoMatch:
+	        ;
+	    }
+	}
+
+	Warning("String not found");
+
+	return 0;
+FoundIt:
+	t->CursorRow=rFirst;
+	t->CursorColumn=CVideocToColumn(myIconSearch,(short)(cFirst),t->CursorRow);	
+
+	t->fRowHigh=t->lRowHigh=t->CursorRow;
+	t->fColumnHigh=t->CursorColumn;
+	t->lColumnHigh=t->CursorColumn+stringmax;
+	CVideoCursorInView(myIconSearch);
+	InvalRectMyWindow(myIconSearch);
+	return 0;
+}
+static int doFindStringForward(struct uDialogStruct *uList)
+{
+ 	IconPtr myIcon;
+	IconPtr myIconSearch;
+	char string[256];
+	char *Data;
+	long rFirst,cFirst,n,k,nc,m;
+	CEditPtr t;
+	int IgnoreCase;
+	int c,ct;
+	int stringcount,stringmax;
+	uDialogReturn *uR;
+
+	if(!uList)return 1;
+	myIcon=uList->myIcon;
+	if(!myIcon)return 1;
+
+	uR=NULL;
+	myIconSearch=FindWindowInList(uList->myIconItem);
+
+	if(!myIconSearch){
+	    Warning("Window To Search Not Found");
+	    return 1;
+	}
+
+	t=(CEditPtr)myIconSearch->DWindow;
+	if(!t || !t->e){
+	    Warning("NULL Window Pointer");
+	    return 1;
+	}
+
+	uR=uDialogGetReturn(uList);
+
+    if(!uR){
+	    Warning("Error Getting Search String Specified");
+	    return 1;
+    }
+
+	string[0]=0;
+	mstrncpy(string,uR[5].sreturn,255);
+	
+    if(uR)uDialogFreeReturn(uR);
+
+	uDialogSet(uList,9L,
+	              uDialogSetFloatAux,0.0,
+	              uDialogSetDone,uDialogSetDone
+	);
+	
+	if(!string[0]){
+	    Warning("No Search String Specified");
+	    return 1;
+	}
+
+	stringmax=(int)strlen(string);
+
+	IgnoreCase=TRUE;
+
+	if(IgnoreCase){
+	    for(n=0;n<stringmax;++n){
+	        c=string[n];
+	        if(c >= 'a' && c <= 'z'){
+	            c='A'+(c-'a');
+	        }	        
+	        string[n]=c;
+	    }
+	}
+
+
+	rFirst=t->CursorRow;
+	cFirst=CVideocColumn(myIconSearch,t->CursorColumn,rFirst);
+	for(n=rFirst;n<t->e->LineCount;++n){
+	    Data=EditListLine(t->e,n);
+	    if(!Data)continue;
+	    nc=(long)strlen(Data);
+	    if(nc < stringmax)continue;
+	    if(n == rFirst){
+			k=cFirst;
+	    }else{
+			k=0;
+	    }
+	    stringcount=0;
+	    for(m=k;m<nc;++m){
+	        c = Data[m];
+	        if(IgnoreCase && c >= 'a' && c <= 'z'){
+	            ct='A'+(c-'a');	        
+	        }else{
+	            ct=c;
+	        }
+	        if(ct == string[stringcount++]){
+	            if(stringcount >= stringmax){
+					rFirst=n;
+					cFirst=m;
+		        	goto FoundIt;
+	            }
+	        }else{
+	            stringcount=0;
+	        }
+	    }
+	}
+
+	Warning("String not found");
+
+	return 0;
+FoundIt:
+	t->CursorRow=rFirst;
+	t->CursorColumn=CVideocToColumn(myIconSearch,(short)(cFirst+1),t->CursorRow);	
+
+	t->fRowHigh=t->lRowHigh=t->CursorRow;
+	t->lColumnHigh=t->CursorColumn;
+	t->fColumnHigh=t->CursorColumn-stringmax;
+	if(t->fColumnHigh < 0)t->fColumnHigh=0;
+	CVideoCursorInView(myIconSearch);
+	InvalRectMyWindow(myIconSearch);
+	return 0;
+}
