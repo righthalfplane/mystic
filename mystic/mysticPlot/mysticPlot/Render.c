@@ -7068,6 +7068,10 @@ int freeblocks(struct Scene *scene)
 		    block->sdata=NULL;
 	    }
 	    
+        if(block->stress){
+           cFree((char *)block->stress);
+           block->stress = NULL;
+        }
 
 	}
 

@@ -260,6 +260,54 @@ int dpress()
 	        i1,j1,k1,i2,j2,k2,i3,j3,k3,i4,j4,k4);
 	return 0;
 }
+#ifndef PC
+#define PC 1
+#endif
+#ifndef DFNT_FLOAT64
+#define DFNT_FLOAT64 1
+#endif
+int AddjustType(unsigned char *d,long length,int floatType)
+{
+	if(!d)return 1;
+	
+	length=length;
+	floatType=floatType;
+#ifdef PC
+/*   do PC */
+    {
+        unsigned char c,*cp;
+	    long np;
+	    cp=(unsigned char *)d;
+	    if(floatType == DFNT_FLOAT64){
+	        for(np=0;np<length;np += 8){
+			    c=cp[np];
+			    cp[np]=cp[np+7];
+			    cp[np+7]=c;
+			    c=cp[np+1];
+			    cp[np+1]=cp[np+6];
+			    cp[np+6]=c;
+			    c=cp[np+2];
+			    cp[np+2]=cp[np+5];
+			    cp[np+5]=c;
+			    c=cp[np+3];
+			    cp[np+3]=cp[np+4];
+			    cp[np+4]=c;
+	        }
+	    }else{
+	        for(np=0;np<length;np += 4){
+			    c=cp[np];
+			    cp[np]=cp[np+3];
+			    cp[np+3]=c;
+			    c=cp[np+1];
+			    cp[np+1]=cp[np+2];
+			    cp[np+2]=c;
+	        }
+	    }
+    }
+#endif
+	return 0;
+}
+
 int grid(x,y,z,n)
 double *x,*y,*z;
 long *n;
@@ -267,6 +315,10 @@ long *n;
 	long Address;
 	
 	if((Address=tableAddress[GRIDGEN])){
+	    double *dpx,*dpy,*dpz;
+	    float *fpx,*fpy,*fpz;
+	    float xx,yy,zz;
+	    //AddjustType((unsigned char *)x,*n,DFNT_FLOAT64);
 	    pushl((long)n);  /*   n   */
 	    pushl((long)z);  /*   z   */
 	    pushl((long)y);  /*   y   */  
@@ -274,7 +326,30 @@ long *n;
 	    pushl((long)0xFFFFFFFFL);  /*   n   */
 	    doRun(Address);
 	    adjust((int)(5*sizeof(long)));
-	}
+	   // AddjustType((unsigned char *)x,*n,DFNT_FLOAT64);
+	   // AddjustType((unsigned char *)y,*n,DFNT_FLOAT64);
+	   // AddjustType((unsigned char *)z,*n,DFNT_FLOAT64);
+	   dpx=x;
+	   dpy=y;
+	   dpz=z;
+	   fpx=(float *)x+1;
+	   fpy=(float *)y+1;
+	   fpz=(float *)z+1;
+	   /*
+	   for(long nn=0;nn< *n;++nn){
+	      printf("nn %ld %f %f %f\n",nn,fpx[nn],fpy[nn],fpz[nn]);
+	   }
+	   printf("%f %f %f  %f %f %f\n",dpx[0],dpy[0],dpz[0],fpx[0],fpy[0],fpz[0]);
+	   */
+	   for(long nn=*n-1;nn>=0;--nn){
+	        xx=fpx[nn];
+	        yy=fpy[nn];
+	        zz=fpz[nn];
+	   		dpx[nn]=xx;
+	   		dpy[nn]=yy;
+	   		dpz[nn]=zz;
+	   }
+}
 	return 0;
 }
 int vel(x,y,z,n)
