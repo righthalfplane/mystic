@@ -1,0 +1,15 @@
+/opt/homebrew/bin/brew install gfortran
+set path = ($path /opt/homebrew/bin)
+cd double
+buildGF
+cd ..
+cd grid23dd
+make -f MakefileDarwin -j 4
+mv grid23G ~/utlib
+cd mysticPlot
+install.txt
+cd mysticPlot
+mv mysticPlot.x ~/utlib/
+cd decks/mobius
+runMystic mobiusmode07.g
+mysticPlot.x
