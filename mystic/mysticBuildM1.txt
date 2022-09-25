@@ -1,5 +1,5 @@
-/opt/homebrew/bin/brew install gfortran
 set path = ($path /opt/homebrew/bin)
+brew install gfortran
 cd double
 buildGF
 cd ..
