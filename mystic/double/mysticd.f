@@ -34,7 +34,7 @@
       character*8 cdata
       common/clist/cdata(64)
       dimension com(20)
-      common a(41025000)
+      common a(601025000)
       real a
       integer ia
       equivalence (a(1),ia(1)),(kploc(1),kpnode)
@@ -64,7 +64,7 @@
       ibigw=1
       ieldat=1
       icheck=0
-      nmax=40000000
+      nmax=600000000
       munit=2
       lunit=3
       nstif=4

@@ -5,7 +5,7 @@
 
 /*
 cc -O3 -arch i386 -o stlbuild stlbuild.c -L/usr/local/hdf/lib -ldf -ljpeg -lz -Wall
-cc -O3 -o stlbuild stlbuild.c -ldf -ljpeg -lz -Wall
+cc -O2 -o stlbuild stlbuild.c -ldf -ljpeg -lz -Wall
 */
 
 
@@ -98,6 +98,7 @@ struct Commands clist[]=
     {"yzplane",doStl},
     {"sinegauge",doStl},
     {"triangle",doStl},
+    {"wedge",doStl},
 	{"limits",doSphere},
 	{"name",doSphere},
 	{"sphere",doSphere},
@@ -139,6 +140,7 @@ int DiskWrite(int nx,int ny,double rin,double rout);
 void BuildTransformMatrix(struct Matrix *m,struct System *p1,struct System *p2);
 struct P Sub(struct P *p1,struct P *p2);
 double Dot(struct P *v1,struct P *v2);
+struct P Mult(struct P *p1,double t);
 
 struct P p(double x,double y,double z);
 
@@ -160,12 +162,15 @@ int TorusWrite(int nx,int ny,double rbig,double rsmall);
 double Len(struct P *v1);
 struct P CrossN(struct P *v1,struct P *v2);
 int SphereWrite(int nx,int ny,double radius);
+struct P Add(struct P *p1,struct P *p2);
 
 int sinegauge(void);
 
 int BoxWrite(double height,double width,double debth);
 
 int writeTriangleP(struct P *p1,struct P *p2,struct P *p3);
+
+int wedge(struct P *p1,struct P *p2,struct P *p3,double thick);
 
 int main(int argc,char **argv)
 {
@@ -212,7 +217,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    ++(*nword);
 	    z=value[*nword];
 
-	    printf("xyplane xl %f nx %d yl %f ny %d np %f z %f\n",xl,nx,yl,ny,np,z);
+	    fprintf(stderr,"xyplane xl %f nx %d yl %f ny %d np %f z %f\n",xl,nx,yl,ny,np,z);
 	    
 	    xyplaneStl(xl, nx, yl, ny, np, z);
 
@@ -232,7 +237,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    ++(*nword);
 	    y=value[*nword];
 
-	    printf("xzplane xl %f nx %d zl %f nz %d np %f y %f\n",xl,nx,zl,nz,np,y);
+	    fprintf(stderr,"xzplane xl %f nx %d zl %f nz %d np %f y %f\n",xl,nx,zl,nz,np,y);
 	    
 	    xzplaneStl(xl, nx, zl, nz, np, y);
 	} else if(!strcmp("yzplane",command[*nword])){
@@ -251,7 +256,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    ++(*nword);
 	    x=value[*nword];
 
-	    printf("yzplane yl %f yx %d zl %f nz %d np %f x %f\n",yl,ny,zl,nz,np,x);
+	    fprintf(stderr,"yzplane yl %f yx %d zl %f nz %d np %f x %f\n",yl,ny,zl,nz,np,x);
 	    
 	    yzplaneStl(yl, ny, zl, nz, np, x);
 	} else if(!strcmp("translate",command[*nword])){
@@ -261,7 +266,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    Translation.y=value[*nword];
 	    ++(*nword);
 	    Translation.z=value[*nword];
-	    printf("translate x %g y %g z %g \n",Translation.x,Translation.y,Translation.z);
+	    fprintf(stderr,"translate x %g y %g z %g \n",Translation.x,Translation.y,Translation.z);
 	} else if(!strcmp("rotate",command[*nword])){
 	    ++(*nword);
 	    Rotation.x=value[*nword];
@@ -269,7 +274,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    Rotation.y=value[*nword];
 	    ++(*nword);
 	    Rotation.z=value[*nword];
-	    printf("rotate x %g y %g z %g \n",Rotation.x,Rotation.y,Rotation.z);
+	    fprintf(stderr,"rotate x %g y %g z %g \n",Rotation.x,Rotation.y,Rotation.z);
 	} else if(!strcmp("scale",command[*nword])){
 	    ++(*nword);
 	    Scale.x=value[*nword];
@@ -277,7 +282,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    Scale.y=value[*nword];
 	    ++(*nword);
 	    Scale.z=value[*nword];
-	    printf("scale x %g y %g z %g \n",Scale.x,Scale.y,Scale.z);
+	    fprintf(stderr,"scale x %g y %g z %g \n",Scale.x,Scale.y,Scale.z);
 	} else if(!strcmp("sphere",command[*nword])){
 		double radius;
 		int nx,ny;
@@ -287,7 +292,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    ny=value[*nword];
 	    ++(*nword);
 	    radius=value[*nword];
-	    printf("sphere nx %d ny %d radius %g \n",nx,ny,radius);
+	    fprintf(stderr,"sphere nx %d ny %d radius %g \n",nx,ny,radius);
 	    SphereWrite(nx,ny,radius);
 	} else if(!strcmp("disk",command[*nword])){
 		double rin,rout;
@@ -300,7 +305,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    rin=value[*nword];
 	    ++(*nword);
 	    rout=value[*nword];
-	    printf("disk nx %d ny %d rin %g rout %g\n",nx,ny,rin,rout);
+	    fprintf(stderr,"disk nx %d ny %d rin %g rout %g\n",nx,ny,rin,rout);
 	    DiskWrite(nx,ny,rin,rout);
 	} else if(!strcmp("torus",command[*nword])){
 		double rbig,rsmall;
@@ -313,7 +318,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    rbig=value[*nword];
 	    ++(*nword);
 	    rsmall=value[*nword];
-	    printf("torus nx %d ny %d rbig %g rsmall %g \n",nx,ny,rbig,rsmall);
+	    fprintf(stderr,"torus nx %d ny %d rbig %g rsmall %g \n",nx,ny,rbig,rsmall);
 	    TorusWrite(nx,ny,rbig,rsmall);
 	} else if(!strcmp("cone",command[*nword])){
 		double rtop,rbottom,length;
@@ -328,7 +333,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    rbottom=value[*nword];
 	    ++(*nword);
 	    length=value[*nword];
-	    printf("cone nx %d ny %d rtop %g rbottom %g length %g\n",nx,ny,rtop,rbottom,length);
+	    fprintf(stderr,"cone nx %d ny %d rtop %g rbottom %g length %g\n",nx,ny,rtop,rbottom,length);
 	    ConeWrite(nx,ny,rtop,rbottom,length);
 	} else if(!strcmp("box",command[*nword])){
 		double height,width,debth;
@@ -338,7 +343,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    width=value[*nword];
 	    ++(*nword);
 	    debth=value[*nword];
-	    printf("box height %g width %g debth %g\n",height,width,debth);
+		fprintf(stderr,"box height %g width %g debth %g\n",height,width,debth);
 	    BoxWrite(height,width,debth);
 	} else if(!strcmp("cube",command[*nword])){
 		double height,width,debth;
@@ -348,7 +353,7 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    width=value[*nword];
 	    ++(*nword);
 	    debth=value[*nword];
-	    printf("cube dx %g dy %g dz %g\n",height,width,debth);
+	    fprintf(stderr,"cube dx %g dy %g dz %g\n",height,width,debth);
 	    BoxWrite(width,height,debth);
 	} else if(!strcmp("triangle",command[*nword])){
 		struct P p1,p2,p3;
@@ -373,11 +378,44 @@ int doStl(IconPtr myIcon,char command[][16],double *value,int *nword)
 	    ++(*nword);
 	    p3.z=value[*nword];
 
-	    printf("triangle p1 %f %f %f p2 %f %f %f p3 %f %f %f\n",
+	    fprintf(stderr,"triangle p1 %f %f %f p2 %f %f %f p3 %f %f %f\n",
 	            p1.x,p1.y,p1.z,p2.x,p2.y,p2.z,p3.x,p3.y,p3.z);
 	    
 	    
 	    writeTriangleP(&p1,&p2,&p3);
+
+	} else if(!strcmp("wedge",command[*nword])){
+		struct P p1,p2,p3;
+		double thick;
+	    ++(*nword);
+	    p1.x=value[*nword];
+	    ++(*nword);
+	    p1.y=value[*nword];
+	    ++(*nword);
+	    p1.z=value[*nword];
+
+	    ++(*nword);
+	    p2.x=value[*nword];
+	    ++(*nword);
+	    p2.y=value[*nword];
+	    ++(*nword);
+	    p2.z=value[*nword];
+
+	    ++(*nword);
+	    p3.x=value[*nword];
+	    ++(*nword);
+	    p3.y=value[*nword];
+	    ++(*nword);
+	    p3.z=value[*nword];
+
+	    ++(*nword);
+	    thick=value[*nword];
+
+	    fprintf(stderr,"wedge p1 %f %f %f p2 %f %f %f p3 %f %f %f thick %f\n",
+	            p1.x,p1.y,p1.z,p2.x,p2.y,p2.z,p3.x,p3.y,p3.z,thick);
+	    
+	    
+	    wedge(&p1,&p2,&p3,thick);
 
 	} else if(!strcmp("sinegauge",command[*nword])){
 		sinegauge();
@@ -1222,15 +1260,79 @@ int yzplaneStl(double yl,int ny, double zl, int nz, double np, double xh)
 	
 	printf("endsolid o1\n");
 	
-	printf("xmin %g xmax %g ymin %g ymax %g zmin %g zmax %g \n",xmin,xmax,ymin,ymax,zmin,zmax);
+	fprintf(stderr,"xmin %g xmax %g ymin %g ymax %g zmin %g zmax %g \n",xmin,xmax,ymin,ymax,zmin,zmax);
 	
 	
+	return 0;
+}
+int wedge(struct P *p1,struct P *p2,struct P *p3,double thick)
+{
+
+	struct P v1,v2,normal,normHalf;
+	if(!p1 || !p2 || !p3)return 1;
+	
+	if(p1->x == p2->x && p1->y == p2->y && p1->z == p2->z)return 1;
+	if(p1->x == p3->x && p1->y == p3->y && p1->z == p3->z)return 1;
+	if(p2->x == p3->x && p2->y == p3->y && p2->z == p3->z)return 1;
+	
+	v1=Sub(p2,p1);
+	v2=Sub(p3,p1);
+	normal=CrossN(&v1,&v2);
+	
+	normHalf=Mult(&normal,0.5*thick);
+	
+	struct P p1a=Add(p1,&normHalf);
+	struct P p2a=Add(p2,&normHalf);
+	struct P p3a=Add(p3,&normHalf);
+	
+	printf("solid o2\n");
+	
+  	printf("  facet normal %g %g %g\n", normal.x, normal.y, normal.z);
+    printf("    outer loop\n");
+    
+	printf("      vertex %g %g %g\n",p1a.x,p1a.y,p1a.z);
+	printf("      vertex %g %g %g\n",p2a.x,p2a.y,p2a.z);
+	printf("      vertex %g %g %g\n",p3a.x,p3a.y,p3a.z);
+   
+    printf("    endloop\n");
+  	printf("  endfacet\n");
+  	
+ 	normHalf=Mult(&normal,-0.5*thick);
+	struct P p1b=Add(p1,&normHalf);
+	struct P p2b=Add(p2,&normHalf);
+	struct P p3b=Add(p3,&normHalf);
+	
+  	printf("  facet normal %g %g %g\n", -normal.x, -normal.y, -normal.z);
+    printf("    outer loop\n");
+    
+	printf("      vertex %g %g %g\n",p1b.x,p1b.y,p1b.z);
+	printf("      vertex %g %g %g\n",p3b.x,p3b.y,p3b.z);
+	printf("      vertex %g %g %g\n",p2b.x,p2b.y,p2b.z);
+   
+    printf("    endloop\n");
+  	printf("  endfacet\n");
+  	
+  	writeTriangleP(&p1a,&p1b,&p2b);
+ 	
+    writeTriangleP(&p2b,&p2a,&p1a);
+ 	
+  	writeTriangleP(&p2a,&p2b,&p3b);
+ 	
+    writeTriangleP(&p3b,&p3a,&p2a);
+ 	
+  	writeTriangleP(&p1b,&p1a,&p3b);
+ 	
+    writeTriangleP(&p3b,&p1a,&p3a);
+ 	
+	printf("endsolid o2\n");
+
 	return 0;
 }
 int writeTriangleP(struct P *p1,struct P *p2,struct P *p3)
 {
 	struct P v1,v2,normal;
 	if(!p1 || !p2 || !p3)return 1;
+	
 	
 	if(p1->x == p2->x && p1->y == p2->y && p1->z == p2->z)return 1;
 	if(p1->x == p3->x && p1->y == p3->y && p1->z == p3->z)return 1;
@@ -1412,7 +1514,7 @@ int xzplaneStl(double xl,int nx, double zl, int nz, double np, double yh)
 	
 	printf("endsolid o1\n");
 	
-	printf("xmin %g xmax %g ymin %g ymax %g zmin %g zmax %g \n",xmin,xmax,ymin,ymax,zmin,zmax);
+	fprintf(stderr,"xmin %g xmax %g ymin %g ymax %g zmin %g zmax %g \n",xmin,xmax,ymin,ymax,zmin,zmax);
 	
 	
 	return 0;
@@ -1543,7 +1645,7 @@ int xyplaneStl(double xl,int nx, double yl, int ny, double np, double zh)
 	
 	printf("endsolid o1\n");
 	
-	printf("xmin %g xmax %g ymin %g ymax %g zmin %g zmax %g \n",xmin,xmax,ymin,ymax,zmin,zmax);
+	fprintf(stderr,"xmin %g xmax %g ymin %g ymax %g zmin %g zmax %g \n",xmin,xmax,ymin,ymax,zmin,zmax);
 	
 	
 	return 0;
@@ -1563,12 +1665,12 @@ Flt VecNormalize(Vec vec)
 int writeTriangle(Vec *points, double np)
 {
     Vec v1,v2,normal;
-    double area;
+//    double area;
     
 	VecSub(points[1],points[0],v1);
 	VecSub(points[2],points[0],v2);
 	VecCross(v1,v2,normal);
-	area=0.5*VecNormalize(normal);
+//	area=0.5*VecNormalize(normal);
 	if(np < 0.0){
 	   VecNegate(normal);
 	}
@@ -2215,6 +2317,16 @@ double Dot(struct P *v1,struct P *v2)
 
     return  Length;
 }
+struct P Mult(struct P *p1,double t)
+{
+    struct P psub;
+
+    psub.x=p1->x*t;
+    psub.y=p1->y*t;
+    psub.z=p1->z*t;
+    return psub;
+ 
+}
 struct P Sub(struct P *p1,struct P *p2)
 {
     struct P psub;
@@ -2222,6 +2334,16 @@ struct P Sub(struct P *p1,struct P *p2)
     psub.x=p1->x-p2->x;
     psub.y=p1->y-p2->y;
     psub.z=p1->z-p2->z;
+    return psub;
+ 
+}
+struct P Add(struct P *p1,struct P *p2)
+{
+    struct P psub;
+
+    psub.x=p1->x+p2->x;
+    psub.y=p1->y+p2->y;
+    psub.z=p1->z+p2->z;
     return psub;
  
 }

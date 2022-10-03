@@ -2,7 +2,7 @@ clear
 
 filelist inputType stl
 
-filelist open ss "/Users/dir/Archive/mystic-157/Alphabet/All_Alphabet_Letters_A-Z/"
+filelist open ss "/Users/dir/Archive/mystic-181/Alphabet/All_Alphabet_Letters_A-Z/"
 Letter_K.stl
 Letter_I.stl
 Letter_R.stl
@@ -34,7 +34,7 @@ expression
 	stltransform(17+xh,yh,zh, 0,0,0, xs,ys,zs);
 	stlmerge(ss,3,1,0.0,1);
 		
-	stlsave("/Users/dir/Archive/mystic-157/Ultimaker/Sue/Letters.stl","text");
+	stlsave("/Users/dir/Archive/mystic-181/Ultimaker/Sue/Letters.stl","text");
 		
 }
 step 0 0
